@@ -76,6 +76,9 @@ STATICFILES_DIRS = (
 ADMIN_MEDIA_PREFIX = posixpath.join(STATIC_URL, "admin/")
 
 # Make this unique, and don't share it with anybody.
+#
+# This one was from the old version, so it's here just in case
+#SECRET_KEY = 'v&_tt0it07k1!cnh+q*sohvifutnp2i^uta+!1v4)&lxg8^1p3'
 SECRET_KEY = 'lt@ugf^nzsbb3lchr3fmzn%_gn^ue(2ukd&mpp#0oyfe7&^^#x'
 
 # List of callables that know how to import templates from various sources.
@@ -118,6 +121,9 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 )
 
 INSTALLED_APPS = (
+    # TD-Webinar
+    'events',
+    'presentations',
     # included
     'django.contrib.auth',
     'django.contrib.contenttypes',
