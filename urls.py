@@ -30,6 +30,7 @@ urlpatterns = patterns('',
     (r'^notices/', include('notification.urls')),
     (r'^announcements/', include('announcements.urls')),
     
+    (r'^admin/uploady/', 'presentations.views.UploadPdf'),
     (r'^admin/(.*)', admin.site.root),
 )
 

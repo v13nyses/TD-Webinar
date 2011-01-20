@@ -1,9 +1,12 @@
 from django.db import models
+#from foobar.events import Event
+
 
 # Presentation model
 class Presentation(models.Model):
   #video = models.OneToOneField('videos.Video')
   presenters = models.ManyToManyField('Presenter')
+  event = models.ForeignKey('events.Event')
 
 class QueuePoint(models.Model):
   slide = models.OneToOneField('Slide')
@@ -31,4 +34,8 @@ class PresenterType(models.Model):
 
 class Slide(models.Model):
   image = models.ImageField(upload_to = 'slides')
+  presentation = models.ForeignKey('Presentation')
+
+class Video(models.Model):
+  video_id = models.IntegerField()
   presentation = models.ForeignKey('Presentation')
