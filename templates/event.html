@@ -1,0 +1,75 @@
+{% extends 'site_base.html' %}
+
+{% load ifsetting_tag %}
+
+{% block head_title %}{{ event.name }}{% endblock %}
+
+{% block header_right %}
+  <h3>{{ event.name }}</h3>
+  <h4>{{ event.start_date }}</h4>
+{% endblock %}
+  
+{% block body %}
+  <div id="presentation-wrapper">
+    <div id="presentation" class="container">
+      <div id="presentation-left">
+        <div id="presentation-webinar">
+          <script type="text/javascript" src="http://content.bitsontherun.com/players/qBb9SODl-iZjQS5cp.js"></script>
+        </div>
+      </div>
+      <div id="slideshow">
+      </div>
+      <div id="presentation-question">
+        <form id="questionform" name="questionform" method="post" action="">
+          <label for="question">Do you have a question or comment for our panel?</label>
+          <div id="questionform-right">
+            <input type="text" name="question" id="question" />
+            <input type="submit" class="form-submit" name="question-submit" id="question-submit" value="Submit" />
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div id="information-wrapper">
+    <div class="container">
+      <div id="information-tabs">
+        <div class="infotab webinar-info" style="background-position:110px top;"></div>
+        <div class="infotab presenter-info" style="background-position:110px top;"></div>
+      </div>
+    </div>
+    <div id="information" class="container">
+      <div id="information-left">
+        <h1>{{ event.name }}<?h1>
+        <h3>{{ event.start_date }}</h3>
+        <div class="description">
+          {{ event.description }}
+        </div>
+      </div>
+      <div id="information-right">
+        <div id="resource-panel">
+          <h3>Resource Panel</h3>
+          <div class="rp-item">
+            <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-download.png" width="20" height="20" alt="Download Presentation" /></div>
+            <div class="rp-description">Download Presentation</div>
+          </div>
+          <div class="rp-item">
+            <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-resourceguide.png" width="20" height="20" alt="Resource Guide" /></div>
+            <div class="rp-description">Resource Guide</div>
+          </div>
+          <div class="rp-item">
+            <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-td.png" width="20" height="20" alt="Locate a TD Small Business Advisor" /></div>
+            <div class="rp-description">Locate a TD Small Business Advisor</div>
+          </div>
+          <div class="rp-item">
+            <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-td.png" width="20" height="20" alt="Find a TD Commercial Banking Centre" /></div>
+            <div class="rp-description">Find a TD Commercial Banking Centre</div>
+          </div>
+          <div class="rp-item">
+            <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-mail.png" width="20" height="20" alt="Recommend this webinar" /></div>
+            <div class="rp-description">Recommend this webinar</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

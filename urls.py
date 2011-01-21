@@ -32,6 +32,9 @@ urlpatterns = patterns('',
     
     (r'^admin/uploady/', 'presentations.views.UploadPdf'),
     (r'^admin/(.*)', admin.site.root),
+
+    # events
+    (r'^events/(\d)/$', 'events.views.display'),
 )
 
 if settings.SERVE_MEDIA:

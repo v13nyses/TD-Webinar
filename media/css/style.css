@@ -1,0 +1,317 @@
+/**1. GENEREAL LAYOUT AND DESIGN **/
+
+html {
+	margin-left: -1px;
+	overflow-Y: scroll;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+	background: url(../images/bodybg.png) repeat-y center top #F9F9F9;
+}
+
+.container {
+	width: 850px;
+	margin: 0 auto;
+	clear: both;
+}
+
+#header-wrapper {
+	width: 100%;
+	background: url(../images/headerbg.png) repeat-x #2D5C3C;
+
+}
+
+#header {
+	height: 65px;
+}
+
+#logo {
+	float: left;
+	width: 190px;
+	height: 45px;
+	margin: 5px 0;
+	background: url(../images/logo.png) no-repeat;
+}
+
+#header-right {
+	float: right;
+	text-align: right;
+	margin-top: 5px;
+}
+
+#presentation-wrapper {
+	background: url(../images/presentationbg.png) center top #3D3D3D;
+}
+
+#presentation {
+	padding-top: 15px;
+}
+
+#presentation-left {
+	width: 480px;
+	float: left;
+	clear: both;
+	border: 2px #0d0d0d solid;
+}
+
+#presentation-info {
+	height: 75px;
+	vertical-align: middle;
+	display: table-cell;
+}
+
+#presentation-webinar {
+	height: 270px;
+}
+
+#slideshow {
+	width: 360px;
+	height: 270px;
+	float: right;
+	background-color: #3D3D3D;
+	border: 2px #0d0d0d solid;
+	margin-bottom: 15px;
+}
+
+#slideshow img {
+	width: 360px;
+	height: 270px;
+}
+
+#information-wrapper {
+	background: url(../images/informationbg.png) repeat-x center top;
+	width: 100%;
+	padding-bottom: 20px;
+	margin-bottom: -30px;
+}
+
+#information-tabs {
+	width: 150px;
+	height: 150px;
+	display: block;
+	z-index: 999;
+	margin-left: -150px;
+	margin-bottom: -150px;
+}
+
+#information-tabs .infotab.webinar-info {
+	background-image:url(../images/webinar-info.jpg);
+	width: 150px;
+	height: 50px;
+	background-repeat: no-repeat;
+	position: relative;
+	top: 5px;
+}
+
+#information-tabs .infotab.presenter-info {
+	background-image:url(../images/presenter-info.jpg);
+	width: 150px;
+	height: 50px;
+	background-repeat: no-repeat;
+}
+
+
+#information {
+	padding: 15px;
+	width: 820px;
+	overflow: auto;
+}
+#information-left {
+	width: 530px;
+	padding-left: 10px;
+	float: left;
+}
+
+#information-right {
+	float: right;
+	width: 225px;
+	display: inline-block;
+}
+
+#resource-panel {
+	width: 195px;
+	padding: 15px;
+	background: #E7E8EA;
+}
+
+#footer-wrapper {
+	background: url(../images/footerbg.png) repeat-x center 50px;
+	height: 100px;
+}
+
+#footer {
+	text-align: right;
+	padding: 70px 0 10px 0;
+}
+
+/** 2. GENERAL TYPOGRAPHY **/
+
+body {
+	font-family: "Segoe UI", Geneva, sans-serif;
+	font-size: 13px;
+	color: #3D3D3D;
+}
+
+h1 {
+	font-size: 26px;
+	line-height: 26px;
+	text-transform: uppercase;
+	color: #2D5C3C;
+	margin-top: 5px;
+}
+
+h3 {
+	font-size: 16px;
+	line-height: 16px;
+	text-transform: uppercase;
+	color: #2D5C3C;
+	margin-bottom: 5px;
+	margin-top: 0px;
+}
+
+
+h4 {
+	font-size: 11px;
+	line-height: 11px;
+	text-transform: uppercase;
+	color: #2D5C3C;
+	margin-top: 0;
+}
+
+#footer {
+	font-size: 11px;
+	color: #e7e8ea;
+}
+
+/** Buttons **/
+
+input.form-submit {
+	border-top: #d66f0b 1px solid;
+	border-bottom: #4c2908 1px solid;
+	border-left: none;
+	border-right: none;
+	background: url(../images/buttonbg.png) repeat-x center top;
+	color: #fff;
+	text-transform: uppercase;
+	font-size: 11px;
+	padding: 3px 6px 2px 6px;
+	display: block;
+	font-weight: bold;
+}
+
+input.form-submit:focus, input.form-submit:active {
+	border-top: #ff9900 1px solid;
+	border-bottom: #a0410d 1px solid;
+	border-left: none;
+	border-right: none;
+	background: url(../images/buttonbg.png) repeat-x center bottom;
+}
+
+input[type=submit] {
+  width: auto;
+  overflow: visible;
+}
+
+/** 3. CUSTOM STYLES **/
+
+#header-right h3, #header-right h4 {
+	color: #e7e8ea;
+}
+
+/* Presentation Box */
+
+#presentation-info h3 {
+	color: #e7e8ea;
+	margin-top: 0;
+}
+
+
+#presentation-info h4 {
+	color: #7d7d7d;
+	margin-top: 0;
+}
+
+/* Presentation Question */
+
+#presentation-question {
+	width: 820px;
+	height: 22px;
+	background: #2D5C3C;
+	padding: 7px 15px 10px 15px;
+	clear: both;
+	margin: 0 auto;
+	background: url(../images/questionbg.png) no-repeat center top;
+	overflow: hidden;	
+	color: #e7e8ea;
+	font-size: 11px;
+}
+
+form#questionform {
+	width: 820px;
+	height: 22px;
+	padding-bottom: 2px;
+	margin: 0;
+	padding-top: 0;
+}
+
+form#questionform label {
+	position:relative;
+	top:5px;
+}
+#questionform-right {
+	float:right;
+}
+
+input#question {
+	width: 400px;
+	margin-left: 25px;
+	padding: 1px;
+	display: inline-block;
+}
+
+
+input#question-submit {
+	display: inline-block;
+}
+
+/* Resource Panel */
+
+#resource-panel {
+	font-size: 11px;
+}
+
+#resource-panel h3 {
+	margin-bottom: 20px;
+}
+
+.rp-item {
+	width: 195px;
+	clear: both;
+}
+.rp-icon {
+	float: left;
+	width: 20px;
+	clear: left;
+	padding: 0 10px 10px 0;
+	height: 100%;
+}
+
+.rp-description {
+	padding: 2px 0 10px ;
+}
+
+/** HACKS **/
+
+button::-moz-focus-inner,
+input[type="reset"]::-moz-focus-inner,
+input[type="button"]::-moz-focus-inner,
+input[type="submit"]::-moz-focus-inner,
+input[type="file"] > input[type="button"]::-moz-focus-inner {
+    border: none;
+}
+
+input {
+	font-size: 12px;
+}
