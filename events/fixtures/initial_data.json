@@ -1,0 +1,1 @@
+[{"pk": 2, "model": "events.event", "fields": {"description": "Epic house warmer.", "end_date": "2011-01-23 00:01:00", "tagline": "Like Big Bang Theory.. but good", "image": "events/sean_bieb_linz_.JPG", "start_date": "2011-01-22 18:00:00", "name": "House Warmer"}}]
