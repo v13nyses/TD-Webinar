@@ -8,13 +8,16 @@ class Presentation(models.Model):
   presenters = models.ManyToManyField('Presenter')
   event = models.ForeignKey('events.Event')
 
+  def __unicode__(self):
+    return self.event.name
+
 class QueuePoint(models.Model):
   slide = models.OneToOneField('Slide')
   time_offset = models.IntegerField()
   presentation = models.ForeignKey('Presentation')
 
   def __unicode__(self):
-    return self.name
+    return "%s_queuepoint_%d" % (self.slide.__unicode__(), self.time_offset)
 
 class Presenter(models.Model):
   name = models.CharField(max_length = 200)
@@ -36,6 +39,12 @@ class Slide(models.Model):
   image = models.ImageField(upload_to = 'slides')
   presentation = models.ForeignKey('Presentation')
 
+  def __unicode__(self):
+    return "%s_slide_%s" % (self.presentation.__unicode__(), self.image.name)
+
 class Video(models.Model):
   video_id = models.IntegerField()
   presentation = models.ForeignKey('Presentation')
+
+  def __unicode__(self):
+    return "%s_video_%d" % (self.presentation.__unicode__(), self.video_id)
