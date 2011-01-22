@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -7,6 +8,7 @@ from presentations import forms
 from presentations import utils
 from presentations.models import Slide, Presentation
 import simplejson as json
+
 
 # Create your views here.
 def UploadPdf(request):
@@ -20,15 +22,15 @@ def UploadPdf(request):
   return render_to_response('upload.html', {'form': form})
 
 def displaySlide(request, slide_id = None):
-  slide = Slide.objects.get(id=slide_id)
+  template_name = 'slide_poll.html'
 
-  if isinstance(slide, Slide):
-    print "is slide"
-  else:
-    print "is not slide"
-  print slide
+  try:
+    slide = Poll.objects.get(id=slide_id)
+  except ObjectDoesNotExist, e:
+    slide = Slide.objects.get(id=slide_id)
+    template_name = 'slide.html'
 
-  return render_to_response('slide.html', {'slide': slide},
+  return render_to_response(template_name, {'slide': slide},
                             context_instance = RequestContext(request))
 
 def queuePoints(request, presentation_id = None):

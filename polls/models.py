@@ -4,7 +4,7 @@ from presentations.models import Slide
 # Create your models here.
 class Poll(Slide):
   question = models.CharField(max_length=200)
-
+  
   def __unicode__(self):
     return "%s (Poll %s)" % (super(Poll, self).__unicode__(), self.question)
 
