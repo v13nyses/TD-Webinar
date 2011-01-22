@@ -43,7 +43,7 @@ class Slide(models.Model):
     return '%s (Slide %d)' % (self.presentation.event.name, self.id)
 
 class Video(models.Model):
-  video_id = models.IntegerField()
+  video_id = models.CharField(max_length=50)
   presentation = models.ForeignKey('Presentation')
 
   def __unicode__(self):

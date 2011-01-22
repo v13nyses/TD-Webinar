@@ -15,5 +15,11 @@ def display(request, event_id = None):
   else:
     event = Event.objects.get(id = event_id)
 
+  # try and load the video
+  try:
+    event.video_id = event.presentation_set.get().video_set.get().video_id
+  except:
+    event.video_id = ''
+
   return render_to_response('event.html', {'event': event}, 
                             context_instance = RequestContext(request))

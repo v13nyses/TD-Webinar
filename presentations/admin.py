@@ -1,4 +1,4 @@
-from presentations.models import Presentation, Presenter, PresenterType, Slide, QueuePoint
+from presentations.models import Presentation, Presenter, PresenterType, Slide, QueuePoint, Video
 from django.contrib import admin
 
 
@@ -12,3 +12,4 @@ admin.site.register(Presenter)
 admin.site.register(PresenterType)
 admin.site.register(Slide)
 admin.site.register(QueuePoint)
+admin.site.register(Video)

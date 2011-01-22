@@ -42,7 +42,7 @@ urlpatterns = patterns('',
 
     # slides
 
-    (r'^slides/', include('presentations.urls')),
+    (r'^presentation/', include('presentations.urls')),
 )
 
 if settings.SERVE_MEDIA:

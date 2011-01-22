@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('',
-  (r'^(?P<slide_id>\d+)/$', 'presentations.views.displaySlide'),
+  (r'^slide/(?P<slide_id>\d+)/$', 'presentations.views.displaySlide'),
+  (r'^(\d+)/queue-points/$', 'presentations.views.queuePoints'),
 )
