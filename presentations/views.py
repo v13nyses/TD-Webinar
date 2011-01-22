@@ -24,11 +24,11 @@ def UploadPdf(request):
 def displaySlide(request, slide_id = None):
   template_name = 'slide_poll.html'
 
-  try:
-    slide = Poll.objects.get(id=slide_id)
-  except ObjectDoesNotExist, e:
-    slide = Slide.objects.get(id=slide_id)
-    template_name = 'slide.html'
+  #try:
+    #slide = Poll.objects.get(id=slide_id)
+  #except ObjectDoesNotExist, e:
+  slide = Slide.objects.get(id=slide_id)
+  template_name = 'slide.html'
 
   return render_to_response(template_name, {'slide': slide},
                             context_instance = RequestContext(request))
@@ -37,7 +37,7 @@ def queuePoints(request, presentation_id = None):
   try:
     presentation = Presentation.objects.get(id = presentation_id)
     print presentation
-    queue_points = presentation.queuepoint_set.all()
+    queue_points = presentation.queuepoint_set.order_by('-time_offset')
     
   except:
     print 'except'

@@ -3,6 +3,21 @@
 {% load ifsetting_tag %}
 
 {% block head_title %}{{ event.name }}{% endblock %}
+{% block extra_head %}
+  <script type="application/javascript" src="{{ STATIC_URL }}/event.js"></script>
+  <script type="application/javascript">
+    TDWebinar = {
+      settings: {
+        slideshowContainer: "#slideshow",
+      },
+      event: {
+        id: {{ event.id }},
+        queuePointUrl: "/presentation/{{ event.presentation_id }}/queue-points",
+        slideUrl: "/presentation/slide/"
+      }
+    }
+  </script>
+{% endblock %}
 
 {% block header_right %}
   <h3>{{ event.name }}</h3>
@@ -14,7 +29,7 @@
     <div id="presentation" class="container">
       <div id="presentation-left">
         <div id="presentation-webinar">
-        <script type="text/javascript" src="http://content.bitsontherun.com/players/{{ event.video_id}}-iZjQS5cp.js"></script>
+        <script type="text/javascript" src="http://content.bitsontherun.com/players/{{ event.video_id}}-mBH9rdBU.js"></script>
         </div>
       </div>
       <div id="slideshow">
