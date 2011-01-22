@@ -1,7 +1,10 @@
+from django.conf import settings
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
+from django.template import RequestContext
 from presentations import forms
 from presentations import utils
+from presentations.models import Slide
 
 # Create your views here.
 def UploadPdf(request):
@@ -13,3 +16,10 @@ def UploadPdf(request):
   else:
     form = forms.UploadPdfForm()
   return render_to_response('upload.html', {'form': form})
+
+def displaySlide(request, slide_id = None):
+  slide = Slide.objects.get(id=slide_id)
+
+  return render_to_response('slide.html', {'slide': slide},
+                            context_instance = RequestContext(request))
+      

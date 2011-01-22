@@ -124,6 +124,7 @@ INSTALLED_APPS = (
     # TD-Webinar
     'events',
     'presentations',
+
     # included
     'django.contrib.auth',
     'django.contrib.contenttypes',

@@ -4,12 +4,12 @@ from django.db import models
 
 # Presentation model
 class Presentation(models.Model):
-  #video = models.OneToOneField('videos.Video')
-  presenters = models.ManyToManyField('Presenter')
+  #video = models.OneToOneField('Video')
+  #presenters = models.ManyToManyField('Presenter')
   event = models.ForeignKey('events.Event')
 
   def __unicode__(self):
-    return self.event.name
+    return '%s (Presentation)' % (self.event.name)
 
 class QueuePoint(models.Model):
   slide = models.OneToOneField('Slide')
@@ -17,7 +17,7 @@ class QueuePoint(models.Model):
   presentation = models.ForeignKey('Presentation')
 
   def __unicode__(self):
-    return "%s_queuepoint_%d" % (self.slide.__unicode__(), self.time_offset)
+    return '%s (QueuePoint %d)' % (self.presentation.event.name, self.id)
 
 class Presenter(models.Model):
   name = models.CharField(max_length = 200)
@@ -40,11 +40,17 @@ class Slide(models.Model):
   presentation = models.ForeignKey('Presentation')
 
   def __unicode__(self):
-    return "%s_slide_%s" % (self.presentation.__unicode__(), self.image.name)
+    return '%s (Slide %d)' % (self.presentation.event.name, self.id)
 
 class Video(models.Model):
   video_id = models.IntegerField()
   presentation = models.ForeignKey('Presentation')
 
   def __unicode__(self):
-    return "%s_video_%d" % (self.presentation.__unicode__(), self.video_id)
+    return '%s (Video %d)' % (self.presentation.event.name, self.id)
+
+class Poll(Slide):
+  result = models.ForeignCharField(max_length=200)
+
+  def __unicode__(self):
+    return "%s (Poll)" % super(Poll, self).__unicode__()
