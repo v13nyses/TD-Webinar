@@ -49,8 +49,3 @@ class Video(models.Model):
   def __unicode__(self):
     return '%s (Video %d)' % (self.presentation.event.name, self.id)
 
-class Poll(Slide):
-  result = models.ForeignCharField(max_length=200)
-
-  def __unicode__(self):
-    return "%s (Poll)" % super(Poll, self).__unicode__()

@@ -20,6 +20,12 @@ def UploadPdf(request):
 def displaySlide(request, slide_id = None):
   slide = Slide.objects.get(id=slide_id)
 
+  if isinstance(slide, Slide):
+    print "is slide"
+  else:
+    print "is not slide"
+  print slide
+
   return render_to_response('slide.html', {'slide': slide},
                             context_instance = RequestContext(request))
       
