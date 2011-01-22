@@ -4,9 +4,12 @@ from django.db import models
 
 # Presentation model
 class Presentation(models.Model):
-  #video = models.OneToOneField('videos.Video')
+  video = models.OneToOneField('Video')
   presenters = models.ManyToManyField('Presenter')
   event = models.ForeignKey('events.Event')
+
+  def __unicode__(self):
+    return '%s (Presentation)' % (self.presentation.event.name)
 
 class QueuePoint(models.Model):
   slide = models.OneToOneField('Slide')
@@ -14,7 +17,7 @@ class QueuePoint(models.Model):
   presentation = models.ForeignKey('Presentation')
 
   def __unicode__(self):
-    return self.name
+    return '%s (QueuePoint %d)' % (self.presentation.event.name, self.id)
 
 class Presenter(models.Model):
   name = models.CharField(max_length = 200)
@@ -36,6 +39,11 @@ class Slide(models.Model):
   image = models.ImageField(upload_to = 'slides')
   presentation = models.ForeignKey('Presentation')
 
+  def __unicode__(self):
+    return '%s (Slide %d)' % (self.presentation.event.name, self.id)
+
 class Video(models.Model):
   video_id = models.IntegerField()
-  presentation = models.ForeignKey('Presentation')
+
+  def __unicode__(self):
+    return '%s (Video %d)' % (self.presentation.event.name, self.id)

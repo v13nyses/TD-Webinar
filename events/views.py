@@ -7,7 +7,11 @@ from events.models import Event
 def display(request, event_id = None):
   # if we didn't get an event id, grab the newest event
   if event_id == None:
-    event = Event.objects.order_by('-start_date')[0]
+    try:
+      event = Event.objects.order_by('-start_date')[0]
+    except IndexError:
+      event = Event()
+
   else:
     event = Event.objects.get(id = event_id)
 

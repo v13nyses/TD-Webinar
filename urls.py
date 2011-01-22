@@ -35,6 +35,7 @@ urlpatterns = patterns('',
 
     # events
     (r'^events/(\d)/$', 'events.views.display'),
+    (r'^events/$', 'events.views.display'),
 )
 
 if settings.SERVE_MEDIA:
