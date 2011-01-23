@@ -1,0 +1,15 @@
+{% extends "slide_base.html" %}
+
+{% block body %}
+  <img src="{{ MEDIA_URL }}{{ poll.image }}" />
+  <h1>{{ poll.question }}</h1>
+  {% if error_message %}<p><strong>{{ error_message }}</strong><p>{% endif %}
+
+  <form action="/presentation/slide/{{ poll.id }}/vote/" method="post">
+    {% for choice in poll.choice_set.all %}
+      <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+      <label for="choice{{ forloop.counter }}">{{ choice.choice }}</label><br />
+    {% endfor %}
+    <input type='submit' value='Vote'/>
+  </form>
+{% endblock %}

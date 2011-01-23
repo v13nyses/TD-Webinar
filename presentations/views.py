@@ -2,11 +2,13 @@ from django.http import HttpResponse
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from presentations import forms
 from presentations import utils
 from presentations.models import Slide, Presentation
+from polls.models import Poll
+from polls.views import vote
 import simplejson as json
 
 
@@ -22,16 +24,13 @@ def UploadPdf(request):
   return render_to_response('upload.html', {'form': form})
 
 def displaySlide(request, slide_id = None):
-  template_name = 'slide_poll.html'
-
   try:
-    slide = Poll.objects.get(id=slide_id)
+    poll = Poll.objects.get(id=slide_id)
+    return vote(request, slide_id)
   except ObjectDoesNotExist, e:
-    slide = Slide.objects.get(id=slide_id)
-    template_name = 'slide.html'
-
-  return render_to_response(template_name, {'slide': slide},
-                            context_instance = RequestContext(request))
+    slide = get_object_or_404(Slide, pk=slide_id)
+    return render_to_response('presentations/slide.html', {'slide': slide},
+                              context_instance = RequestContext(request))
 
 def queuePoints(request, presentation_id = None):
   try:
