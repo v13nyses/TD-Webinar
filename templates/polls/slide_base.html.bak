@@ -1,5 +1,0 @@
-<div class='slide'>
-  {% block body %}
-
-  {% endblock %}
-</div>

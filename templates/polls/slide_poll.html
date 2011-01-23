@@ -1,15 +1,16 @@
 {% extends "slide_base.html" %}
 
 {% block body %}
+  <script type="application/javascript" src="{{ STATIC_URL }}poll.js"></script>
   <img src="{{ MEDIA_URL }}{{ poll.image }}" />
   <h1>{{ poll.question }}</h1>
   {% if error_message %}<p><strong>{{ error_message }}</strong><p>{% endif %}
 
-  <form action="/presentation/slide/{{ poll.id }}/vote/" method="post">
+  <form action="/presentations/slides/{{ poll.id }}/" method="post">
     {% for choice in poll.choice_set.all %}
-      <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
+      <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" onclick="enableSubmit()"/>
       <label for="choice{{ forloop.counter }}">{{ choice.choice }}</label><br />
     {% endfor %}
-    <input type='submit' value='Vote'/>
+    <input id="submit_button" type="submit" value="Vote" disabled="true"/>
   </form>
 {% endblock %}

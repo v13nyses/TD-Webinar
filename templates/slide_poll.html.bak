@@ -2,4 +2,6 @@
 
 {% block body %}
 <img src="{{ MEDIA_URL}}{{ slide.image }}" />
+<!--TO DO POLL INPUT -->
+TO DO POLL FORM
 {% endblock %}

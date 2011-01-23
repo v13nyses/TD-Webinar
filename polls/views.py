@@ -11,10 +11,10 @@ def vote(request, poll_id):
   except (KeyError, Choice.DoesNotExist):
     return render_to_response('polls/slide_poll.html', {
       'poll': poll,
-      'error_message': 'You didn''t select a choice.',
-#    })
     }, context_instance=RequestContext(request))
   else:
     selected_choice.votes += 1
     selected_choice.save()
-    return HttpResponseRedirect('presentations/slide.html')
+    return render_to_response('presentations/slide.html', {'slide': poll},
+      context_instance=RequestContext(request))
+    #return HttpResponseRedirect('presentations/slide.html')
