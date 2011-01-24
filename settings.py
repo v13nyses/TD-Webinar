@@ -158,7 +158,8 @@ INSTALLED_APPS = (
 
 FIXTURE_DIRS = (
   'events/fixtures',
-  'presentations/fixtures'
+  'presentations/fixtures',
+  'fixtures'
 )
 
 ABSOLUTE_URL_OVERRIDES = {
