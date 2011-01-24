@@ -30,14 +30,30 @@ def display(request, event_id = None):
     start_date = event.start_date.replace(tzinfo = timezone(settings.TIMEZONE))
     event.start_offset = (now - start_date).seconds
 
-    print now
-    print start_date
-    print event.start_offset
-
   except:
     event.video_id = ''
     event.presentation_id = ''
     event.start_offset = 0
 
-  return render_to_response('event.html', {'event': event}, 
+  presenters = build_presenters(event)
+
+  return render_to_response('event.html', {'event': event, 'presenters': presenters}, 
                             context_instance = RequestContext(request))
+
+def build_presenters(event):
+  presenter_types = {}
+
+  for presenter in event.presentation_set.get().presenters.all():
+    try:
+      presenter_types[presenter.presenter_type]['presenters'].append(presenter)
+    
+    except KeyError:
+      presenter_types[presenter.presenter_type] = {'type': presenter.presenter_type, 'presenters': []}
+      presenter_types[presenter.presenter_type]['presenters'].append(presenter)
+
+  # because of annoying limitations in the template for tag, we need to return an array, not a dict
+  presenter_types_list = []
+  for presenter_type in presenter_types:
+    presenter_types_list.append(presenter_types[presenter_type])
+
+  return presenter_types_list

@@ -1,5 +1,6 @@
 /**1. GENEREAL LAYOUT AND DESIGN **/
 
+
 html {
 	margin-left: -1px;
 	overflow-Y: scroll;
@@ -9,6 +10,10 @@ body {
 	margin: 0;
 	padding: 0;
 	background: url(../images/bodybg.png) repeat-y center top #F9F9F9;
+}
+
+.container.hidden {
+  display: none;
 }
 
 .container {
@@ -80,6 +85,68 @@ body {
 	height: 270px;
 }
 
+/* Presenters */
+#presenters {
+  width: 560px;
+  padding: 20px;
+  margin: 0;
+  clear: none;
+  float: left;
+}
+
+#presenters span {
+  clear: both;
+  float: left;
+}
+
+#presenters a {
+  clear: both;
+  float: left;
+}
+
+#presenters h3 {
+    background-color: #EFEFEF;
+    color: #2D5C3C;
+    font-size: 15px;
+    margin: 0;
+    padding: 5px 0;
+    text-indent: 10px;
+    text-transform: uppercase;
+	display: block;
+  
+}
+
+
+#presenters .presenter-type-container, 
+#presenters .presenter-container {
+  color: #2D5C3C;
+  width: 240px;
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+
+#presenters .presenter-container {
+  margin-top: 10px;
+}
+
+#presenters .bio {
+  display: none;
+}
+
+#presenters img {
+  width: 80px;
+  height: auto;
+  display: table-cell;
+}
+
+#presenters .info-container {
+    display: table-cell;
+    min-height: 80px;
+    padding-left: 15px;
+    vertical-align: top;
+    width: 135px;
+}
+
 #information-wrapper {
 	background: url(../images/informationbg.png) repeat-x center top;
 	width: 100%;
@@ -112,12 +179,25 @@ body {
 	background-repeat: no-repeat;
 }
 
+#information-tabs div {
+  background-position: 110px top;
+}
+
+#information-tabs div.selected {
+  background-position: 50px top;
+}
 
 #information {
 	padding: 15px;
-	width: 820px;
-	overflow: auto;
+	width: 560px;
+  margin: 0;
+  float: left;
 }
+
+#content-container {
+  min-height: 300px;
+}
+
 #information-left {
 	width: 530px;
 	padding-left: 10px;
@@ -126,7 +206,7 @@ body {
 
 #information-right {
 	float: right;
-	width: 225px;
+	width: 245px;
 	display: inline-block;
 }
 
@@ -280,6 +360,7 @@ input#question-submit {
 
 #resource-panel {
 	font-size: 11px;
+  margin: 20px 20px 0 0;
 }
 
 #resource-panel h3 {
