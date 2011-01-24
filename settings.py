@@ -41,6 +41,7 @@ TIME_ZONE = 'US/Eastern'
 # http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
 # http://blogs.law.harvard.edu/tech/stories/storyReader$15
 LANGUAGE_CODE = 'en'
+TIMEZONE = 'America/Vancouver'
 
 SITE_ID = 1
 
@@ -155,9 +156,9 @@ INSTALLED_APPS = (
 
 )
 
-FIXTURE_DIRS = (
-  'events/fixtures',
-)
+# FIXTURE_DIRS = (
+#   'events/fixtures',
+# )
 
 ABSOLUTE_URL_OVERRIDES = {
     "auth.user": lambda o: "/profiles/profile/%s/" % o.username,
