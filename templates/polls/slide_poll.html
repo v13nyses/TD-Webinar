@@ -5,12 +5,18 @@
   <img src="{{ MEDIA_URL }}{{ poll.image }}" />
   <h1>{{ poll.question }}</h1>
   {% if error_message %}<p><strong>{{ error_message }}</strong><p>{% endif %}
-
+  
+  <div id="form_div" style="visibility:visible">
   <form action="/presentations/slides/{{ poll.id }}/" method="post">
     {% for choice in poll.choice_set.all %}
       <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" onclick="enableSubmit()"/>
       <label for="choice{{ forloop.counter }}">{{ choice.choice }}</label><br />
     {% endfor %}
-    <input id="submit_button" type="submit" value="Vote" disabled="true"/>
+    <input id="submit_button" type="submit" value="Vote" disabled="true" onclick="pollSubmitted()"/>
   </form>
+  </div>
+
+  <div id="thank_you_div" style="visibility:hidden">
+    <strong>Thank you for your input!</strong>
+  </div>
 {% endblock %}

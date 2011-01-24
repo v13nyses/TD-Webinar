@@ -11,7 +11,7 @@ class Poll(Slide):
 class Choice(models.Model):
   poll = models.ForeignKey('Poll')
   choice = models.CharField(max_length=200)
-  votes = models.IntegerField()
+  votes = models.IntegerField(default=0)
 
   def __unicode__(self):
     return "%s (Choice %s)" % (self.poll.__unicode__(), self.choice)
