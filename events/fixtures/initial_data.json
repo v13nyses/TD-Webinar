@@ -1,1 +1,1 @@
-[{"pk": 1, "model": "events.event", "fields": {"description": "Test", "end_date": "2011-01-24 02:00:00", "tagline": "", "image": "events/Slide2.PNG", "start_date": "2011-01-24 12:00:00", "name": "Using Social Media to Grow Your Business"}}]
+[{"pk": 1, "model": "events.event", "fields": {"description": "Test", "end_date": "2011-01-24 02:00:00", "image": "events/Slide2.PNG", "short_description": "", "start_date": "2011-01-24 12:00:00", "name": "Using Social Media to Grow Your Business"}}]

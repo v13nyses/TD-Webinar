@@ -5,7 +5,7 @@ from django.db import models
 # Presentation model
 class Presentation(models.Model):
   #video = models.OneToOneField('Video')
-  #presenters = models.ManyToManyField('Presenter')
+  presenters = models.ManyToManyField('Presenter')
   event = models.ForeignKey('events.Event')
 
   def __unicode__(self):

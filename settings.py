@@ -156,9 +156,10 @@ INSTALLED_APPS = (
 
 )
 
-# FIXTURE_DIRS = (
-#   'events/fixtures',
-# )
+FIXTURE_DIRS = (
+  'events/fixtures',
+  'presentations/fixtures'
+)
 
 ABSOLUTE_URL_OVERRIDES = {
     "auth.user": lambda o: "/profiles/profile/%s/" % o.username,

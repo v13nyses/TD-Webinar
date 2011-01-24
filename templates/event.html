@@ -4,6 +4,9 @@
 
 {% block head_title %}{{ event.name }}{% endblock %}
 {% block extra_head %}
+  <link type="text/css" rel="stylesheet" href="{{ STATIC_URL}}/fancybox/jquery.fancybox-1.3.4.css" />
+  <script type="application/javascript" src="{{ STATIC_URL }}/fancybox/jquery.fancybox-1.3.4.js"></script>
+  <script type="application/javascript" src="{{ STATIC_URL }}/jquery.hoverIntent.minified.js"></script>
   <script type="application/javascript" src="{{ STATIC_URL }}/event.js"></script>
   <script type="application/javascript">
     TDWebinar = {
@@ -21,7 +24,7 @@
 
 {% block header_right %}
   <h3>{{ event.name }}</h3>
-  <h4>{{ event.start_date }}</h4>
+  <h4>{{ event.start_date|date:"F d, Y" }}</h4>
 {% endblock %}
   
 {% block body %}
@@ -48,16 +51,38 @@
   <div id="information-wrapper">
     <div class="container">
       <div id="information-tabs">
-        <div class="infotab webinar-info" style="background-position:110px top;"></div>
-        <div class="infotab presenter-info" style="background-position:110px top;"></div>
+        <div class="infotab webinar-info selected" rel="information"></div>
+        <div class="infotab presenter-info" rel="presenters"></div>
       </div>
     </div>
-    <div id="information" class="container">
-      <div id="information-left">
-        <h1>{{ event.name }}<?h1>
-        <h3>{{ event.start_date }}</h3>
-        <div class="description">
-          {{ event.description }}
+    <div id="content-container" class="container">
+      <div id="presenters" class="container hidden">
+        <div id="presenters-left">
+          {% for presenter_type in presenters %}
+            <div class="presenter-type-container">
+              <h3>{{ presenter_type.type }}</h4>
+              {% for presenter in presenter_type.presenters %}
+                <div class="presenter-container">
+                  <img src="{{ MEDIA_URL }}{{ presenter.photo }}" />
+                  <div class="info-container">
+                    <h4>{{ presenter.name }}</h4>
+                    <span class="job-title">{{ presenter.job_title }}</span>
+                    <a id="inline" href="#bio-{{ presenter.id }}">View Full Bio</a>
+                    <div id="bio-{{ presenter.id }}" class="bio">{{ presenter.description|safe }}</div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+      <div id="information">
+        <div id="information-left">
+          <h1>{{ event.name }}<?h1>
+          <h3>{{ event.start_date|date:"F d, Y" }}</h3>
+          <div class="description">
+            {{ event.short_description|safe }}
+          </div>
         </div>
       </div>
       <div id="information-right">
@@ -65,11 +90,11 @@
           <h3>Resource Panel</h3>
           <div class="rp-item">
             <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-download.png" width="20" height="20" alt="Download Presentation" /></div>
-            <div class="rp-description">Download Presentation</div>
+            <div class="rp-description"><a href="{{ MEDIA_URL }}events/social_media_presentation.pdf" >Download Presentation</a></div>
           </div>
           <div class="rp-item">
             <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-resourceguide.png" width="20" height="20" alt="Resource Guide" /></div>
-            <div class="rp-description">Resource Guide</div>
+            <div class="rp-description"><a href="{{ MEDIA_URL}}events/social_media_resource_guide.pdf">Resource Guide</a></div>
           </div>
           <div class="rp-item">
             <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-td.png" width="20" height="20" alt="Locate a TD Small Business Advisor" /></div>
