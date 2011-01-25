@@ -16,9 +16,11 @@
       event: {
         id: {{ event.id }},
         queuePointUrl: "/presentations/{{ event.presentation_id }}/queue-points",
-        slideUrl: "/presentations/slides/"
+        slideUrl: "/presentations/slides/",
+        startOffset: {{ event.start_offset }},
+        state: "{{ event.state }}"
       }
-    }
+    };
   </script>
 {% endblock %}
 
@@ -32,7 +34,7 @@
     <div id="presentation" class="container">
       <div id="presentation-left">
         <div id="presentation-webinar">
-        <script type="text/javascript" src="http://content.bitsontherun.com/players/{{ event.video_id}}-mBH9rdBU.js"></script>
+        <script type="text/javascript" src="http://content.bitsontherun.com/players/{{ event.video_id}}-8OfZPacs.js"></script>
         </div>
       </div>
       <div id="slideshow">
@@ -51,7 +53,7 @@
   <div id="information-wrapper">
     <div class="container">
       <div id="information-tabs">
-        <div class="infotab webinar-info selected" rel="information"></div>
+        <div class="infotab webinar-info selected active" rel="information"></div>
         <div class="infotab presenter-info" rel="presenters"></div>
       </div>
     </div>
@@ -60,7 +62,7 @@
         <div id="presenters-left">
           {% for presenter_type in presenters %}
             <div class="presenter-type-container">
-              <h3>{{ presenter_type.type }}</h4>
+              <h3>{{ presenter_type.type }}</h3>
               {% for presenter in presenter_type.presenters %}
                 <div class="presenter-container">
                   <img src="{{ MEDIA_URL }}{{ presenter.photo }}" />
@@ -78,7 +80,7 @@
       </div>
       <div id="information">
         <div id="information-left">
-          <h1>{{ event.name }}<?h1>
+          <h1>{{ event.name }}</h1>
           <h3>{{ event.start_date|date:"F d, Y" }}</h3>
           <div class="description">
             {{ event.short_description|safe }}
