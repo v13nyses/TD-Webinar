@@ -66,9 +66,9 @@
               <h3>{{ presenter_type.type }}</h3>
               {% for presenter in presenter_type.presenters %}
                 <div class="presenter-container">
-                  <img src="{{ MEDIA_URL }}{{ presenter.photo }}" />
+                  <div class="presenter-img-container"><img src="{{ MEDIA_URL }}{{ presenter.photo }}" /></div>
                   <div class="info-container">
-                    <h4>{{ presenter.name }}</h4>
+                    <span class="presenter-name">{{ presenter.name }}</span>
                     <span class="job-title">{{ presenter.job_title }}</span>
                     <a id="inline" href="#bio-{{ presenter.id }}">View Full Bio</a>
                     <div id="bio-{{ presenter.id }}" class="bio">{{ presenter.description|safe }}</div>
@@ -115,4 +115,5 @@
       </div>
     </div>
   </div>
+
 {% endblock %}

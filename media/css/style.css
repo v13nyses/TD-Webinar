@@ -60,6 +60,7 @@ body {
 	clear: both;
 	border: 2px #0d0d0d solid;
   height: 270px;
+  margin-left: -2px;
   overflow: hidden;
 }
 
@@ -102,6 +103,7 @@ body {
 	background-color: #3D3D3D;
 	border: 2px #0d0d0d solid;
 	margin-bottom: 15px;
+	margin-right: -2px;
 }
 
 #slideshow img {
@@ -141,34 +143,39 @@ body {
 }
 
 
-#presenters .presenter-type-container, 
-#presenters .presenter-container {
-  color: #2D5C3C;
-  width: 240px;
-  margin-right: 20px;
-  margin-bottom: 10px;
+#presenters .presenter-type-container {
+	width: 250px;
+	display:block;
+	float: left;
+	margin-right: 20px;
+	margin-bottom: 20px;
 }
 
 #presenters .presenter-container {
   margin-top: 10px;
+  display: block;
 }
 
+#presenters .presenter-name {
+	display: block;
+	font-weight: bold;
+}
 #presenters .bio {
   display: none;
 }
 
-#presenters img {
-  width: 80px;
-  height: auto;
-  display: table-cell;
+#presenters .presenter-img-container {
+	width: 80px;
+	margin-right: 15px;
+	display: table-cell;
 }
 
 #presenters .info-container {
-    display: table-cell;
-    min-height: 80px;
-    padding-left: 15px;
-    vertical-align: top;
-    width: 135px;
+	width: 135px;
+	display: table-cell;
+	vertical-align: top;
+	padding-left: 15px;
+	min-height: 80px;
 }
 
 #information-wrapper {
@@ -430,3 +437,6 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
 input {
 	font-size: 12px;
 }
+
+/* Temporary */
+
