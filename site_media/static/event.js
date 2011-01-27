@@ -11,11 +11,9 @@ function playerReady(obj) {
 
   // setup the onTime event for the player
   player.onTime(function(event) {
-    if(typeof queuePoint != "undefined") {
+    if(typeof queuePoint !== "undefined") {
       var slideUrl;
       while(event.position > queuePoint.timeOffset || queuePoint.timeOffset == 0) {
-        // uncomment to debug
-        //console.log("switching slide to: " + queuePoint.slideId);
         slideUrl = TDWebinar.event.slideUrl + queuePoint.slideId + "/";
         queuePoint = queuePoints.pop();
       }
