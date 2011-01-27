@@ -28,7 +28,21 @@ def display(request, event_id = None):
     # add timezones to everything to make sure the dates match
     now = datetime.now(timezone(settings.TIMEZONE))
     start_date = event.start_date.replace(tzinfo = timezone(settings.TIMEZONE))
+    end_date = event.end_date.replace(tzinfo = timezone(settings.TIMEZONE))
     event.start_offset = (now - start_date).seconds
+
+    print "!!! Now: %s" % now
+    print "!!! Start date: %s" % start_date
+    print "!!! End date: %s" % end_date
+    print "!!! diff: %d" % (end_date - start_date).seconds
+    print "!!! start_offset: %d" % event.start_offset
+
+    if now < start_date:
+      event.state = 'pre'
+    elif now > end_date:
+      event.state = 'post'
+    else:
+      event.state = 'live'
 
   except:
     event.video_id = ''
