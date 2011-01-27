@@ -65,6 +65,9 @@ STATIC_ROOT = os.path.join(PROJECT_ROOT, 'site_media', 'static')
 # Example: "http://media.lawrence.com"
 STATIC_URL = '/site_media/static/'
 
+# used to store temporary media
+TEMP_URL = 'site_media/temp/'
+
 # Additional directories which hold static files
 STATICFILES_DIRS = (
     ('TD-Webinar', os.path.join(PROJECT_ROOT, 'media')),

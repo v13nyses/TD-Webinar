@@ -17,7 +17,14 @@ def UploadPdf(request):
   if request.method == "POST":
     form = forms.UploadPdfForm(request.POST, request.FILES)
     if form.is_valid():
-      utils.extract_images(request.FILES['pdf_file'])
+      image_files = utils.extract_images(request.FILES['pdf_file'])
+      
+      for img in image_files:
+        pass
+        #slide = Slide({'image': )        
+
+      #utils.remove_images(image_files)
+
       return HttpResponseRedirect('/admin/')
   else:
     form = forms.UploadPdfForm()

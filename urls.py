@@ -44,6 +44,8 @@ urlpatterns = patterns('',
     # slides
 
     (r'^presentations/', include('presentations.urls')),
+
+    (r'^upload/$', 'presentations.views.UploadPdf'),
 )
 
 if settings.SERVE_MEDIA:
