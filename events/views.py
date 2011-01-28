@@ -10,7 +10,7 @@ def display(request, event_id = None):
   # if we didn't get an event id, grab the newest event
   if event_id == None:
     try:
-      event = Event.objects.order_by('-start_date')[0]
+      event = Event.objects.order_by('-live_start_date')[0]
     except IndexError:
       # create a blank event if there aren't any yet
       event = Event()
