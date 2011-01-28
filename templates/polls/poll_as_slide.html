@@ -1,0 +1,11 @@
+{% extends "slide_base.html" %}
+
+{% block body %}
+  <img src="{{ MEDIA_URL }}{{ poll.image }}" />
+  
+  <div class="poll"> 
+    <div id="thank_you_div">
+      <strong>Thank you for your input!</strong>
+    </div>
+  </div>
+{% endblock %}

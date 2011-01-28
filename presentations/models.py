@@ -1,5 +1,8 @@
 from django.db import models
 #from foobar.events import Event
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+from snippetscream import PolyModel
 
 
 # Presentation model
@@ -27,13 +30,17 @@ class PresenterType(models.Model):
   def __unicode__(self):
     return self.name
 
-class Slide(models.Model):
+class Slide(PolyModel):
   image = models.ImageField(upload_to = 'slides')
   slide_set = models.ForeignKey('SlideSet')
   offset = models.IntegerField()
 
   def __unicode__(self):
     return '%s (Slide %d)' % (self.slide_set.__unicode__(), self.id)
+
+  def display(self, request, slide):
+    return render_to_response('presentations/slide.html', {'slide': slide},
+      context_instance = RequestContext(request))
 
 class SlideSet(models.Model):
   presentation = models.ForeignKey('Presentation')
