@@ -11,14 +11,6 @@ class Presentation(models.Model):
   def __unicode__(self):
     return '%s (Presentation)' % (self.event.name)
 
-class QueuePoint(models.Model):
-  slide = models.OneToOneField('Slide')
-  time_offset = models.IntegerField()
-  presentation = models.ForeignKey('Presentation')
-
-  def __unicode__(self):
-    return '%s (QueuePoint %d)' % (self.presentation.event.name, self.id)
-
 class Presenter(models.Model):
   name = models.CharField(max_length = 200)
   description = models.TextField(blank = True)
@@ -37,10 +29,31 @@ class PresenterType(models.Model):
 
 class Slide(models.Model):
   image = models.ImageField(upload_to = 'slides')
-  presentation = models.ForeignKey('Presentation')
+  slide_set = models.ForeignKey('SlideSet')
+  offset = models.IntegerField()
 
   def __unicode__(self):
-    return '%s (Slide %d)' % (self.presentation.event.name, self.id)
+    return '%s (Slide %d)' % (self.slide_set.__unicode__(), self.id)
+
+class SlideSet(models.Model):
+  presentation = models.ForeignKey('Presentation')
+  changed = models.BooleanField(default="true",editable=False)
+  export_pdf = models.FileField(upload_to='slidesets',editable=False)
+
+  def __unicode__(self):
+    return "%s (SlideSet %d)" % (self.presentation.__unicode__(), self.id)
+
+  def export_pdf(self):
+    # TO DO
+    pass
+
+  def import_pdf(self, pdf_file):
+    # TO DO
+    pass
+
+  def get_ordered_slides(self):
+    # TO DO
+    pass
 
 class Video(models.Model):
   video_id = models.CharField(max_length=50)
