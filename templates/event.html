@@ -26,7 +26,7 @@
 
 {% block header_right %}
   <h3>{{ event.name }}</h3>
-  <h4>{{ event.start_date|date:"F d, Y" }}</h4>
+  <h4>{{ event.live_start_date|date:"F d, Y" }}</h4>
 {% endblock %}
   
 {% block body %}
@@ -34,7 +34,7 @@
     <div id="presentation" class="container">
       <div id="presentation-left">
         <div id="presentation-webinar">
-          <script type="text/javascript" src="http://content.bitsontherun.com/players/{{ event.video_id}}-DJcfEIoF.js"></script>
+        <script type="text/javascript" src="{{ event.presentation.video.url }}"></script>
         </div>
         <div id="presentation-cover"></div>
       </div>
@@ -82,7 +82,7 @@
       <div id="information">
         <div id="information-left">
           <h1>{{ event.name }}</h1>
-          <h3>{{ event.start_date|date:"F d, Y" }}</h3>
+          <h3>{{ event.live_start_date|date:"F d, Y" }}</h3>
           <div class="description">
             {{ event.short_description|safe }}
           </div>
@@ -93,11 +93,11 @@
           <h3>Resource Panel</h3>
           <div class="rp-item">
             <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-download.png" width="20" height="20" alt="Download Presentation" /></div>
-            <div class="rp-description"><a href="{{ MEDIA_URL }}events/social_media_presentation.pdf" >Download Presentation</a></div>
+            <div class="rp-description"><a href="{{ MEDIA_URL }}{{ event.resource_guide }}" >Download Presentation</a></div>
           </div>
           <div class="rp-item">
             <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-resourceguide.png" width="20" height="20" alt="Resource Guide" /></div>
-            <div class="rp-description"><a href="{{ MEDIA_URL}}events/social_media_resource_guide.pdf">Resource Guide</a></div>
+            <div class="rp-description"><a href="{{ MEDIA_URL}}{{ event.resource_guide }}">Resource Guide</a></div>
           </div>
           <div class="rp-item">
             <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-td.png" width="20" height="20" alt="Locate a TD Small Business Advisor" /></div>

@@ -35,13 +35,12 @@ DATABASE_PORT = ''             # Set to empty string for default. Not used with 
 # although not all variations may be possible on all operating systems.
 # If running in a Windows environment this must be set to the same as your
 # system time zone.
-TIME_ZONE = 'US/Eastern'
+TIME_ZONE = 'America/Vancouver'
 
 # Language code for this installation. All choices can be found here:
 # http://www.w3.org/TR/REC-html40/struct/dirlang.html#langcodes
 # http://blogs.law.harvard.edu/tech/stories/storyReader$15
 LANGUAGE_CODE = 'en'
-TIMEZONE = 'America/Vancouver'
 
 SITE_ID = 1
 
@@ -188,6 +187,10 @@ CONTACT_EMAIL = "feedback@example.com"
 SITE_NAME = "Pinax"
 LOGIN_URL = "/account/login/"
 LOGIN_REDIRECT_URLNAME = "what_next"
+
+# TD Webinar Specific Settings
+EVENT_SLUG_WORDS = 4 # the number of words to use when creating an event 'slug'
+VIDEO_URL = "http://content.bitsontherun.com/players/%s-%s.js"
 
 # local_settings.py can be used to override environment-specific settings
 # like database and email that differ between development and production.

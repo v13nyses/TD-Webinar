@@ -4,9 +4,8 @@ from django.db import models
 
 # Presentation model
 class Presentation(models.Model):
-  #video = models.OneToOneField('Video')
+  video = models.OneToOneField('Video')
   presenters = models.ManyToManyField('Presenter')
-  event = models.ForeignKey('events.Event')
 
   def __unicode__(self):
     return '%s (Presentation)' % (self.event.name)
@@ -57,8 +56,12 @@ class SlideSet(models.Model):
 
 class Video(models.Model):
   video_id = models.CharField(max_length=50)
-  presentation = models.ForeignKey('Presentation')
+  player_id = models.CharField(max_length=50)
+
+  def get_url(self):
+    return settings.VIDEO_URL % (video_id, player_id)
+
+  url = property(get_url, doc = "The url of the javascript used to load the video.")
 
   def __unicode__(self):
     return '%s (Video %d)' % (self.presentation.event.name, self.id)
-
