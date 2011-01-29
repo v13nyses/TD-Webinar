@@ -125,7 +125,7 @@ INSTALLED_APPS = (
     'events',
     'presentations',
     'polls',
-    'autofixture',
+    #'autofixture',
  
     # included
     'django.contrib.auth',
