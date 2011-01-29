@@ -6,6 +6,6 @@ urlpatterns = patterns('',
   (r'^(\d+)/queue-points/$', 'presentations.views.queuePoints'),
 
   (r'^presenter_type/$', 'presentations.admin_views.presenter_type_view'),
-  (r'^(.*)', admin.site.root),
+  (r'^$', admin.site.root),
   #(r'^/$',   
 )
