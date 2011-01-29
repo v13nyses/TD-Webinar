@@ -24,13 +24,17 @@ def UploadPdf(request):
   return render_to_response('upload.html', {'form': form})
 
 def displaySlide(request, slide_id = None):
-  try:
-    poll = Poll.objects.get(id=slide_id)
-    return vote(request, slide_id)
-  except ObjectDoesNotExist, e:
-    slide = get_object_or_404(Slide, pk=slide_id)
-    return render_to_response('presentations/slide.html', {'slide': slide},
-                              context_instance = RequestContext(request))
+  slide = get_object_or_404(Slide, pk=slide_id)
+  slide = slide.as_leaf_class()
+  return slide.display(request, slide)
+
+#  try:
+#    poll = Poll.objects.get(id=slide_id)
+#    return vote(request, slide_id)
+#  except ObjectDoesNotExist, e:
+#    slide = get_object_or_404(Slide, pk=slide_id)
+#    return render_to_response('presentations/slide.html', {'slide': slide},
+#                              context_instance = RequestContext(request))
 
 def queuePoints(request, presentation_id = None):
   try:

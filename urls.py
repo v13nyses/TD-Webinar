@@ -30,9 +30,11 @@ urlpatterns = patterns('',
     (r'^notices/', include('notification.urls')),
     (r'^announcements/', include('announcements.urls')),
     
-    (r'^admin/uploady/', 'presentations.views.UploadPdf'),
+    (r'^admin/presentations/', include('presentations.urls')),
+    (r'^admin/permission_denied/', 'presentations.admin_views.permission_denied_view'),
     (r'^admin/(.*)', admin.site.root),
 
+    (r'^presentations/', include('presentations.urls')),
     # events
     #(r'^events/(\d)/$', 'events.views.display'),
     #(r'^events/$', 'events.views.display'),
@@ -43,7 +45,6 @@ urlpatterns = patterns('',
 
     # slides
 
-    (r'^presentations/', include('presentations.urls')),
 )
 
 if settings.SERVE_MEDIA:
