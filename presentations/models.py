@@ -6,6 +6,7 @@ from django.db import models
 class Presentation(models.Model):
   video = models.OneToOneField('Video')
   presenters = models.ManyToManyField('Presenter')
+  slide_set = models.OneToOneField('SlideSet')
 
   def __unicode__(self):
     return '%s (Presentation)' % (self.event.name)
@@ -35,7 +36,6 @@ class Slide(models.Model):
     return '%s (Slide %d)' % (self.slide_set.__unicode__(), self.id)
 
 class SlideSet(models.Model):
-  presentation = models.ForeignKey('Presentation')
   changed = models.BooleanField(default="true",editable=False)
   export_pdf = models.FileField(upload_to='slidesets',editable=False)
 
