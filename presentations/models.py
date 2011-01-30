@@ -3,7 +3,12 @@ from django.db import models
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from snippetscream import PolyModel
+from events.models import event_upload_base_path
+from django.conf import settings
 
+def slide_upload_to(slide, filename):
+  event = slide.slide_set.presentation.event
+  return "%s/slides/%s" % (event_upload_base_path(event), filename)
 
 # Presentation model
 class Presentation(models.Model):
@@ -12,7 +17,7 @@ class Presentation(models.Model):
   slide_set = models.OneToOneField('SlideSet')
 
   def __unicode__(self):
-    return '%s (Presentation)' % (self.event.name)
+    return 'Presentation: %d' % (self.id)
 
 class Presenter(models.Model):
   name = models.CharField(max_length = 200)
@@ -31,7 +36,7 @@ class PresenterType(models.Model):
     return self.name
 
 class Slide(PolyModel):
-  image = models.ImageField(upload_to = 'slides')
+  image = models.ImageField(upload_to = slide_upload_to)
   slide_set = models.ForeignKey('SlideSet')
   offset = models.IntegerField()
 
@@ -47,7 +52,7 @@ class SlideSet(models.Model):
   export_pdf = models.FileField(upload_to='slidesets',editable=False)
 
   def __unicode__(self):
-    return "%s (SlideSet %d)" % (self.presentation.__unicode__(), self.id)
+    return "SlideSet %d" % (self.id)
 
   def export_pdf(self):
     # TO DO
@@ -66,9 +71,9 @@ class Video(models.Model):
   player_id = models.CharField(max_length=50)
 
   def get_url(self):
-    return settings.VIDEO_URL % (video_id, player_id)
+    return settings.VIDEO_URL % (self.video_id, self.player_id)
 
   url = property(get_url, doc = "The url of the javascript used to load the video.")
 
   def __unicode__(self):
-    return '%s (Video %d)' % (self.presentation.event.name, self.id)
+    return 'Video: %s (Player: %s, id: %d)' % (self.video_id, self.player_id, self.id)

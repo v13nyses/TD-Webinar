@@ -61,7 +61,7 @@
     <div id="content-container" class="container">
       <div id="presenters" class="container hidden">
         <div id="presenters-left">
-          {% for presenter_type in presenters %}
+          {% for presenter_type in event.presenters %}
             <div class="presenter-type-container">
               <h3>{{ presenter_type.type }}</h3>
               {% for presenter in presenter_type.presenters %}

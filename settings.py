@@ -131,27 +131,27 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
-    'django.contrib.sites',
+    #'django.contrib.sites',
     'django.contrib.humanize',
     'pinax.templatetags',
     
     # external
-    'notification', # must be first
-    'django_openid',
-    'emailconfirmation',
-    'mailer',
-    'announcements',
+    #'notification', # must be first
+    #'django_openid',
+    #'emailconfirmation',
+    #'mailer',
+    #'announcements',
     'pagination',
-    'timezones',
+    #'timezones',
     'ajax_validation',
-    'uni_form',
+    #'uni_form',
     'staticfiles',
     
     # internal (for now)
-    'basic_profiles',
-    'account',
-    'signup_codes',
-    'about',
+    #'basic_profiles',
+    #'account',
+    #'signup_codes',
+    #'about',
     'django.contrib.admin',
 
 )
