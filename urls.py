@@ -32,6 +32,9 @@ urlpatterns = patterns('',
     
     (r'^admin/(.*)', admin.site.root),
 
+    # admin and client dashboard
+    (r'^dashboard/', include('dashboard.urls')),
+    # frontend
     (r'^$', include('events.urls')),
 )
 
