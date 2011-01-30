@@ -6,7 +6,22 @@ from events.models import Event
 from datetime import datetime
 from pytz import timezone
 
-def display(request, event_id = None):
+# used by urls:
+#   event/<event_id>/slides/
+def slides(request):
+  # TO DO
+  pass
+
+# used by urls:
+#   event/<event_id>/slide/<slide_id>/
+def slide(request, slide_id = None):
+  # TO DO
+  pass
+
+# used by urls:
+#   event/
+#   event/<event_id>/
+def event(request, event_id = None):
   # if we didn't get an event id, grab the newest event
   if event_id == None:
     try:
