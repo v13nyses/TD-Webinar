@@ -19,30 +19,8 @@ def register(request, event_id = None):
   
   return render_to_response('registration/register.html', {'form': form})
 
-def login(request, event_id = None):
-  if request.method == "POST":
-    form = LoginForm(request.POST)
-
-    if form.is_valid():
-      if not is_registered_for_event(request, form.email, event_id):
-        register_for_event(request, form.email, event_id)
-
-        login_for_event(request, form.email, event_id)
-      else:
-        
-      registrations = Registration.objects.filter(email=form.email).filter(event=event_id)
-      utils.login_session(request, form.email)
-    else:
-
-  return HttpResponseRedirect('registration/login.html')
-
 def user_has_session(request):
   return not request.session['loggin_email'] is None
-
-def login_session(request, email = None, event_id = None):
-  if email and event_id:
-    request.session['loggin_email'] = email
-    request.session['loggin_event'] = event_id
 
 def is_registered_for_event(request, email = None, event_id = None):
   if email and event_id:

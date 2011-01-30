@@ -125,6 +125,9 @@ INSTALLED_APPS = (
     'events',
     'presentations',
     'polls',
+    'dashboard',
+    'reporting',
+    'registration',
     #'autofixture',
  
     # included
@@ -136,10 +139,10 @@ INSTALLED_APPS = (
     'pinax.templatetags',
     
     # external
-    #'notification', # must be first
+    'notification', # must be first
     #'django_openid',
-    #'emailconfirmation',
-    #'mailer',
+    'emailconfirmation',
+    'mailer',
     #'announcements',
     'pagination',
     #'timezones',
@@ -149,7 +152,7 @@ INSTALLED_APPS = (
     
     # internal (for now)
     #'basic_profiles',
-    #'account',
+    'account',
     #'signup_codes',
     #'about',
     'django.contrib.admin',
