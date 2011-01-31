@@ -1,12 +1,29 @@
-# Create your views here.
+from django.shortcuts import render_to_response
+from django.conf import settings
+from django.template import RequestContext
+import form_utils
+from forms import EventForm
+from events.models import Event, event_upload_to
+from presentations.models import Video
+
+def upload_file(event, uploaded_file):
+  print event_upload_to(event, uploaded_file.name)
 
 # used by urls:
 #   dashboard/event/add/
 #   dashboard/event/<event_id>/
 #   dashboard/
 def event(request, event_id = None):
-  # TO DO
-  pass
+  if request.POST:
+    event_form = EventForm(request.POST, request.FILES)
+    if event_form.is_valid():
+      event_form.save()
+
+  else:
+    event_form = EventForm()
+
+  return render_to_response('dashboard/event.html', {'event_form': event_form}, 
+                            context_instance = RequestContext(request))
  
 # used by urls:
 #   dashboard/slides/add/ 

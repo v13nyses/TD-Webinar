@@ -12,9 +12,9 @@ def slide_upload_to(slide, filename):
 
 # Presentation model
 class Presentation(models.Model):
-  video = models.OneToOneField('Video')
-  presenters = models.ManyToManyField('Presenter')
-  slide_set = models.OneToOneField('SlideSet')
+  video = models.OneToOneField('Video', blank = True, null = True)
+  presenters = models.ManyToManyField('Presenter', blank = True, null = True)
+  slide_set = models.OneToOneField('SlideSet', blank = True, null = True)
 
   def __unicode__(self):
     return 'Presentation: %d' % (self.id)
