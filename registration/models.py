@@ -3,6 +3,6 @@ from django.db import models
 from events.models import Event
 
 # Create your models here.
-class Registration(model.models):
-  email = ...
-  event = models.ForeignKey("Event")
+class Registration(models.Model):
+  email = models.CharField(max_length=200)
+  event = models.ForeignKey('events.Event')

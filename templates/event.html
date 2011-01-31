@@ -2,6 +2,8 @@
 
 {% load ifsetting_tag %}
 
+{% load event_login %}
+
 {% block head_title %}{{ event.name }}{% endblock %}
 {% block extra_head %}
   <link type="text/css" rel="stylesheet" href="{{ STATIC_URL}}/fancybox/jquery.fancybox-1.3.4.css" />
@@ -14,19 +16,21 @@
         'slideshowContainer': "#slideshow"
       },
       'event': {
-        'id': {{ event.id }},
+        'id': "{{ event.id }}",
         'queuePointUrl': "/presentations/{{ event.presentation_id }}/queue-points",
         'slideUrl': "/presentations/slides/",
-        'startOffset': {{ event.start_offset }},
+        'startOffset': "{{ event.start_offset }}",
         'state': "{{ event.state }}"
       }
     }
+    //]]>
   </script>
 {% endblock %}
 
 {% block header_right %}
   <h3>{{ event.name }}</h3>
   <h4>{{ event.live_start_date|date:"F d, Y" }}</h4>
+  {% event_login request login_form logout_form %}
 {% endblock %}
   
 {% block body %}
@@ -91,6 +95,14 @@
       <div id="information-right">
         <div id="resource-panel">
           <h3>Resource Panel</h3>
+          {% ifequal request.session.login_email None %}
+
+          {% else %}
+            <div class="rp-item">
+              <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-register.png" width="20" height="20" alt="Login" /></div>
+              <div class="rp-description"><a href="event/{{ event.id }}/register/" >Register for this Event</a></div>
+            </div>
+          {% endifequal %}
           <div class="rp-item">
             <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-download.png" width="20" height="20" alt="Download Presentation" /></div>
             <div class="rp-description"><a href="{{ MEDIA_URL }}{{ event.resource_guide }}" >Download Presentation</a></div>

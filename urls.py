@@ -35,7 +35,7 @@ urlpatterns = patterns('',
     # admin and client dashboard
     (r'^dashboard/', include('dashboard.urls')),
     # frontend
-    (r'^$', include('events.urls')),
+    (r'^', include('events.urls')),
 )
 
 if settings.SERVE_MEDIA:
