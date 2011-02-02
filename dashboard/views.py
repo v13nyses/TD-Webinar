@@ -1,40 +1,18 @@
 from django.shortcuts import render_to_response
 from django.conf import settings
 from django.template import RequestContext
-import form_utils
-from forms import EventForm, PresentationForm
-from events.models import Event, event_upload_to
-from presentations.models import Video
-
-def upload_file(event, uploaded_file):
-  print event_upload_to(event, uploaded_file.name)
-
-def show_form(request, FormClass, template):
-  if request.POST:
-    form = FormClass(request.POST, request.FILES)
-    if form.is_valid():
-      form.save()
-
-  else:
-    form = FormClass()
-
-  return render_to_response(template, {'form': form}, 
-                            context_instance = RequestContext(request))
+from form_controllers import EventFormController, PresentationFormController
+from events.models import Event
 
 # used by urls:
 #   dashboard/event/add/
 #   dashboard/event/<event_id>/
 #   dashboard/
 def event(request, event_id = None):
-  if request.POST:
-    event_form = EventForm(request.POST, request.FILES)
-    if event_form.is_valid():
-      event_form.save()
+  controller = EventFormController(request)
+  controller.save()
 
-  else:
-    event_form = EventForm()
-
-  return render_to_response('dashboard/event.html', {'event_form': event_form}, 
+  return render_to_response('dashboard/event.html', {'form': controller.form}, 
                             context_instance = RequestContext(request))
  
 # used by urls:
@@ -53,16 +31,10 @@ def slide(request, slide_id = None):
 #   dashboard/<event_id>/presenters/add/ 
 def presenters(request, event_id = None):
   event = Event.objects.get(id = event_id)
+  controller = PresentationFormController(request)
+  controller.save(event)
 
-  if request.POST:
-    form = PresentationForm(event, request)
-    if form.is_valid():
-      form.save()
-
-  else:
-    form = PresentationForm(event)
-
-  return render_to_response('dashboard/presentation.html', {'form': form, 'form_url': request.META['PATH_INFO']}, 
+  return render_to_response('dashboard/presentation.html', {'form': controller.form, 'form_url': request.META['PATH_INFO'], 'event': event}, 
                             context_instance = RequestContext(request))
   
 # used by urls:

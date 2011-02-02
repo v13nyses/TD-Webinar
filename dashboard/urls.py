@@ -2,16 +2,13 @@ from django.conf.urls.defaults import *
 from forms import EventForm
 
 urlpatterns = patterns('',
-  (r'^event/add/$', 'dashboard.views.show_form', {'FormClass': EventForm, 
-                                                  'template': 'dashboard/event.html'}),
+  (r'^event/add/$', 'dashboard.views.event'),
   (r'^event/(?P<event_id>\d+)/$', 'dashboard.views.event'),
 
   (r'^event/(?P<event_id>\d+)/slides/add/$', 'dashboard.views.slides'),
   (r'^event/(?P<event_id>\d+)/slide/(?P<slide_id>\d+)/$', 'dashboard.views.slide'),
 
   (r'^event/(?P<event_id>\d+)/presenters/add/$', 'dashboard.views.presenters'),
-  (r'^event/add/$', 'dashboard.views.show_form', {'FormClass': EventForm, 
-                                                  'template': 'dashboard/event.html'}),
   (r'^event/(?P<event_id>\d+)/presenter/(?P<presenter_id>\d+)/$', 'dashboard.views.presenter'),
 
   (r'^event/(?P<event_id>\d+)/preview/pre/$', 'dashboard.views.pre'),

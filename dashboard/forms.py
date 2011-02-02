@@ -25,46 +25,6 @@ class EventForm(BetterForm):
   image = forms.FileField()
   resource_guide = forms.FileField()
 
-  def save(self):
-    event = Event()
-
-    for field_name in self.cleaned_data:
-      field_value = self.cleaned_data[field_name]
-      if field_name == 'lobby_video':
-        video_id, player_id = field_value.split('-')
-        video = Video()
-        video.video_id = video_id
-        video.player_id = player_id
-        video.save()
-        event.lobby_video = video
-      elif type(field_value) == InMemoryUploadedFile:
-        filepath = self.upload_file(event, field_value)
-        event.__dict__[field_name] = filepath
-      else:
-        event.__dict__[field_name] = field_value
-    
-    presentation = Presentation()
-    presentation.save()
-    event.presentation = presentation
-
-    event.save()
-  
-  def upload_file(self, event, uploaded_file):
-    filepath = event_upload_to(event, uploaded_file.name)
-
-    try:
-      destination = open(filepath, 'wb+')
-    except IOError:
-      os.mkdir(os.path.dirname(filepath))
-      destination = open(filepath, 'wb+')
-
-    for chunk in uploaded_file.chunks():
-      destination.write(chunk)
-    destination.close()
-
-    return filepath
-    
-
   class Meta:
     model = Event
     fieldsets = [('details', {'fields': [
@@ -88,41 +48,3 @@ class PresentationForm(BetterForm):
   job_title = forms.CharField()
   photo = forms.FileField()
   bio = forms.CharField(widget = AutoResizeTextarea)
-
-  def __init__(self, event, request = None):
-    self.event = event
-
-    if request != None:
-      BetterForm.__init__(self, request.POST, request.FILES)
-    else:
-      BetterForm.__init__(self)
-
-  def save(self):
-    data = self.cleaned_data
-
-    presenter = Presenter()
-    presenter.name = data['full_name']
-    presenter.description = data['bio']
-    presenter.job_title = data['job_title']
-    presenter.presenter_type = PresenterType.objects.get(id = data['presenter_type'])
-    presenter.photo = self.upload_file(data['photo'])
-    presenter.save()
-
-    presentation = self.event.presentation
-    presentation.presenters.add(presenter)
-    presentation.save()
-
-  def upload_file(self, uploaded_file):
-    filepath = 'presenters/%s' % uploaded_file.name
-
-    try:
-      destination = open(filepath, 'wb+')
-    except IOError:
-      os.mkdir(os.path.dirname(filepath))
-      destination = open(filepath, 'wb+')
-
-    for chunk in uploaded_file.chunks():
-      destination.write(chunk)
-    destination.close()
-
-    return filepath

@@ -1,7 +1,8 @@
 {% extends "dashboard/base.html" %}
 {% load form_utils_tags %}
+{% load dashboard_extras %}
 
-{% block head_title %}Step 1 of 4: Event Information{% endblock %}
+{% block head_title %}Step 2 of 4: Presenter Information{% endblock %}
 {% block header_right %}
   <h4>Step 2 of 4: Presenter Information</h4>
 {% endblock %}
@@ -12,5 +13,8 @@
       {{ form|render:"dashboard/form.html" }}
       <input type="submit" value="Save" />
     </form>
+  </div>
+  <div class="dashboard-panel presenters">
+    {% presenter_pane event %}
   </div>
 {% endblock %}
