@@ -1,9 +1,12 @@
+{% load thumbnail %}
 {% for presenter_type in presenters %}
   <div class="presenter-type-container">
     <h3>{{ presenter_type.type }}</h3>
     {% for presenter in presenter_type.presenters %}
       <div class="presenter-container">
-        <div class="presenter-img-container"><img src="{{ settings.MEDIA_URL }}{{ presenter.photo }}" /></div>
+        {% thumbnail presenter.photo "80x120" crop="center" as photo %}
+          <div class="presenter-img-container"><img src="{{ photo.url }}" /></div>
+        {% endthumbnail %}
         <div class="info-container">
           <span class="presenter-name">{{ presenter.name }}</span>
           <span class="job-title">{{ presenter.job_title }}</span>

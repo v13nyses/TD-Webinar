@@ -22,8 +22,8 @@ class Event(models.Model):
   description = models.TextField()
   image = models.ImageField(upload_to = event_upload_to)
   resource_guide = models.FileField(upload_to = event_upload_to)
-  lobby_video = models.OneToOneField('presentations.Video')
-  presentation = models.OneToOneField('presentations.Presentation', blank = True, null = False)
+  lobby_video = models.OneToOneField('presentations.Video', blank = True, null = True)
+  presentation = models.OneToOneField('presentations.Presentation', blank = True, null = True)
 
   # these dates are used to find the current state of the event
   lobby_start_date = models.DateTimeField()

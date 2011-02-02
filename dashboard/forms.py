@@ -1,29 +1,25 @@
-from form_utils.forms import BetterForm
+from form_utils.forms import BetterForm, BetterModelForm
 from form_utils.widgets import AutoResizeTextarea
 from events.models import Event, event_upload_to
 from presentations.models import Video, Presentation, PresenterType, Presenter
 from django import forms
-from django.forms.widgets import SplitDateTimeWidget
+from django.forms.widgets import SplitDateTimeWidget, HiddenInput
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import os
 
-class EventForm(BetterForm):
+class EventForm(BetterModelForm):
   name = forms.CharField()
   short_description = forms.CharField(widget = AutoResizeTextarea())
   description = forms.CharField(widget = AutoResizeTextarea())
 
-  lobby_start_date = forms.DateTimeField(widget = SplitDateTimeWidget(),
-                                input_formats = ['%m/%d/%Y %I:%M %p', '%m/%d/%Y %I:%M%p'])
-  live_start_date = forms.DateTimeField(widget = SplitDateTimeWidget(),
-                                input_formats = ['%m/%d/%Y %I:%M %p', '%m/%d/%Y %I:%M%p'])
-  live_stop_date = forms.DateTimeField(widget = SplitDateTimeWidget(),
-                                input_formats = ['%m/%d/%Y %I:%M %p', '%m/%d/%Y %I:%M%p'])
-  archive_start_date = forms.DateTimeField(widget = SplitDateTimeWidget(),
-                                input_formats = ['%m/%d/%Y %I:%M %p', '%m/%d/%Y %I:%M%p'])
+  lobby_start_date = forms.DateTimeField(widget = SplitDateTimeWidget())
+  live_start_date = forms.DateTimeField(widget = SplitDateTimeWidget())
+  live_stop_date = forms.DateTimeField(widget = SplitDateTimeWidget())
+  archive_start_date = forms.DateTimeField(widget = SplitDateTimeWidget())
 
-  lobby_video = forms.CharField()
-  image = forms.FileField()
-  resource_guide = forms.FileField()
+  lobby_video_string = forms.CharField(required = False)
+  image = forms.FileField(required = False)
+  resource_guide = forms.FileField(required = False)
 
   class Meta:
     model = Event
@@ -39,12 +35,15 @@ class EventForm(BetterForm):
                  ('files', {'fields': [
                     'image',
                     'resource_guide',
-                    'lobby_video'
+                    'lobby_video_string'
                   ]})]
 
-class PresentationForm(BetterForm):
+class PresentationForm(BetterModelForm):
   presenter_type = forms.ChoiceField(choices = PresenterType.objects.all().values_list())
-  full_name = forms.CharField()
+  name = forms.CharField()
   job_title = forms.CharField()
-  photo = forms.FileField()
-  bio = forms.CharField(widget = AutoResizeTextarea)
+  photo = forms.FileField(required = False)
+  description = forms.CharField(widget = AutoResizeTextarea)
+  
+  class Meta:
+    model = Presenter
