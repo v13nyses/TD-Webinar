@@ -3,5 +3,5 @@ dashboard = {
 }
 
 $(document).ready(function() {
-  $(dashboard.dateFields).datepicker();
+  $(dashboard.dateFields).datepicker({dateFormat: 'yy-mm-dd'});
 });

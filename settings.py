@@ -131,8 +131,8 @@ INSTALLED_APPS = (
     'reporting',
     'registration',
 		'userprofiles',
+    'sorl.thumbnail',
     #'autofixture',
- 
     # included
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -206,3 +206,6 @@ try:
     from local_settings import *
 except ImportError:
     pass
+
+# sorl-thumbnail settings
+THUMBNAIL_DEBUG = True
