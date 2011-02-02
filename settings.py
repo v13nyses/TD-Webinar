@@ -70,6 +70,8 @@ STATICFILES_DIRS = (
     ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
 )
 
+GEOIP_PATH = 'apps/geoip/'
+
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
