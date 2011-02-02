@@ -10,7 +10,7 @@ def event_upload_base_path(event):
   # truncate the event name and turn it into a valid url
   event_slug = slugify(truncate_words(event.name, settings.EVENT_SLUG_WORDS))
 
-  return "%s/events/%s" % (settings.MEDIA_ROOT, event_slug)
+  return "events/%s" % (event_slug)
 
 def event_upload_to(event, filename):
   return "%s/%s" % (event_upload_base_path(event), filename)

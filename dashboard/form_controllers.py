@@ -1,7 +1,7 @@
 import os
 from django.conf import settings
-from events.models import Event
-from presentations.models import Presentation, PresenterType, Presenter
+from events.models import Event, event_upload_base_path
+from presentations.models import Presentation, PresenterType, Presenter, Video
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from forms import PresentationForm, EventForm
 
@@ -55,9 +55,8 @@ class EventFormController(FormController):
         video.save()
         event.lobby_video = video
       elif type(field_value) == InMemoryUploadedFile:
-        filepath = event_upload_to(event, uploaded_file.name)
-        self.upload_file(field_value, upload_to = os.path.dirname(upload_to))
-        event.__dict__[field_name] = filepath
+        base_path = event_upload_base_path(event)
+        event.__dict__[field_name] = self.upload_file(field_value, upload_to = base_path)
       else:
         event.__dict__[field_name] = field_value
     

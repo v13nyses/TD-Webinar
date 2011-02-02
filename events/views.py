@@ -49,7 +49,7 @@ def event(request, event_id = None):
       event = Event()
 
   else:
-    event = Event.objects.get_or_create(id = event_id)
+    event = Event.objects.get(id = event_id)
 
   return render_to_response('event.html', {
                               'event': event,

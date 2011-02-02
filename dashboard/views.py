@@ -17,7 +17,9 @@ def event(request, event_id = None):
   else: 
     controller = EventFormController(request)
 
-  controller.save()
+  if controller.save():
+    id = controller.form.instance.id
+    return HttpResponseRedirect('/dashboard/event/%d/presenters/add' % id)
 
   return render_to_response('dashboard/event.html', {'form': controller.form, 'form_url': request.META['PATH_INFO']}, 
                             context_instance = RequestContext(request))
