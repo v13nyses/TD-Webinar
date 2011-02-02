@@ -1,0 +1,17 @@
+{% load ifsetting_tag %}
+
+<script type="text/javascript" src="{{ settings.STATIC_URL }}logout.js"></script>
+
+{% ifequal request.session.login_email None %}
+<form name="login_form" action="." method="post">
+	{{ login_form.as_p }}
+	<input type="submit" value="Submit"></input>
+</form>
+{% else %}
+<form name="logout_form" action="." method="post"><!-- style="visibility:hidden">-->
+	{{ logout_form.as_p }}
+	welcome, {{ request.session.login_email }}!<br/>
+	not you?  <a name="logout_link" id="logout_link" href="#">click here</a>
+</form>
+{% endifequal %}
+

@@ -3,6 +3,7 @@
 {% load ifsetting_tag %}
 
 {% load event_login %}
+{% load user_profile %}
 
 {% block head_title %}{{ event.name }}{% endblock %}
 {% block extra_head %}
@@ -30,7 +31,6 @@
 {% block header_right %}
   <h3>{{ event.name }}</h3>
   <h4>{{ event.live_start_date|date:"F d, Y" }}</h4>
-  {% event_login request login_form logout_form %}
 {% endblock %}
   
 {% block body %}
@@ -93,11 +93,16 @@
         </div>
       </div>
       <div id="information-right">
-        <div id="resource-panel">
-          <h3>Resource Panel</h3>
+        <div id="user-panel">
+          <h3>User Panel</h3>
+          {% event_login request login_form logout_form %}
+          {% user_profile request user_profile_form %}
           {% ifequal request.session.login_email None %}
 
           {% else %}
+        </div>
+        <div id="resource-panel">
+          <h3>Resource Panel</h3>
             <div class="rp-item">
               <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-register.png" width="20" height="20" alt="Login" /></div>
               <div class="rp-description"><a href="event/{{ event.id }}/register/" >Register for this Event</a></div>

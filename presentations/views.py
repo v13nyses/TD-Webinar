@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response, get_object_or_404
 from django.template import RequestContext
 from presentations import forms
-from presentations import utils
+#from presentations import utils
 from presentations.models import Slide, Presentation
 from polls.models import Poll
 from polls.views import vote

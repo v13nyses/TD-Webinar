@@ -7,6 +7,7 @@ from datetime import datetime
 from pytz import timezone
 
 from events.forms import LoginForm, LogoutForm
+from userprofiles.forms import UserProfileForm
 
 # used by urls:
 #   event/<event_id>/slides/
@@ -39,6 +40,7 @@ def event(request, event_id = None):
 
   login_form = LoginForm()
   logout_form = LogoutForm()
+  user_profile_form = UserProfileForm()
 
   # if we didn't get an event id, grab the newest event
   if event_id == None:
@@ -54,6 +56,7 @@ def event(request, event_id = None):
   return render_to_response('event.html', {
                               'event': event,
                               'login_form': login_form, 
-                              'logout_form': logout_form
+                              'logout_form': logout_form,
+                              'user_profile_form': user_profile_form,
                             }, 
                             context_instance = RequestContext(request))

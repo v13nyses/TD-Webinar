@@ -115,7 +115,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "pinax.core.context_processors.pinax_settings",
     
     "notification.context_processors.notification",
-    "announcements.context_processors.site_wide_announcements",
+    #"announcements.context_processors.site_wide_announcements",
     "account.context_processors.openid",
     "account.context_processors.account",
 )
@@ -130,6 +130,7 @@ INSTALLED_APPS = (
     'django_extensions',
     'reporting',
     'registration',
+		'userprofiles',
     #'autofixture',
  
     # included
@@ -163,6 +164,7 @@ INSTALLED_APPS = (
 
 FIXTURE_DIRS = (
   'events/fixtures',
+  'userprofiles/fixtures',
   #'presentations/fixtures',
   'fixtures'
 )
