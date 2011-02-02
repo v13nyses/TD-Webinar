@@ -1,0 +1,16 @@
+{% extends "dashboard/base.html" %}
+{% load form_utils_tags %}
+
+{% block head_title %}Step 1 of 4: Event Information{% endblock %}
+{% block header_right %}
+  <h4>Step 1 of 4: Event Information</h4>
+{% endblock %}
+
+{% block body %}
+  <div class="dashboard-panel presenter">
+    <form action="/dashboard/event/add/" method="post" enctype="multipart/form-data">
+      {{ form|render:"dashboard/form.html" }}
+      <input type="submit" value="Save" />
+    </form>
+  </div>
+{% endblock %}

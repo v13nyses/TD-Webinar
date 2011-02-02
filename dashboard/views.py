@@ -2,12 +2,24 @@ from django.shortcuts import render_to_response
 from django.conf import settings
 from django.template import RequestContext
 import form_utils
-from forms import EventForm
+from forms import EventForm, PresentationForm
 from events.models import Event, event_upload_to
 from presentations.models import Video
 
 def upload_file(event, uploaded_file):
   print event_upload_to(event, uploaded_file.name)
+
+def show_form(request, FormClass, template):
+  if request.POST:
+    form = FormClass(request.POST, request.FILES)
+    if form.is_valid():
+      form.save()
+
+  else:
+    form = FormClass()
+
+  return render_to_response(template, {'form': form}, 
+                            context_instance = RequestContext(request))
 
 # used by urls:
 #   dashboard/event/add/
@@ -38,10 +50,20 @@ def slide(request, slide_id = None):
   pass
   
 # used by urls:
-#   dashboard/presenters/add/ 
-def presenters(request):
-  # TO DO
-  pass
+#   dashboard/<event_id>/presenters/add/ 
+def presenters(request, event_id = None):
+  event = Event.objects.get(id = event_id)
+
+  if request.POST:
+    form = PresentationForm(event, request)
+    if form.is_valid():
+      form.save()
+
+  else:
+    form = PresentationForm(event)
+
+  return render_to_response('dashboard/presentation.html', {'form': form, 'form_url': request.META['PATH_INFO']}, 
+                            context_instance = RequestContext(request))
   
 # used by urls:
 #   dashboard/presenter/<presenter_id>/

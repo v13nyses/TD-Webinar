@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block extra_head_base %}
+  {% block extra_head %}
+  <link type="text/css" href="{{ STATIC_URL }}ui-lightness/jquery-ui-1.8.9.custom.css" rel="Stylesheet" />
+    <script type="text/javascript" src="{{ STATIC_URL }}dashboard.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}jquery-ui.min.js"></script>
+  {% endblock %}
+{% endblock %}
+
+{% block header %}
+  <h3>Event Builder</h3>
+  {% block header_right %}{% endblock %}
+{% endblock %}

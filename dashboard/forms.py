@@ -1,7 +1,7 @@
 from form_utils.forms import BetterForm
 from form_utils.widgets import AutoResizeTextarea
 from events.models import Event, event_upload_to
-from presentations.models import Video, Presentation
+from presentations.models import Video, Presentation, PresenterType, Presenter
 from django import forms
 from django.forms.widgets import SplitDateTimeWidget
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -81,3 +81,48 @@ class EventForm(BetterForm):
                     'resource_guide',
                     'lobby_video'
                   ]})]
+
+class PresentationForm(BetterForm):
+  presenter_type = forms.ChoiceField(choices = PresenterType.objects.all().values_list())
+  full_name = forms.CharField()
+  job_title = forms.CharField()
+  photo = forms.FileField()
+  bio = forms.CharField(widget = AutoResizeTextarea)
+
+  def __init__(self, event, request = None):
+    self.event = event
+
+    if request != None:
+      BetterForm.__init__(self, request.POST, request.FILES)
+    else:
+      BetterForm.__init__(self)
+
+  def save(self):
+    data = self.cleaned_data
+
+    presenter = Presenter()
+    presenter.name = data['full_name']
+    presenter.description = data['bio']
+    presenter.job_title = data['job_title']
+    presenter.presenter_type = PresenterType.objects.get(id = data['presenter_type'])
+    presenter.photo = self.upload_file(data['photo'])
+    presenter.save()
+
+    presentation = self.event.presentation
+    presentation.presenters.add(presenter)
+    presentation.save()
+
+  def upload_file(self, uploaded_file):
+    filepath = 'presenters/%s' % uploaded_file.name
+
+    try:
+      destination = open(filepath, 'wb+')
+    except IOError:
+      os.mkdir(os.path.dirname(filepath))
+      destination = open(filepath, 'wb+')
+
+    for chunk in uploaded_file.chunks():
+      destination.write(chunk)
+    destination.close()
+
+    return filepath
