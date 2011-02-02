@@ -9,7 +9,12 @@
 
 {% block body %}
   <div class="dashboard-panel presenter">
-    <form action="{{ form_url }}" method="post" enctype="multipart/form-data">
+    {% if not presenter.id %}
+      <form action="{% url db_presenter_add event.id %}" method="post" enctype="multipart/form-data">
+    {% else %}
+      <form action="{% url db_presenter_edit event.id  presenter.id %}" method="post" enctype="multipart/form-data">
+    {% endif %}
+
       {{ form|render:"dashboard/form.html" }}
       <input type="submit" value="Save and Continue" />
     </form>
@@ -19,6 +24,6 @@
       <legend>Presenters</legend>
       {% presenter_pane event %}
     </fieldset>
-    <a href="{% presenter_link event '' 'add' %}" class="add-presenter">Add a presenter</a>
+    <a href="{% url db_presenter_add event.id %}" class="add-presenter">Add a presenter</a>
   </div>
 {% endblock %}

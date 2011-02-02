@@ -145,7 +145,7 @@ INSTALLED_APPS = (
     #'django_openid',
     'emailconfirmation',
     'mailer',
-    #'announcements',
+    'announcements',
     'pagination',
     #'timezones',
     'ajax_validation',

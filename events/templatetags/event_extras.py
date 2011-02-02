@@ -17,3 +17,9 @@ def presenter_list(presenters):
     'settings': settings
   }
 
+@register.inclusion_tag('events/presentation.html')
+def presentation(event):
+  return {
+    'event': event,
+    'settings': settings
+  }

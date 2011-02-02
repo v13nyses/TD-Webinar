@@ -6,8 +6,8 @@
       <div class="presenter-wrapper">
         {% presenter presenter %}
         <ul class="link-container">
-          <li><a href="{% presenter_link event presenter %}" class="edit">Edit</a></li>
-          <li><a href="{% presenter_link event presenter 'delete' %}" class="edit">Delete</a></li>
+          <li><a href="{% url db_presenter_edit event.id presenter.id%}" class="edit">Edit</a></li>
+          <li><a href="{% url db_presenter_action event.id presenter.id "delete" %}" class="edit">Delete</a></li>
         </ul>
       </div>
     {% endfor %}

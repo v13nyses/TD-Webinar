@@ -8,7 +8,7 @@
 
 {% block body %}
   <div class="dashboard-panel presenter">
-    <form action="{{ form_url }}" method="post" enctype="multipart/form-data">
+    <form action="{% url db_event_add %}" method="post" enctype="multipart/form-data">
       {{ form|render:"dashboard/form.html" }}
       <input type="submit" value="Save and Continue" />
     </form>
