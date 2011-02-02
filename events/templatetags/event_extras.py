@@ -3,9 +3,17 @@ from django.conf import settings
 
 register = template.Library()
 
+@register.inclusion_tag('events/presenter.html')
+def presenter(presenter):
+  return {
+    'presenter': presenter,
+    'settings': settings
+  }
+
 @register.inclusion_tag('events/presenter_list.html')
-def presenters(presenters):
+def presenter_list(presenter_list):
   return {
     'presenters': presenters,
     'settings': settings
   }
+

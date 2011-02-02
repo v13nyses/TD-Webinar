@@ -1,6 +1,7 @@
 from django.shortcuts import render_to_response
 from django.conf import settings
 from django.template import RequestContext
+from django.http import HttpResponseRedirect
 from form_controllers import EventFormController, PresentationFormController
 from events.models import Event
 from presentations.models import Presenter
@@ -45,13 +46,18 @@ def presenters(request, event_id = None):
   
 # used by urls:
 #   dashboard/<event_id>/presenter/<presenter_id>/
-def presenter(request, event_id = None, presenter_id = None):
+def presenter(request, event_id = None, presenter_id = None, action = 'save'):
   event = Event.objects.get(id = event_id)
   presenter = Presenter.objects.get(id = presenter_id)
   controller = PresentationFormController(request, instance = presenter)
-  controller.save(event)
 
-  return render_to_response('dashboard/presentation.html', {'form': controller.form, 'form_url': request.META['PATH_INFO'], 'event': event}, 
+  if action == 'save':
+    controller.save(event)
+  elif action == 'delete':
+    controller.delete()
+    return HttpResponseRedirect('/dashboard/event/%s/presenters/add/' % event.id)
+
+  return render_to_response('dashboard/presentation.html', {'form': controller.form, 'form_url': request.META['PATH_INFO'], 'event': event, 'action': action}, 
                             context_instance = RequestContext(request))
   
 # used by urls:

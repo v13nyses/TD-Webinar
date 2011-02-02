@@ -15,6 +15,10 @@
     </form>
   </div>
   <div class="dashboard-panel presenters">
-    {% presenter_pane event %}
+    <fieldset>
+      <legend>Presenters</legend>
+      {% presenter_pane event %}
+    </fieldset>
+    <a href="{% presenter_link event '' 'add' %}" class="add-presenter">Add a presenter</a>
   </div>
 {% endblock %}

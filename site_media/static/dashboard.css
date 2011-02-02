@@ -1,0 +1,48 @@
+label {
+  display: block;
+  clear: both;
+}
+
+fieldset {
+  width: 300px;
+}
+
+textarea {
+  width: 200px;
+}
+
+.dashboard-panel {
+  float: left;
+}
+
+/* presenters */
+.presenter-container span,
+.presenter-container a {
+  display: block;
+  clear: both;
+}
+
+.presenter-container .info-container,
+.presenter-container .presenter-img-container {
+  float: left;
+}
+
+.presenter-wrapper, .presenter-type-container {
+  float: left;
+  clear: both;
+  margin-bottom: 15px;
+  width: 250px;
+}
+
+.presenter-wrapper:hover .link-container {
+  display: block;
+}
+
+.presenters img {
+  margin-right: 15px;
+}
+
+.presenters .link-container {
+  float: right;
+  display: none;
+}

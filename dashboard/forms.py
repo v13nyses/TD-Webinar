@@ -47,3 +47,11 @@ class PresentationForm(BetterModelForm):
   
   class Meta:
     model = Presenter
+
+    fieldsets = [('Presenter', {'fields': [
+                    'name',
+                    'presenter_type',
+                    'job_title',
+                    'photo',
+                    'description'
+                ]})]

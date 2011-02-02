@@ -13,7 +13,10 @@ class FormController():
     else:
       self.form = FormClass(instance = instance)
 
-  def save():
+  def delete(self):
+    self.form.instance.delete()
+
+  def save(self):
     pass
 
   def upload_file(self, uploaded_file, upload_to = ''):

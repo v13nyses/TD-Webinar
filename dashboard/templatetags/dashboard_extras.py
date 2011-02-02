@@ -9,3 +9,10 @@ def presenter_pane(event):
     'event': event,
     'settings': settings
   }
+
+@register.simple_tag
+def presenter_link(event, presenter, action = ''):
+  if action == 'add':
+    return '/dashboard/event/%d/presenters/add/' % event.id
+  else:
+    return '/dashboard/event/%d/presenter/%d/%s' % (event.id, presenter.id, action)

@@ -10,6 +10,7 @@ urlpatterns = patterns('',
 
   (r'^event/(?P<event_id>\d+)/presenters/add/$', 'dashboard.views.presenters'),
   (r'^event/(?P<event_id>\d+)/presenter/(?P<presenter_id>\d+)/$', 'dashboard.views.presenter'),
+  (r'^event/(?P<event_id>\d+)/presenter/(?P<presenter_id>\d+)/(?P<action>[a-z]+)+/$', 'dashboard.views.presenter'),
 
   (r'^event/(?P<event_id>\d+)/preview/pre/$', 'dashboard.views.pre'),
   (r'^event/(?P<event_id>\d+)/preview/lobby/$', 'dashboard.views.lobby'),
