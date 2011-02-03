@@ -11,18 +11,18 @@ from presentations.models import Presenter
 #   dashboard/event/add/
 #   dashboard/event/<event_id>/
 #   dashboard/
-def event(request, event_id = None):
+def event(request, event_id = None, action = 'add'):
   if event_id != None:
     event = Event.objects.get(id = event_id)
     controller = EventFormController(request, event)
   else: 
     controller = EventFormController(request)
 
-  if controller.save():
+  if controller.save() and (action == 'add' or action == 'edit'):
     id = controller.form.instance.id
     return HttpResponseRedirect(reverse('db_presenter_add', args=[id]))
 
-  return render_to_response('dashboard/event.html', {'form': controller.form}, 
+  return render_to_response('dashboard/event.html', {'form': controller.form, 'action': action, 'event': controller.form.instance}, 
                             context_instance = RequestContext(request))
  
 # used by urls:

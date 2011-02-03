@@ -35,6 +35,7 @@ urlpatterns = patterns('',
     # admin and client dashboard
     (r'^dashboard/', include('dashboard.urls')),
     # frontend
+    (r'^presentation/', include('presentations.urls')),
     (r'^', include('events.urls')),
 )
 

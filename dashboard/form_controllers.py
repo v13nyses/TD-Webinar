@@ -47,13 +47,9 @@ class EventFormController(FormController):
 
     for field_name in data:
       field_value = data[field_name]
-      if field_name == 'lobby_video_string' and field_value != '':
-        video_id, player_id = field_value.split('-')
-        video = Video()
-        video.video_id = video_id
-        video.player_id = player_id
-        video.save()
-        event.lobby_video = video
+      # figure out a better way to do this... __dict__ stores 'lobby_video_id'
+      if field_name == 'lobby_video':
+        event.lobby_video = field_value
       elif type(field_value) == InMemoryUploadedFile:
         base_path = event_upload_base_path(event)
         event.__dict__[field_name] = self.upload_file(field_value, upload_to = base_path)

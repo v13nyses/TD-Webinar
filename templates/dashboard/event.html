@@ -6,9 +6,13 @@
   <h4>Step 1 of 4: Event Information</h4>
 {% endblock %}
 
-{% block body %}
+{% block content %}
   <div class="dashboard-panel presenter">
-    <form action="{% url db_event_add %}" method="post" enctype="multipart/form-data">
+    {% if not event %}
+      <form action="{% url db_event_add %}" method="post" enctype="multipart/form-data">
+    {% else %}
+      <form action="{% url db_event_edit event.id %}" method="post" enctype="multipart/form-data">
+    {% endif %}
       {{ form|render:"dashboard/form.html" }}
       <input type="submit" value="Save and Continue" />
     </form>

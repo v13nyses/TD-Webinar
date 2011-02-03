@@ -4,7 +4,8 @@ label {
 }
 
 fieldset {
-  width: 300px;
+  width: 379px;
+  margin: 10px;
 }
 
 textarea {
@@ -45,4 +46,26 @@ textarea {
 .presenters .link-container {
   float: right;
   display: none;
+}
+
+/* video widget */
+
+.video-widget-container {
+  width: 375px;
+  height: 250px;
+}
+
+.video-widget-fields {
+  float: left;
+}
+
+.video-widget-fields input {
+  width: 100px;
+}
+
+.video-container {
+  width: 244px;
+  height: 139px;
+  border: 2px solid black;
+  float: right;
 }

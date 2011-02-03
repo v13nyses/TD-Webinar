@@ -7,7 +7,7 @@
   <h4>Step 2 of 4: Presenter Information</h4>
 {% endblock %}
 
-{% block body %}
+{% block content %}
   <div class="dashboard-panel presenter">
     {% if not presenter.id %}
       <form action="{% url db_presenter_add event.id %}" method="post" enctype="multipart/form-data">
