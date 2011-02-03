@@ -4,6 +4,7 @@
 
 {% load event_login %}
 {% load user_profile %}
+{% load event_extras %}
 
 {% block head_title %}{{ event.name }}{% endblock %}
 {% block extra_head %}
@@ -36,25 +37,7 @@
   
 {% block body %}
   <div id="presentation-wrapper">
-    <div id="presentation" class="container">
-      <div id="presentation-left">
-        <div id="presentation-webinar">
-        <script type="text/javascript" src="{{ event.presentation.video.url }}"></script>
-        </div>
-        <div id="presentation-cover"></div>
-      </div>
-      <div id="slideshow">
-      </div>
-      <div id="presentation-question">
-        <form id="questionform" name="questionform" method="post" action="">
-          <label for="question">Do you have a question or comment for our panel?</label>
-          <div id="questionform-right">
-            <input type="text" name="question" id="question" />
-            <input type="submit" class="form-submit" name="question-submit" id="question-submit" value="Submit" />
-          </div>
-        </form>
-      </div>
-    </div>
+    {% presentation event %}
   </div>
   <div id="information-wrapper">
     <div class="container">
@@ -66,22 +49,7 @@
     <div id="content-container" class="container">
       <div id="presenters" class="container hidden">
         <div id="presenters-left">
-          {% for presenter_type in event.presenters %}
-            <div class="presenter-type-container">
-              <h3>{{ presenter_type.type }}</h3>
-              {% for presenter in presenter_type.presenters %}
-                <div class="presenter-container">
-                  <div class="presenter-img-container"><img src="{{ MEDIA_URL }}{{ presenter.photo }}" /></div>
-                  <div class="info-container">
-                    <span class="presenter-name">{{ presenter.name }}</span>
-                    <span class="job-title">{{ presenter.job_title }}</span>
-                    <a id="inline" href="#bio-{{ presenter.id }}">View Full Bio</a>
-                    <div id="bio-{{ presenter.id }}" class="bio">{{ presenter.description|safe }}</div>
-                  </div>
-                </div>
-              {% endfor %}
-            </div>
-          {% endfor %}
+          {% presenter_list event.presenters %}
         </div>
       </div>
       <div id="information">
@@ -120,11 +88,11 @@
           <h3>Resource Panel</h3>
           <div class="rp-item">
             <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-download.png" width="20" height="20" alt="Download Presentation" /></div>
-            <div class="rp-description"><a href="{{ MEDIA_URL }}{{ event.resource_guide }}" >Download Presentation</a></div>
+            <div class="rp-description"><a href="{{ MEDIA_URL }}{{ event.resource_guide.name }}" >Download Presentation</a></div>
           </div>
           <div class="rp-item">
             <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-resourceguide.png" width="20" height="20" alt="Resource Guide" /></div>
-            <div class="rp-description"><a href="{{ MEDIA_URL}}{{ event.resource_guide }}">Resource Guide</a></div>
+            <div class="rp-description"><a href="{{ MEDIA_URL}}{{ event.resource_guide.name }}">Resource Guide</a></div>
           </div>
           <div class="rp-item">
             <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-td.png" width="20" height="20" alt="Locate a TD Small Business Advisor" /></div>

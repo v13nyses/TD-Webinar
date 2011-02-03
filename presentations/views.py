@@ -53,3 +53,7 @@ def displaySlideSet(request, presentation_id = None):
     })
 
   return HttpResponse(json.dumps(slides_data), mimetype = 'application/javascript')
+
+def video_player(request, video_id, player_id):
+  url = settings.VIDEO_URL % (video_id, player_id)
+  return render_to_response('presentations/video_player.html', {'url': url})

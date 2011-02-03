@@ -39,7 +39,7 @@ def event(request, event_id = None):
       # create a blank event if there aren't any yet
       event = Event()
   else:
-    event = Event.objects.get_or_create(id = event_id)
+    event = Event.objects.get(id = event_id)
 
   request.session['event_id'] = event.id
 

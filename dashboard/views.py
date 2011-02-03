@@ -1,6 +1,8 @@
 from django.shortcuts import render_to_response
 from django.conf import settings
 from django.template import RequestContext
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 from form_controllers import EventFormController, PresentationFormController
 from events.models import Event
 from presentations.models import Presenter
@@ -9,16 +11,18 @@ from presentations.models import Presenter
 #   dashboard/event/add/
 #   dashboard/event/<event_id>/
 #   dashboard/
-def event(request, event_id = None):
+def event(request, event_id = None, action = 'add'):
   if event_id != None:
     event = Event.objects.get(id = event_id)
     controller = EventFormController(request, event)
   else: 
     controller = EventFormController(request)
 
-  controller.save()
+  if controller.save() and (action == 'add' or action == 'edit'):
+    id = controller.form.instance.id
+    return HttpResponseRedirect(reverse('db_presenter_add', args=[id]))
 
-  return render_to_response('dashboard/event.html', {'form': controller.form, 'form_url': request.META['PATH_INFO']}, 
+  return render_to_response('dashboard/event.html', {'form': controller.form, 'action': action, 'event': controller.form.instance}, 
                             context_instance = RequestContext(request))
  
 # used by urls:
@@ -34,24 +38,24 @@ def slide(request, slide_id = None):
   pass
   
 # used by urls:
-#   dashboard/<event_id>/presenters/add/ 
-def presenters(request, event_id = None):
-  event = Event.objects.get(id = event_id)
-  controller = PresentationFormController(request)
-  controller.save(event)
-
-  return render_to_response('dashboard/presentation.html', {'form': controller.form, 'form_url': request.META['PATH_INFO'], 'event': event}, 
-                            context_instance = RequestContext(request))
-  
-# used by urls:
+#   dashboard/<event_id>/presenters/add
 #   dashboard/<event_id>/presenter/<presenter_id>/
-def presenter(request, event_id = None, presenter_id = None):
-  event = Event.objects.get(id = event_id)
-  presenter = Presenter.objects.get(id = presenter_id)
-  controller = PresentationFormController(request, instance = presenter)
-  controller.save(event)
+def presenter(request, event_id = None, presenter_id = None, action = 'add'):
+  if presenter_id == None:
+    presenter = Presenter()
+  else:
+    presenter = Presenter.objects.get(id = presenter_id)
 
-  return render_to_response('dashboard/presentation.html', {'form': controller.form, 'form_url': request.META['PATH_INFO'], 'event': event}, 
+  event = Event.objects.get(id = event_id)
+  controller = PresentationFormController(request, instance = presenter)
+
+  if action == 'add':
+    controller.save(event)
+  elif action == 'delete':
+    controller.delete()
+    return HttpResponseRedirect('/dashboard/event/%s/presenters/add/' % event.id)
+
+  return render_to_response('dashboard/presentation.html', {'form': controller.form, 'event': event, 'action': action, 'presenter': presenter}, 
                             context_instance = RequestContext(request))
   
 # used by urls:

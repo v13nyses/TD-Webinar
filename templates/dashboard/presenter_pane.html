@@ -1,2 +1,15 @@
-{% load event_extras %}
-{% presenters event.presenters %}
+{% load event_extras dashboard_extras %}
+{% for presenter_type in event.presenters %}
+  <div class="presenter-type-container">
+    <h3>{{ presenter_type.type }}</h3>
+    {% for presenter in presenter_type.presenters %}
+      <div class="presenter-wrapper">
+        {% presenter presenter %}
+        <ul class="link-container">
+          <li><a href="{% url db_presenter_edit event.id presenter.id%}" class="edit">Edit</a></li>
+          <li><a href="{% url db_presenter_action event.id presenter.id "delete" %}" class="edit">Delete</a></li>
+        </ul>
+      </div>
+    {% endfor %}
+  </div>
+{% endfor %}
