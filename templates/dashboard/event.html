@@ -8,7 +8,7 @@
 
 {% block content %}
   <div class="dashboard-panel presenter">
-    {% if not event %}
+    {% if not event.id %}
       <form action="{% url db_event_add %}" method="post" enctype="multipart/form-data">
     {% else %}
       <form action="{% url db_event_edit event.id %}" method="post" enctype="multipart/form-data">
