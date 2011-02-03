@@ -6,4 +6,4 @@ from events.models import Event
 class Registration(models.Model):
   email = models.CharField(max_length=200)
   event = models.ForeignKey('events.Event')
-  ip = models.CharField(max_length=200)
+  ip_address = models.IPAddressField()

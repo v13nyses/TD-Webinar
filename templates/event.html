@@ -11,6 +11,7 @@
   <script type="text/javascript" src="{{ STATIC_URL }}fancybox/jquery.fancybox-1.3.4.js"></script>
   <script type="text/javascript" src="{{ STATIC_URL }}jquery.hoverIntent.minified.js"></script>
   <script type="text/javascript" src="{{ STATIC_URL }}event.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}register.js"></script>
   <script type="text/javascript">
     TDWebinar = {
       'settings': {
@@ -96,18 +97,27 @@
         <div id="user-panel">
           <h3>User Panel</h3>
           {% event_login request login_form logout_form %}
-          {% user_profile request user_profile_form %}
           {% ifequal request.session.login_email None %}
-
+            {% user_profile request user_profile_form %}
           {% else %}
+            {% ifequal request.session.user_registered None %}
+              <!-- TO DO - registration form 
+              <form name="register_event_form" action="." method="post">
+                {{ register_event_form.as_p }}
+                <div style="visibility:hidden">
+                  <input type="text" name="email" value="{{ request.session.login_email }}"></input>
+                  <input type="text" name="event" value="{{ request.session.event_id }}"></input>
+                </div>
+                <div class="rp-item">
+                  <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-register.png" width="20" height="20" alt="Register" /></div>
+                  <div class="rp-description"><a class="register_for_event" href="#" >Register for this Event</a></div>
+                </div>
+              </form>-->
+            {% endifequal %}
+          {% endifequal %}
         </div>
         <div id="resource-panel">
           <h3>Resource Panel</h3>
-            <div class="rp-item">
-              <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-register.png" width="20" height="20" alt="Login" /></div>
-              <div class="rp-description"><a href="event/{{ event.id }}/register/" >Register for this Event</a></div>
-            </div>
-          {% endifequal %}
           <div class="rp-item">
             <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-download.png" width="20" height="20" alt="Download Presentation" /></div>
             <div class="rp-description"><a href="{{ MEDIA_URL }}{{ event.resource_guide }}" >Download Presentation</a></div>
