@@ -1,12 +1,13 @@
 from form_utils.forms import BetterForm, BetterModelForm
 from form_utils.widgets import AutoResizeTextarea
 from events.models import Event, event_upload_to
-from presentations.models import Video, Presentation, PresenterType, Presenter
+from presentations.models import Video, Presentation, PresenterType, Presenter, Slide
 from django import forms
 from django.template.loader import render_to_string
 from django.forms.widgets import SplitDateTimeWidget, HiddenInput
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import os
+import ipdb
 
 class VideoWidget(forms.MultiWidget):
   def __init__(self):
@@ -14,7 +15,9 @@ class VideoWidget(forms.MultiWidget):
     forms.MultiWidget.__init__(self, self.widgets)
 
   def decompress(self, video_id):
-    if video_id:
+    if type(video_id) == list:
+      return video_id
+    elif video_id:
       video = Video.objects.get(id = video_id)
       return [video.video_id, video.player_id]
     else:
@@ -34,9 +37,12 @@ class VideoWidget(forms.MultiWidget):
 
   def render(self, name, value, attrs = None):
     """ Add labels to the two video textinputs. """
-    video_id, player_id = self.render_widgets(name, value, attrs)
+    video_id, player_id = self.decompress(value)
+    video_id_widget, player_id_widget = self.render_widgets(name, value, attrs)
     return render_to_string('dashboard/video_widget.html', {'video_id': video_id,
-                                                            'player_id': player_id})
+                                                        'player_id': player_id,
+                                                        'video_id_widget': video_id_widget,
+                                                        'player_id_widget': player_id_widget})
 
 class VideoField(forms.MultiValueField):
   def __init__(self):
@@ -79,7 +85,7 @@ class EventForm(BetterModelForm):
 
   class Meta:
     model = Event
-    fieldsets = [('details', {'fields': [
+    fieldsets = [('Event Details', {'fields': [
                     'name',
                     'lobby_start_date',
                     'live_start_date',
@@ -88,7 +94,7 @@ class EventForm(BetterModelForm):
                     'short_description',
                     'description'
                   ]}),
-                 ('files', {'fields': [
+                 ('Event Files', {'fields': [
                     'image',
                     'resource_guide',
                     'lobby_video'
@@ -110,4 +116,18 @@ class PresentationForm(BetterModelForm):
                     'job_title',
                     'photo',
                     'description'
+                ]})]
+
+class SlideForm(BetterModelForm):
+  video = VideoField()
+  image = forms.ImageField(required = False)
+  offset = forms.CharField()
+
+  class Meta:
+    model = Slide
+
+    fieldsets = [('Video', {'fields': ['video']}),
+                 ('Add Slide', {'fields': [
+                    'image',
+                    'offset'
                 ]})]

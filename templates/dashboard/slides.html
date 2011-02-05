@@ -1,0 +1,29 @@
+{% extends "dashboard/base.html" %}
+{% load form_utils_tags %}
+{% load dashboard_extras %}
+{% load event_extras %}
+
+{% block head_title %}Step 3 of 4: Presentation Slides{% endblock %}
+{% block header_right %}
+  <h4>Step 3 of 4: Presentation Slides</h4>
+{% endblock %}
+
+{% block content %}
+  <div class="dashboard-panel slide-form">
+    {% if not slide.id %}
+      <form action="{% url db_slide_add event.id %}" method="post" enctype="multipart/form-data">
+    {% else %}
+      <form action="{% url db_slide_edit event.id  slide.id %}" method="post" enctype="multipart/form-data">
+    {% endif %}
+      {{ form|render:"dashboard/form.html" }}
+      <fieldset class="slide-fieldset">
+        <legend>Slides</legend>
+        {% slide_pane event %}
+      </fieldset>
+      <div class="buttons-container">
+        <input type="submit" name="submit" value="Save Slide" />
+        <input type="submit" name="submit" value="Save and Continue" />
+      </div>
+    </form>
+  </div>
+{% endblock %}

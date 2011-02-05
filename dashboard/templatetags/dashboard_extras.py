@@ -9,3 +9,11 @@ def presenter_pane(event):
     'event': event,
     'settings': settings
   }
+
+@register.inclusion_tag('dashboard/slide_pane.html')
+def slide_pane(event):
+  return {
+    'event': event,
+    'settings': settings,
+    'slides': event.presentation.slide_set.slide_set.order_by('offset')
+  }

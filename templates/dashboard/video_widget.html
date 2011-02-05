@@ -1,11 +1,14 @@
+{% load presentations_extras %}
 <div class="video-widget-container">
   <div class="video-widget-fields">
     <div class="required">
-      <label>Video ID:</label>{{ video_id }}
+      <label>Video ID:</label>{{ video_id_widget }}
     </div>
     <div class="required">
-      <label>Player ID:</label>{{ player_id }}
+      <label>Player ID:</label>{{ player_id_widget }}
     </div>
   </div>
-  <div class="video-container"></div>
+  <div class="video-container">
+    {% video_player video_id player_id %}
+  </div>
 </div>

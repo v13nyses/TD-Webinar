@@ -4,15 +4,23 @@ label {
 }
 
 fieldset {
-  width: 379px;
   margin: 10px;
+  float: left;
 }
 
 textarea {
   width: 200px;
 }
 
+body .container {
+  width: 940px;
+}
+
 .dashboard-panel {
+  float: left;
+}
+
+.buttons-container {
   float: left;
 }
 
@@ -48,14 +56,27 @@ textarea {
   display: none;
 }
 
+/* slides */
+.slide-fieldset {
+  float: right;
+  width: 375px;
+}
+
+.slide-fieldset .slide-container {
+  float: left;
+  width: 115px;
+  margin: 5px;
+}
+
 /* video widget */
 
 .video-widget-container {
-  width: 375px;
-  height: 250px;
+  width: 480px;
+  height: 270px;
 }
 
-.video-widget-fields {
+.video-widget-fields,
+.video-widget-fields div {
   float: left;
 }
 
@@ -64,8 +85,8 @@ textarea {
 }
 
 .video-container {
-  width: 244px;
-  height: 139px;
+  width: 480px;
+  height: 270px;
   border: 2px solid black;
   float: right;
 }

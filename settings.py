@@ -153,7 +153,7 @@ INSTALLED_APPS = (
     'staticfiles',
     
     # internal (for now)
-    #'basic_profiles',
+    'basic_profiles',
     'account',
     #'signup_codes',
     #'about',
