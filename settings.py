@@ -70,6 +70,8 @@ STATICFILES_DIRS = (
     ('pinax', os.path.join(PINAX_ROOT, 'media', PINAX_THEME)),
 )
 
+GEOIP_PATH = 'apps/geoip/'
+
 # URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
 # trailing slash.
 # Examples: "http://foo.com/media/", "/media/".
@@ -115,7 +117,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "pinax.core.context_processors.pinax_settings",
     
     "notification.context_processors.notification",
-    "announcements.context_processors.site_wide_announcements",
+    #"announcements.context_processors.site_wide_announcements",
     "account.context_processors.openid",
     "account.context_processors.account",
 )
@@ -130,8 +132,9 @@ INSTALLED_APPS = (
     'django_extensions',
     'reporting',
     'registration',
+		'userprofiles',
     'sorl.thumbnail',
-
+    #'autofixture',
     # included
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -163,6 +166,7 @@ INSTALLED_APPS = (
 
 FIXTURE_DIRS = (
   'events/fixtures',
+  'userprofiles/fixtures',
   #'presentations/fixtures',
   'fixtures'
 )
