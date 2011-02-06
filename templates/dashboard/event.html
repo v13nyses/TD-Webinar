@@ -1,5 +1,5 @@
 {% extends "dashboard/base.html" %}
-{% load form_utils_tags %}
+{% load form_utils_tags dashboard_extras %}
 
 {% block head_title %}Step 1 of 4: Event Information{% endblock %}
 {% block header_right %}
@@ -14,7 +14,7 @@
       <form action="{% url db_event_edit event.id %}" method="post" enctype="multipart/form-data">
     {% endif %}
       {{ form|render:"dashboard/form.html" }}
-      <input type="submit" value="Save and Continue" />
+      {% form_buttons "Event" 0 %}
     </form>
   </div>
 {% endblock %}

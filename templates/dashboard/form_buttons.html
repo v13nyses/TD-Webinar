@@ -1,0 +1,7 @@
+<div class="buttons-container">
+  {% if back_button %}
+    <input type="submit" name="submit" value="Back" />
+  {% endif %}
+  <input type="submit" name="submit" value="Save {{ name|capfirst }}" />
+  <input type="submit" name="submit" value="Save and Continue" />
+</div>

@@ -4,9 +4,9 @@
     {% thumbnail slide.image "112x100" crop="center" as image %}
       <img src="{{ image.url }}" />
     {% endthumbnail %}
-    <span class="offset">Timing: {{ slide.offset }}</span>
+    <span class="offset">Timing: {% time_offset slide.offset %}</span>
     <ul class="link-container">
-      <li><a href="{% url db_slide_edit event.id slide.id%}" class="edit">Edit</a></li>
+      <li><a href="{% url db_slide_action event.id slide.id "edit" %}" class="edit">Edit</a></li>
       <li><a href="{% url db_slide_action event.id slide.id "delete" %}" class="edit">Delete</a></li>
     </ul>
   </div>

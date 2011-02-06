@@ -13,17 +13,14 @@
     {% if not slide.id %}
       <form action="{% url db_slide_add event.id %}" method="post" enctype="multipart/form-data">
     {% else %}
-      <form action="{% url db_slide_edit event.id  slide.id %}" method="post" enctype="multipart/form-data">
+      <form action="{% url db_slide_action event.id  slide.id "edit" %}" method="post" enctype="multipart/form-data">
     {% endif %}
       {{ form|render:"dashboard/form.html" }}
       <fieldset class="slide-fieldset">
         <legend>Slides</legend>
         {% slide_pane event %}
       </fieldset>
-      <div class="buttons-container">
-        <input type="submit" name="submit" value="Save Slide" />
-        <input type="submit" name="submit" value="Save and Continue" />
-      </div>
+      {% form_buttons "slide" %}
     </form>
   </div>
 {% endblock %}

@@ -1,5 +1,6 @@
 from django import template
 from django.conf import settings
+from dashboard.form_fields import date_offset_string
 
 register = template.Library()
 
@@ -16,4 +17,15 @@ def slide_pane(event):
     'event': event,
     'settings': settings,
     'slides': event.presentation.slide_set.slide_set.order_by('offset')
+  }
+
+@register.simple_tag
+def time_offset(offset_seconds):
+  return date_offset_string(offset_seconds)
+
+@register.inclusion_tag('dashboard/form_buttons.html')
+def form_buttons(name, back_button = True):
+  return {
+    'name': name,
+    'back_button': back_button
   }

@@ -4,6 +4,7 @@ from events.models import Event, event_upload_base_path
 from presentations.models import Presentation, PresenterType, Presenter, Video, slide_upload_to
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from forms import PresentationForm, EventForm, SlideForm
+import datetime
 
 class FormController():
 

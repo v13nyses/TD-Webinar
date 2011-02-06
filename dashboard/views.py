@@ -27,12 +27,11 @@ def event(request, event_id = None, action = 'add'):
                             context_instance = RequestContext(request))
  
 # used by urls:
-#   dashboard/event/<event_id>/slide/<slide_id>/ 
+#   dashboard/event/<event_id>/slide/<slide_id>/<action> 
 def slide(request, event_id, slide_id = None, action = 'add'):
   event = Event.objects.get(id = event_id)
 
   if slide_id != None:
-    action = 'edit'
     slide = Slide.objects.get(id = slide_id)
     controller = SlideFormController(request, event, slide)
 
@@ -40,6 +39,10 @@ def slide(request, event_id, slide_id = None, action = 'add'):
     controller = SlideFormController(request, event)
 
   controller.set_action(action)
+
+  if request.POST.has_key('submit') and request.POST['submit'].find('Back') != -1:
+    return HttpResponseRedirect(reverse('db_presenter_add', args=[event.id]))
+
   if action == 'add' or action == 'edit':
     if controller.save() and request.POST.has_key('submit'):
       if request.POST['submit'].find('Continue') != -1:
@@ -48,7 +51,6 @@ def slide(request, event_id, slide_id = None, action = 'add'):
   elif action == 'delete':
     controller.delete()
     return HttpResponseRedirect(reverse('db_slide_add', args=[event.id]))
-
   return render_to_response('dashboard/slides.html', {'form': controller.form, 'action': action, 'slide': controller.form.instance, 'event': event}, 
                             context_instance = RequestContext(request))
 
@@ -61,11 +63,13 @@ def presenter(request, event_id = None, presenter_id = None, action = 'add'):
     presenter = Presenter()
   else:
     presenter = Presenter.objects.get(id = presenter_id)
-    action = 'edit'
 
   event = Event.objects.get(id = event_id)
   controller = PresentationFormController(request, instance = presenter)
   controller.set_action(action, presenter)
+
+  if request.POST.has_key('submit') and request.POST['submit'].find('Back') != -1:
+    return HttpResponseRedirect(reverse('db_event_edit', args=[event.id]))
 
   if action == 'add' or action == 'edit':
     if controller.save(event) and request.POST.has_key('submit'):
@@ -73,7 +77,7 @@ def presenter(request, event_id = None, presenter_id = None, action = 'add'):
         return HttpResponseRedirect(reverse('db_slide_add', args=[event.id]))
   elif action == 'delete':
     controller.delete()
-    return HttpResponseRedirect(reverse('db_presenter_add', args=[id]))
+    return HttpResponseRedirect(reverse('db_presenter_add', args=[event.id]))
 
   return render_to_response('dashboard/presentation.html', {'form': controller.form, 'event': event, 'action': action, 'presenter': presenter}, 
                             context_instance = RequestContext(request))

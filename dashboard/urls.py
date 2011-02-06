@@ -11,7 +11,7 @@ urlpatterns = patterns('',
 
   url(r'^event/(?P<event_id>\d+)/presenters/add/$', 'dashboard.views.presenter', name = 'db_presenter_add'),
   url(r'^event/(?P<event_id>\d+)/presenter/(?P<presenter_id>\d+)/$', 'dashboard.views.presenter', name = 'db_presenter_edit'),
-  url(r'^event/(?P<event_id>\d+)/presenter/(?P<presenter_id>\d+)/(?P<action>[a-z]+)/$', 'dashboard.views.presenter', name = 'db_presenter_action'),
+  url(r'^event/(?P<event_id>\d+)/presenter/(?P<presenter_id>\d+)/(?P<action>[a-z]+)+/$', 'dashboard.views.presenter', name = 'db_presenter_action'),
 
   url(r'^event/(?P<event_id>\d+)/preview/pre/$', 'dashboard.views.pre'),
   url(r'^event/(?P<event_id>\d+)/preview/lobby/$', 'dashboard.views.lobby'),
