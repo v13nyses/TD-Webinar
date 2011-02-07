@@ -44,7 +44,7 @@ class Slide(PolyModel):
     return '%s (Slide %d)' % (self.slide_set.__unicode__(), self.id)
 
   def display(self, request, slide):
-    return render_to_response('presentations/slide.html', {'slide': slide},
+    return render_to_response('presentations/slide.html', {'slide': slide, 'settings': settings},
       context_instance = RequestContext(request))
 
 class SlideSet(models.Model):

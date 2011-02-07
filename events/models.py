@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from datetime import datetime
+from datetime import datetime, timedelta
 from pytz import timezone
 from django.utils.text import truncate_words
 from django.template.defaultfilters import slugify
@@ -30,6 +30,30 @@ class Event(models.Model):
   live_start_date = models.DateTimeField()
   live_stop_date = models.DateTimeField()
   archive_start_date = models.DateTimeField()
+
+  debug = True
+
+  def time_difference(self, time_a, time_b = None):
+    """ Returns time_a - time_b in seconds. If time_a < time_b, returns -1. """
+    if time_b == None:
+      time_b = datetime.now(timezone(settings.TIME_ZONE))
+
+    # make sure both times have the correct timezone
+    time_a = time_a.replace(tzinfo = timezone(settings.TIME_ZONE))
+    time_b = time_b.replace(tzinfo = timezone(settings.TIME_ZONE))
+
+    if time_a < time_b:
+      return -1
+
+    return (time_a - time_b).seconds
+    
+  def debug_times(self):
+    now = datetime.now(timezone(settings.TIME_ZONE))
+    self.lobby_start_date = now + timedelta(seconds = 10)
+    self.live_start_date = now + timedelta(seconds = 20)
+    self.live_stop_date = now + timedelta(seconds = 30)
+    self.archive_start_date = now + timedelta(seconds = 40)
+    self.save()
 
   def get_state(self):
     # grab the current date, and add timezone info to all our date fields
@@ -82,12 +106,33 @@ class Event(models.Model):
 
     return presenter_types_list
 
+  def get_state_offsets_debug(self):
+    self.debug_times()
+    return {
+        'lobby': 10,
+        'live': 20,
+        'post': 30,
+        'archive': 40
+    }
+
+  def get_state_offsets(self):
+    if self.debug:
+      return self.get_state_offsets_debug()
+
+    return {
+        'lobby': self.time_difference(self.lobby_start_date),
+        'live': self.time_difference(self.live_start_date),
+        'post': self.time_difference(self.live_stop_date),
+        'archive': self.time_difference(self.archive_start_date)
+    }
+
   def __unicode__(self):
     return self.name
 
   state = property(get_state, doc = 'The current state of the event.')
   start_offset = property(get_start_offset, doc = 'The number of seconds the event has been live.')
   presenters = property(get_presenters, doc = 'A special array of presenters for use in templates.')
+  state_offsets = property(get_state_offsets)
 
   STATE_PRE = 'pre' 
   STATE_LOBBY = 'lobby'

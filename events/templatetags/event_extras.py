@@ -1,5 +1,6 @@
 from django import template
 from django.conf import settings
+from django.template.loader import render_to_string
 
 register = template.Library()
 
@@ -17,9 +18,12 @@ def presenter_list(presenters):
     'settings': settings
   }
 
-@register.inclusion_tag('events/presentation.html')
+@register.simple_tag
 def presentation(event):
-  return {
+  context = {
     'event': event,
     'settings': settings
   }
+
+  return render_to_string(['events/presentation_%s.html' % event.state, 
+                           'events/presentation.html'], context)

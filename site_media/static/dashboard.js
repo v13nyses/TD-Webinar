@@ -1,10 +1,4 @@
-dashboard = {
-  dateFields: "#id_lobby_start_date_0, #id_live_start_date_0, #id_live_stop_date_0, #id_archive_start_date_0",
-  videoWidget: ".video-widget-container",
-  bitsOnTheRunBaseUrl: "http://content.bitsontherun.com/players/",
-  videoPlayerBaseUrl: "/presentation/video-player/",
-  playerUpdateInterval: 2000
-}
+var dashboard = TDWebinar.settings.dashboard;
 
 VideoWidget = function(container) {
   this.container = $(container);

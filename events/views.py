@@ -82,6 +82,7 @@ def event(request, event_id = None):
   
   context_data = {
     'event': event,
+    'stateOffsets': event.state_offsets,
     'login_form': LoginForm(),
     'logout_form': LogoutForm(),
     'register_event_form': RegisterEventForm(),
@@ -113,3 +114,12 @@ def register_user_for_event(email, event):
 
 def logout_user(request):
   request.session['login_email'] = None
+
+def presentation(request, event_id, state = None):
+  event = Event.objects.get(id = event_id)
+  if state == None:
+    state = event.state
+
+  template = 'events/presentation_%s.html' % state
+  
+  return render_to_response([template, 'events/presentation.html'], {'event': event, 'state': state}, context_instance = RequestContext(request))
