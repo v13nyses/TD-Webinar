@@ -28,7 +28,7 @@ def slide(request, slide_id = None):
 # used by urls:
 #   event/
 #   event/<event_id>/
-def event(request, event_id = None):
+def event(request, event_id = None, state = None):
   # if we didn't get an event id, grab the newest event
   event = None
 
@@ -40,6 +40,13 @@ def event(request, event_id = None):
       event = Event()
   else:
     event = Event.objects.get(id = event_id)
+
+  if state == 'debug':
+    state = None
+    event.debug()
+
+  if state == None:
+    state = event.state
 
   request.session['event_id'] = event.id
 
@@ -82,6 +89,7 @@ def event(request, event_id = None):
   
   context_data = {
     'event': event,
+    'state': state,
     'stateOffsets': event.state_offsets,
     'login_form': LoginForm(),
     'logout_form': LogoutForm(),

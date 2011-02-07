@@ -1,71 +1,106 @@
-// called when the video player starts playing. Set up slide syncing
-function playerReady(obj) {
-  var queuePoints, queuePoint;
-  var player = jwplayer(document.getElementById(obj.id));
+//
+// event.js
+//
+// This file is used on the event pages to control transitions between event
+// states (from lobby to live, etc), syncing the video for pseudo-live streaming,
+// and switching slides in a presentation.
+//
 
-  // load our queue points as JSON
-  $.getJSON(TDWebinar.settings.eventPage.queuePointUrl, function(data) {
-    queuePoints = data;
-    queuePoint = queuePoints.pop();
+// PresentationController listens for events from the video player, and switches slides.
+PresentationController = function(player) {
+  // queuePoints contains the slide timing and ids (used for ajax loading of slides)
+  this.queuePoints = TDWebinar.settings.eventPage.queuePoints;
+  this.currentQueuePoint = 0;
+  this.debug = true;
+
+  this.initPlayer(player);
+}
+
+o = PresentationController.prototype;
+
+o.initPlayer = function(player) {
+  this.player = player;
+  this.attachPlayerEvents();
+}
+
+o.attachPlayerEvents = function() {
+  if(this.debug) {
+    console.log('attaching events', this.player);
+  }
+
+  var self = this;
+  // the onTime event is called every ~10ms
+  this.player.onTime(function(event) {
+    self.loadSlide(event);
   });
+}
 
-  // setup the onTime event for the player
-  player.onTime(function(event) {
-    if(typeof queuePoint !== "undefined") {
-      var slideUrl;
-      while(event.position > queuePoint.timeOffset || queuePoint.timeOffset == 0) {
-        slideUrl = TDWebinar.settings.eventPage.slideUrl + queuePoint.slideId + "/";
-        queuePoint = queuePoints.pop();
-      }
-      // put this outside the while, so we don't flash slides that don't need to be shown
-      $(TDWebinar.settings.slideshowContainer).load(slideUrl);
+o.slideUrl = function() {
+  var slideId = this.queuePoints[this.currentQueuePoint].slideId;
+  return TDWebinar.settings.eventPage.slideUrl + slideId + "/";
+}
+
+o.loadSlide = function(event) {
+  var queuePoint = this.queuePoints[this.currentQueuePoint];
+  var lastQueuePoint = this.currentQueuePoint;
+
+  var nextQueuePoint = this.currentQueuePoint + 1;
+  if(queuePoint.timeOffset < event.position) {
+    while(nextQueuePoint < this.queuePoints.length && 
+          this.queuePoints[nextQueuePoint].timeOffset < event.position) {
+      nextQueuePoint += 1;
+      this.currentQueuePoint += 1;
     }
-  });
+  } else if(queuePoint.timeOffset > event.position) {
+    while(this.currentQueuePoint > 0 && 
+          this.queuePoints[this.currentQueuePoint].timeOffset > event.position) {
+      nextQueuePoint -= 1;
+      this.currentQueuePoint -= 1;
+    }
+  }
 
-  // check the current event state
-  if(TDWebinar.settings.eventPage.state == 'live') {
-    player.seek(TDWebinar.settings.eventPage.startOffset).play();
-  } else {
-    $("#presentation-cover").hide();
+  if(this.currentQueuePoint != lastQueuePoint) {
+    $(TDWebinar.settings.eventPage.slideshowContainer).load(this.slideUrl());
   }
 }
 
+// EventController loads new event states and animates the transitions. It also sets
+// up a PresentationController when necessary to control the slides.
 EventController = function() {
-  this.reloadElements();
+  this.presentationController = null;
+  // call the onChangeState callback to setup variables
+  this.onChangeState();
   this.setupStateTransitions();
 }
 
 o = EventController.prototype;
 
-o.reloadElements = function() {
+o.onChangeState = function() {
   this.presentation = $(TDWebinar.settings.eventPage.presentationContainer);
   this.presentationWrapper = $(TDWebinar.settings.eventPage.presentationWrapper);
+
   this.state = TDWebinar.settings.eventPage.state;
   this.slideAnimationDuration = TDWebinar.settings.eventPage.slideAnimationDuration;
   this.presentationUrl = TDWebinar.settings.eventPage.presentationUrl;
-}
-
-o.stateNum = function() {
-  var states = TDWebinar.settings.eventPage.eventStates;
-  var currentState = TDWebinar.settings.eventPage.state;
-  for(var i = 0; i < states.length; i++) {
-    if(states[i] == currentState) {
-      return i;
-    }
-  }
-  return -1;
+  this.startOffset = TDWebinar.settings.eventPage.startOffset;
 }
 
 o.setupStateTransitions = function() {
+  // grab a list of all possible states
   var states = TDWebinar.settings.eventPage.eventStates;
+  // and an object containing the time (in seconds) to switch states
   var stateOffsets = TDWebinar.settings.eventPage.stateTransitionOffsets;
-  var self = this, offset;
+  var self = this;
+  var offset;
+  // loop through all the offsets, and 
   for(var i = 0; i < states.length; i++) {
     offset = stateOffsets[states[i]];
     if(offset > -1) {
+      // use an anonymous function to create another scope for state, otherwise
+      // it will get overwritten in the next loop iteration
       (function() {
         var state = states[i];
-        console.log(state);
+        // change the state in <offset> seconds
         setTimeout(function() {
           self.changeState(state);
         }, offset * 1000);
@@ -83,7 +118,7 @@ o.changeState = function(state) {
   var loadNewState = function() {
     self.presentationWrapper
       .load(self.presentationUrl, function(data) {
-        self.reloadElements();
+        self.onChangeState();
         self.presentation.hide().slideDown(self.slideAnimationDuration);
       });
   }
@@ -94,9 +129,50 @@ o.changeState = function(state) {
   }
 }
 
+o.onPlayerReady = function(player) {
+  this.player = player;
+  console.log('onPlayerReady', player, this.state);
+  if(this.state == 'live') {
+    if(this.startOffset < this.player.getDuration() && this.startOffset > 0) {
+      this.player.seek(this.startOffset);
+    }
+    this.startPresentation();
+    this.coverPlayer(true);
+    this.player.play();
+  } else if(this.state == 'archive') {
+    this.startPresentation();
+    this.coverPlayer(false);
+  } else {
+    this.coverPlayer(false);
+  }
+}
+
+o.startPresentation = function() {
+  if(!this.presentationController) {
+    this.presentationController = new PresentationController(this.player);
+  } else {
+    this.presentationController.initPlayer(this.player);
+  }
+}
+
+o.coverPlayer = function(cover) {
+  if(cover) {
+    $(TDWebinar.settings.eventPage.playerCover).show();
+  } else {
+    $(TDWebinar.settings.eventPage.playerCover).hide();
+  }
+}
+
+// called when the video player starts playing. Set up slide syncing
+function playerReady(obj) {
+  var player = jwplayer(document.getElementById(obj.id));
+  TDWebinar.eventController.onPlayerReady(player);
+}
+
 $(document).ready(function() {
   // setup the event controller
-  eventController = new EventController();
+  TDWebinar.eventController = new EventController();
+
   // information and presenter tabs
   $("#information-tabs div")
     .hoverIntent(

@@ -2,7 +2,7 @@
 <div id="presentation" class="container">
   <div id="presentation-left">
     <div id="presentation-webinar">
-      <script type="text/javascript" src="{{ event.lobby_video.url }}"></script>
+      {% video_player event.lobby_video.video_id event.lobby_video.player_id %}
     </div>
     <div id="presentation-cover"></div>
   </div>

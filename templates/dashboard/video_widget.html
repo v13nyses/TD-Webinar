@@ -2,11 +2,15 @@
 <div class="video-widget-container">
   <div class="video-widget-fields">
     <div class="required">
-      <label>Video ID:</label>{{ video_id_widget }}
+      <label>Video ID:</label>{{ video_widget }}
     </div>
     <div class="required">
-      <label>Player ID:</label>{{ player_id_widget }}
+      <label>Player ID:</label>{{ player_widget }}
     </div>
+    {% if archive %}
+    <div>
+      <label>Archive Player ID:</label>{{ archive_player_widget }}
+    {% endif %}
   </div>
   <div class="video-container">
     {% video_player video_id player_id %}

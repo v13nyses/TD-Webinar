@@ -1,0 +1,14 @@
+{% load presentations_extras %}
+<div id="presentation" class="container">
+  <div id="presentation-left">
+    <div id="presentation-webinar">
+      <h1>You Just Missed Us</h1>
+    </div>
+    <div id="presentation-cover"></div>
+  </div>
+  <div id="slideshow">
+    {% first_slide event %}
+  </div>
+  <div id="presentation-question">
+  </div>
+</div>

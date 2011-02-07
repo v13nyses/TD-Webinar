@@ -11,6 +11,7 @@ TDWebinar = {
       slideshowContainer: "#slideshow",
       presentationWrapper: "#presentation-wrapper",
       presentationContainer: "#presentation",
+      playerCover: "#presentation-cover",
       eventStates: ["pre", "lobby", "live", "post", "archive"],
       slideAnimationDuration: 800
     }

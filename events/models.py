@@ -31,7 +31,7 @@ class Event(models.Model):
   live_stop_date = models.DateTimeField()
   archive_start_date = models.DateTimeField()
 
-  debug = True
+  debug = False
 
   def time_difference(self, time_a, time_b = None):
     """ Returns time_a - time_b in seconds. If time_a < time_b, returns -1. """
@@ -47,12 +47,14 @@ class Event(models.Model):
 
     return (time_a - time_b).seconds
     
-  def debug_times(self):
+  def debug(self):
+    self.debug = True
+
     now = datetime.now(timezone(settings.TIME_ZONE))
     self.lobby_start_date = now + timedelta(seconds = 10)
     self.live_start_date = now + timedelta(seconds = 20)
-    self.live_stop_date = now + timedelta(seconds = 30)
-    self.archive_start_date = now + timedelta(seconds = 40)
+    self.live_stop_date = now + timedelta(seconds = 50)
+    self.archive_start_date = now + timedelta(seconds = 60)
     self.save()
 
   def get_state(self):
@@ -107,12 +109,11 @@ class Event(models.Model):
     return presenter_types_list
 
   def get_state_offsets_debug(self):
-    self.debug_times()
     return {
         'lobby': 10,
         'live': 20,
-        'post': 30,
-        'archive': 40
+        'post': 50,
+        'archive': 60
     }
 
   def get_state_offsets(self):

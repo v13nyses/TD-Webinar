@@ -1,10 +1,6 @@
 {% extends 'site_base.html' %}
 
-{% load ifsetting_tag %}
-
-{% load event_login %}
-{% load user_profile %}
-{% load event_extras %}
+{% load event_login user_profile event_extras presentations_extras %}
 
 {% block head_title %}{{ event.name }}{% endblock %}
 {% block extra_head %}
@@ -17,11 +13,9 @@
   <script type="text/javascript">
     var settings = TDWebinar.settings.eventPage;
     settings.id = "{{ event.id }}";
-    settings.queuePointUrl = "/presentations/{{ event.presentation_id }}/queue-points";
-    settings.slideUrl = "/presentations/slides/";
+    settings.queuePoints = {% slide_set_json event %}
+    settings.slideUrl = "/event/{{ event.id }}/slide/";
     settings.presentationUrl = "/event/{{ event.id }}/presentation";
-    settings.startOffset = "{{ event.start_offset }}";
-    settings.state = "{{ event.state }}";
     // time in seconds until stage transition
     settings.stateTransitionOffsets = {
       lobby: "{{ stateOffsets.lobby }}",
@@ -38,8 +32,11 @@
 {% endblock %}
   
 {% block body %}
+  <div id="bits-on-the-run">
+    <script type="text/javascript" src="{{ STATIC_URL }}bitsontherun.js"></script>
+  </div>
   <div id="presentation-wrapper">
-    {% presentation event %}
+    {% presentation event state %}
   </div>
   <div id="information-wrapper">
     <div class="container">

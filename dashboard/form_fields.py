@@ -7,7 +7,7 @@ from presentations.models import Video
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from django.conf import settings
-import os
+import os, ipdb
 from sorl.thumbnail import get_thumbnail
 
 def thumbnail(image_path):
@@ -29,20 +29,28 @@ class ImageWidget(forms.widgets.FileInput):
 ### /snippet-934
 
 def parse_date_offset_string(offset_hms):
-  offset_components = offset_hms.split(':')
+  if offset_hms != '':
+    offset_components = offset_hms.split(':')
+    offset_seconds = 0
+    for i in range(0, len(offset_components)):
+      offset_seconds += int(offset_components[i]) * 60**(len(offset_components) - i - 1)
 
-  offset_seconds = 0
-  for i in range(0, len(offset_components)):
-    offset_seconds += int(offset_components[i]) * 60**(len(offset_components) - i - 1)
+    return offset_seconds
 
-  return offset_seconds
+  else:
+    return 0
 
 def date_offset_string(offset_seconds):
   return str(datetime.timedelta(seconds = offset_seconds))
 
 class VideoWidget(forms.MultiWidget):
-  def __init__(self):
-    self.widgets = (forms.TextInput(), forms.TextInput())
+  def __init__(self, archive = False):
+    self.archive = archive
+    if archive:
+      self.widgets = (forms.TextInput(), forms.TextInput(), forms.TextInput())
+    else:
+      self.widgets = (forms.TextInput(), forms.TextInput())
+
     forms.MultiWidget.__init__(self, self.widgets)
 
   def decompress(self, video_id):
@@ -50,9 +58,14 @@ class VideoWidget(forms.MultiWidget):
       return video_id
     elif video_id:
       video = Video.objects.get(id = video_id)
-      return [video.video_id, video.player_id]
+      if self.archive:
+        return [video.video_id, video.player_id, video.archive_player_id]
+      else:
+        return [video.video_id, video.player_id]
     else:
-      return [None, None]
+      if self.archive:
+        return [None] * 3
+      return [None] * 2
 
   def render_widgets(self, name, value, attrs):
     rendered_widgets = []
@@ -68,12 +81,21 @@ class VideoWidget(forms.MultiWidget):
 
   def render(self, name, value, attrs = None):
     """ Add labels to the two video textinputs. """
-    video_id, player_id = self.decompress(value)
-    video_id_widget, player_id_widget = self.render_widgets(name, value, attrs)
-    return render_to_string('dashboard/video_widget.html', {'video_id': video_id,
-                                                        'player_id': player_id,
-                                                        'video_id_widget': video_id_widget,
-                                                        'player_id_widget': player_id_widget})
+    values = self.decompress(value)
+    widgets = self.render_widgets(name, value, attrs)
+
+    context = {
+        'video_widget': widgets[0],
+        'player_widget': widgets[1],
+        'video_id': values[0],
+        'player_id': values[1],
+        'archive': self.archive
+    }
+    if len(widgets) == 3:
+      context['archive_player_widget'] = widgets[2]
+      context['archive_player_id'] = values[2]
+
+    return render_to_string('dashboard/video_widget.html', context)
 
 class TimeOffsetWidget(forms.widgets.TextInput):
   def render(self, name, value, attrs = None):
@@ -95,9 +117,13 @@ class TimeOffsetField(forms.CharField):
     return forms.CharField.clean(self, offset_sec)
 
 class VideoField(forms.MultiValueField):
-  def __init__(self):
-    self.widget = VideoWidget()
-    self.fields = (forms.CharField(), forms.CharField())
+  def __init__(self, archive = False):
+    self.widget = VideoWidget(archive = archive)
+    self.archive = archive
+    if archive:
+      self.fields = (forms.CharField(), forms.CharField(), forms.CharField())
+    else:
+      self.fields = (forms.CharField(), forms.CharField())
     forms.MultiValueField.__init__(self, self.fields)
 
   def clean(self, value, initial = None):
@@ -106,13 +132,22 @@ class VideoField(forms.MultiValueField):
   
   def compress(self, value_list):
     if value_list:
-      video_id, player_id = value_list
+      if self.archive:
+        video_id, player_id, archive_player_id = value_list
+      else:
+        video_id, player_id = value_list
+
       try:
-        video = Video.objects.get(video_id = video_id, player_id = player_id)
+        if self.archive:
+          video = Video.objects.get(video_id = video_id, player_id = player_id, archive_player_id = archive_player_id)
+        else:
+          video = Video.objects.get(video_id = video_id, player_id = player_id)
       except Video.DoesNotExist:
         video = Video()
         video.video_id = video_id
         video.player_id = player_id
+        if self.archive:
+          video.archive_player_id = archive_player_id
         video.save()
 
       return video

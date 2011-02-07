@@ -19,11 +19,19 @@ def presenter_list(presenters):
   }
 
 @register.simple_tag
-def presentation(event):
+def presentation(event, state = None):
+  if state == None:
+    state = event.state
+    start_offset = event.start_offset
+  else:
+    start_offset = 0
+
   context = {
     'event': event,
+    'state': state,
+    'start_offset': start_offset,
     'settings': settings
   }
 
-  return render_to_string(['events/presentation_%s.html' % event.state, 
+  return render_to_string(['events/presentation_%s.html' % state, 
                            'events/presentation.html'], context)

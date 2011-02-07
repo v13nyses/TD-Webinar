@@ -60,7 +60,7 @@ class PresentationForm(BetterModelForm):
                 ]})]
 
 class SlideForm(BetterModelForm):
-  video = form_fields.VideoField()
+  video = form_fields.VideoField(archive = True)
   image = forms.ImageField(required = False, widget = form_fields.ImageWidget)
   offset = form_fields.TimeOffsetField()
 

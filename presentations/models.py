@@ -69,11 +69,19 @@ class SlideSet(models.Model):
 class Video(models.Model):
   video_id = models.CharField(max_length=50)
   player_id = models.CharField(max_length=50)
+  archive_player_id = models.CharField(max_length=50, blank = True)
+
+  def get_archive_url(self):
+    if self.archive_player_id:
+      return settings.VIDEO_URL % (self.video_id, self.archive_player_id)
+    else:
+      return self.url
 
   def get_url(self):
     return settings.VIDEO_URL % (self.video_id, self.player_id)
 
   url = property(get_url, doc = "The url of the javascript used to load the video.")
+  archive_url = property(get_archive_url, doc = "The url of the javascript used to load the video.")
 
   def __unicode__(self):
     return 'Video: %s (Player: %s, id: %d)' % (self.video_id, self.player_id, self.id)
