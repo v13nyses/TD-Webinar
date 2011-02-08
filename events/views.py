@@ -44,6 +44,8 @@ def event(request, event_id = None, state = None):
   if state == 'debug':
     state = None
     event.debug()
+  else:
+    event.debug = False
 
   if state == None:
     state = event.state

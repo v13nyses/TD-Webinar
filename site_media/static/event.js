@@ -11,7 +11,8 @@ PresentationController = function(player) {
   // queuePoints contains the slide timing and ids (used for ajax loading of slides)
   this.queuePoints = TDWebinar.settings.eventPage.queuePoints;
   this.currentQueuePoint = 0;
-  this.debug = true;
+  //this.debug = true;
+  this.debug = false;
 
   this.initPlayer(player);
 }
@@ -76,6 +77,8 @@ EventController = function() {
 o = EventController.prototype;
 
 o.onChangeState = function() {
+  this.tabController = TDWebinar.tabController;
+
   this.presentation = $(TDWebinar.settings.eventPage.presentationContainer);
   this.presentationWrapper = $(TDWebinar.settings.eventPage.presentationWrapper);
 
@@ -83,6 +86,12 @@ o.onChangeState = function() {
   this.slideAnimationDuration = TDWebinar.settings.eventPage.slideAnimationDuration;
   this.presentationUrl = TDWebinar.settings.eventPage.presentationUrl;
   this.startOffset = TDWebinar.settings.eventPage.startOffset;
+
+  if(this.state == 'live') {
+    this.tabController.selectTab('.infotab.presenter-info');
+  } else {
+    this.tabController.selectTab('.infotab.webinar-info');
+  }
 }
 
 o.setupStateTransitions = function() {
@@ -131,7 +140,6 @@ o.changeState = function(state) {
 
 o.onPlayerReady = function(player) {
   this.player = player;
-  console.log('onPlayerReady', player, this.state);
   if(this.state == 'live') {
     if(this.startOffset < this.player.getDuration() && this.startOffset > 0) {
       this.player.seek(this.startOffset);
@@ -169,42 +177,68 @@ function playerReady(obj) {
   TDWebinar.eventController.onPlayerReady(player);
 }
 
+TabController = function(tabContainer, tabDefaultState, tabHoverState) {
+  this.tabDefaultState = tabDefaultState;
+  this.tabHoverState = tabHoverState;
+  this.tabs = $(tabContainer).find("div");
+  this.tabContainer = $(tabContainer);
+
+  this.attachEvents();
+}
+
+o = TabController.prototype;
+
+o.attachEvents = function() {
+  var self = this;
+  this.tabs.hoverIntent(function() {
+    self.onMouseOverTab(this);
+  }, function() {
+    self.onMouseOutTab(this);
+  });
+
+  this.tabs.click(function() {
+    self.onTabClick(this);
+  });
+}
+
+o.onMouseOverTab = function(tab) {
+  if(!$(tab).hasClass("selected")) {
+    $(tab).animate(this.tabHoverState);
+  }
+}
+
+o.onMouseOutTab = function(tab) {
+  if(!$(tab).hasClass("selected")) {
+    $(tab).animate(this.tabDefaultState);
+  }
+}
+
+o.onTabClick = function(tab) {
+  this.selectTab(tab);
+}
+
+o.selectTab = function(tab) {
+  tab = $(tab);
+  if(!tab.hasClass("selected")) {
+    // hide the content from other tabs
+    var oldContainer = this.tabContainer.find("div.selected").attr('rel');
+    $('#' + oldContainer).hide();
+
+    this.tabContainer.find("div.selected")
+      .animate(this.tabDefaultState)
+      .removeClass("selected").removeClass("active");
+
+    tab.addClass("selected").addClass("active").animate(this.tabHoverState);
+    $('#' + tab.attr('rel')).show();
+  }
+}
+
 $(document).ready(function() {
+  TDWebinar.tabController = new TabController(TDWebinar.settings.eventPage.tabContainer,
+                                              TDWebinar.settings.eventPage.tabDefaultState,
+                                              TDWebinar.settings.eventPage.tabHoverState);
   // setup the event controller
   TDWebinar.eventController = new EventController();
-
-  // information and presenter tabs
-  $("#information-tabs div")
-    .hoverIntent(
-      function() { // mouse over
-        if(!$(this).hasClass('selected')) {
-          $(this).animate({
-            'background-position': '50px top'
-          }).addClass("active");
-        }
-      }, function() { // mouse out
-        if(!$(this).hasClass('selected')) {
-          $(this).animate({
-            'background-position': '110px top'
-          }).removeClass("active");
-        }
-      })
-    .click(function() {
-      if(!$(this).hasClass("selected")) {
-        // hide the content from other tabs
-        var oldContainer = $("#information-tabs div.selected").attr('rel');
-        $('#' + oldContainer).hide();
-
-        $("#information-tabs div.selected")
-          .removeClass("selected").removeClass("active")
-          .animate({
-            'background-position': '110px top'
-          });
-
-        $(this).addClass("selected").addClass("active");
-        $('#' + $(this).attr('rel')).show();
-      }
-    });
 
   // add the fancybox popup for bios on the presenters tab
   $("#presenters a").fancybox();
