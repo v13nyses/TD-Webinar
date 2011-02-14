@@ -16,6 +16,7 @@ o.addCallbacks = function() {
   var changed = false;
   var change = function() {
     changed = true; 
+    console.log('changed');
   }
   var timer = function() {
     if(changed) {
@@ -30,7 +31,7 @@ o.addCallbacks = function() {
 
 o.onChange = function() {
   console.log(this.getUrl());
-  //this.player.load(this.getUrl());
+  this.player.load(this.getUrl());
 }
 
 o.getUrl = function() {
@@ -40,10 +41,11 @@ o.getUrl = function() {
 
 $(document).ready(function() {
   $(dashboard.dateFields).datepicker({dateFormat: 'yy-mm-dd'});
-  /* Don't enable the video widget JS until we figure out a way to 
-   * control the embedded BitsOnTheRun player.
   $(dashboard.videoWidget).each(function() {
     videoWidgets = new VideoWidget(this);
   });
-  */
+  $(dashboard.previewStateLinks).find("a").click(function() {
+    var url = $(this).attr('href').substring(1);
+    $(dashboard.previewIframe).attr('src', url);
+  });
 });

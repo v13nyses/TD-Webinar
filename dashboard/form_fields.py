@@ -136,12 +136,10 @@ class VideoField(forms.MultiValueField):
         video_id, player_id, archive_player_id = value_list
       else:
         video_id, player_id = value_list
+        archive_player_id = None
 
       try:
-        if self.archive:
-          video = Video.objects.get(video_id = video_id, player_id = player_id, archive_player_id = archive_player_id)
-        else:
-          video = Video.objects.get(video_id = video_id, player_id = player_id)
+        video = Video.objects.get(video_id = video_id, player_id = player_id, archive_player_id = archive_player_id)
       except Video.DoesNotExist:
         video = Video()
         video.video_id = video_id

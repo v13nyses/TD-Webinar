@@ -1,26 +1,46 @@
 import os, ipdb
 from django.conf import settings
 from events.models import Event, event_upload_base_path
-from presentations.models import Presentation, PresenterType, Presenter, Video, slide_upload_to
+from presentations.models import Presentation, PresenterType, Presenter, Video, SlideSet, slide_upload_to
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from forms import PresentationForm, EventForm, SlideForm
 import datetime
 
 class FormController():
 
-  def __init__(self, request, FormClass, instance = None, initial = None):
+  def __init__(self, request, FormClass = None, instance = None, initial = None):
     self.request = request
-
-    if request.POST:
-      self.form = FormClass(request.POST, request.FILES, instance = instance, initial = initial)
-    else:
-      self.form = FormClass(instance = instance, initial = initial)
+    
+    if FormClass:
+      if request.POST:
+        self.form = FormClass(request.POST, request.FILES, instance = instance, initial = initial)
+      else:
+        self.form = FormClass(instance = instance, initial = initial)
 
   def delete(self):
     self.form.instance.delete()
 
   def save(self):
     pass
+
+  def submit(self, continue_path = None, back_path = None):
+    if not self.request.POST:
+      return False
+
+    save_result = True
+    submit_button = self.request.POST['submit'].lower()
+    print '!!! %s' % submit_button
+    if submit_button.find('save') != -1:
+      save_result = self.save()
+
+    if submit_button.find('back') != -1 and save_result and back_path:
+      return back_path
+
+    if submit_button.find('continue') != -1 and save_result:
+      return continue_path 
+
+    return False
+
   
   def set_fieldset_label(self, label, fieldset_num = 0):
     # TODO: Figure out a better way to change fieldset labels.
@@ -70,15 +90,16 @@ class EventFormController(FormController):
     
     if event.presentation_id == None:
       presentation = Presentation()
-      presentation.save()
       event.presentation = presentation
+      event.presentation.save()
 
     event.save()
 
     return True
 
 class PresentationFormController(FormController):
-  def __init__(self, request, instance = None):
+  def __init__(self, request, event, instance = None):
+    self.event = event
     FormController.__init__(self, request, PresentationForm, instance)
 
   def set_action(self, action, presenter = None):
@@ -91,7 +112,7 @@ class PresentationFormController(FormController):
 
     self.set_fieldset_label(label)
 
-  def save(self, event):
+  def save(self):
     if not self.form.is_valid():
       return False
 
@@ -106,7 +127,13 @@ class PresentationFormController(FormController):
       presenter.photo = self.upload_file(data['photo'], upload_to = 'presenters')
     presenter.save()
 
-    presentation = event.presentation
+    presentation = self.event.presentation
+    if not presentation:
+      presentation = Presentation()
+      presentation.save()
+      self.event.presentation = presentation
+      self.event.save()
+
     presentation.presenters.add(presenter)
     presentation.save()
 
@@ -115,8 +142,11 @@ class PresentationFormController(FormController):
 class SlideFormController(FormController):
   def __init__(self, request, event, instance = None):
     self.event = event
-    video_id = self.event.presentation.video.id
-    FormController.__init__(self, request, SlideForm, instance, initial = {'video': video_id})
+    if self.event.presentation.video:
+      initial = {'video': self.event.presentation.video.id}
+    else:
+      initial = {}
+    FormController.__init__(self, request, SlideForm, instance, initial = initial)
 
   def set_action(self, action):
     if action == 'add':
@@ -134,6 +164,12 @@ class SlideFormController(FormController):
 
     data = self.form.cleaned_data
     slide_set = self.event.presentation.slide_set
+
+    if slide_set == None:
+      slide_set = SlideSet()
+      slide_set.presentation = self.event.presentation
+      slide_set.save()
+      self.event.presentation.slide_set = slide_set
 
     slide = self.form.instance
     slide.slide_set = slide_set

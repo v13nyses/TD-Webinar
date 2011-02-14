@@ -12,6 +12,10 @@ textarea {
   width: 200px;
 }
 
+body {
+  background-image: none;
+}
+
 body .container {
   width: 940px;
 }
@@ -22,6 +26,34 @@ body .container {
 
 .buttons-container {
   float: left;
+}
+
+.buttons-wrapper {
+  width: 100%;
+  background-color: #2D5C3C;
+  float: left;
+}
+
+.buttons-container {
+  padding: 10px 15px;
+  float: right;
+}
+
+.link-container {
+  float: right;
+  display: none;
+  height: 0px;
+  position: relative;
+  top: -13px;
+  margin: 0;
+  padding: 0;
+}
+
+.link-container li {
+  list-style: none;
+  display: inline;
+  margin: 0;
+  padding: 0;
 }
 
 /* presenters */
@@ -36,6 +68,10 @@ body .container {
   float: left;
 }
 
+.presenter-container .info-container {
+  width: 100%;
+}
+
 .presenter-wrapper, .presenter-type-container {
   float: left;
   clear: both;
@@ -44,6 +80,7 @@ body .container {
 }
 
 .presenter-wrapper:hover .link-container {
+  background-color: #2D5C3C;
   display: block;
 }
 
@@ -68,6 +105,21 @@ body .container {
   margin: 5px;
 }
 
+.slide-container:hover .link-container {
+  display: block;
+}
+
+.slide-container .link-container {
+  top: -110px;
+  left: -5px;
+}
+
+.slide-container .link-container li {
+  background-color: white;
+  margin: 0;
+  padding: 2px 5px;
+}
+
 /* video widget */
 
 .video-widget-container {
@@ -89,4 +141,22 @@ body .container {
   height: 270px;
   border: 2px solid black;
   float: right;
+}
+
+/* preview */
+.preview #body .container {
+  width: 1120px;
+}
+
+.preview-fieldset iframe {
+  width: 1080px;
+  height: 500px;
+  margin-top: 20px;
+}
+
+.preview-states, .preview-states li {
+  list-style: none;
+  display: inline;
+  margin: 0 10px;
+  padding: 0;
 }

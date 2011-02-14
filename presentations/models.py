@@ -41,7 +41,10 @@ class Slide(PolyModel):
   offset = models.IntegerField()
 
   def __unicode__(self):
-    return '%s (Slide %d)' % (self.slide_set.__unicode__(), self.id)
+    if self.id:
+      return '%s (Slide %d)' % (self.slide_set.__unicode__(), self.id)
+    else:
+      return self.slide_set.__unicode__()
 
   def display(self, request, slide):
     return render_to_response('presentations/slide.html', {'slide': slide, 'settings': settings},
@@ -52,7 +55,10 @@ class SlideSet(models.Model):
   export_pdf = models.FileField(upload_to='slidesets',editable=False)
 
   def __unicode__(self):
-    return "SlideSet %d" % (self.id)
+    if self.id:
+      return "SlideSet %d" % (self.id)
+    else:
+      return "SlideSet"
 
   def export_pdf(self):
     # TO DO

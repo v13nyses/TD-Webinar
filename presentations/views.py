@@ -56,4 +56,4 @@ def displaySlideSet(request, presentation_id = None):
 
 def video_player(request, video_id, player_id):
   url = settings.VIDEO_URL % (video_id, player_id)
-  return render_to_response('presentations/video_player.html', {'url': url})
+  return render_to_response('presentations/video_player.html', {'url': url, 'video_id': video_id, 'player_id': player_id})

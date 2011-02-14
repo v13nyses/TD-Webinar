@@ -16,14 +16,14 @@
     {% endif %}
 
       {{ form|render:"dashboard/form.html" }}
+      <div class="dashboard-panel presenters">
+        <fieldset>
+          <legend>Presenters (<a href="{% url db_presenter_add event.id %}" class="add-presenter">Add a presenter</a>)</legend>
+          {% presenter_pane event %}
+        </fieldset>
+        
+      </div>
       {% form_buttons "Presenter" %}
     </form>
-  </div>
-  <div class="dashboard-panel presenters">
-    <fieldset>
-      <legend>Presenters</legend>
-      {% presenter_pane event %}
-    </fieldset>
-    <a href="{% url db_presenter_add event.id %}" class="add-presenter">Add a presenter</a>
   </div>
 {% endblock %}

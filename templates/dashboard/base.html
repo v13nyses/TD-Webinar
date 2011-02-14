@@ -1,9 +1,12 @@
 {% extends "base.html" %}
 
+{% block body_class %}dashboard {% block extra_body_class %}{% endblock %}{% endblock %}
 {% block extra_head_base %}
   {% block extra_head %}
     <link type="text/css" href="{{ STATIC_URL }}ui-lightness/jquery-ui-1.8.9.custom.css" rel="Stylesheet" />
     <link type="text/css" href="{{ STATIC_URL }}dashboard.css" rel="Stylesheet" />
+    <script type="text/javascript" src="{{ STATIC_URL }}settings.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}bitsontherun.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}dashboard.js"></script>
     <script type="text/javascript" src="{{ STATIC_URL }}jquery-ui.min.js"></script>
   {% endblock %}

@@ -16,7 +16,7 @@ def video_player(video_id, player_id):
 
 @register.inclusion_tag('presentations/slide.html')
 def first_slide(event):
-  slide = Slide.objects.order_by('offset')[0]
+  slide = event.presentation.slide_set.slide_set.order_by('offset')[0]
 
   return {
     'slide': slide,

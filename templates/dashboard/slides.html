@@ -17,7 +17,7 @@
     {% endif %}
       {{ form|render:"dashboard/form.html" }}
       <fieldset class="slide-fieldset">
-        <legend>Slides</legend>
+        <legend>Slides (<a href="{% url db_slide_add event.id %}">Add a Slide</a>)</legend>
         {% slide_pane event %}
       </fieldset>
       {% form_buttons "slide" %}

@@ -13,13 +13,8 @@ urlpatterns = patterns('',
   url(r'^event/(?P<event_id>\d+)/presenter/(?P<presenter_id>\d+)/$', 'dashboard.views.presenter', name = 'db_presenter_edit'),
   url(r'^event/(?P<event_id>\d+)/presenter/(?P<presenter_id>\d+)/(?P<action>[a-z]+)+/$', 'dashboard.views.presenter', name = 'db_presenter_action'),
 
-  url(r'^event/(?P<event_id>\d+)/preview/pre/$', 'dashboard.views.pre'),
-  url(r'^event/(?P<event_id>\d+)/preview/lobby/$', 'dashboard.views.lobby'),
-  url(r'^event/(?P<event_id>\d+)/preview/live/$', 'dashboard.views.live'),
-  url(r'^event/(?P<event_id>\d+)/preview/post/$', 'dashboard.views.post'),
-  url(r'^event/(?P<event_id>\d+)/preview/archive/$', 'dashboard.views.archive'),
-  url(r'^event/(?P<event_id>\d+)/preview/email/$', 'dashboard.views.email'),
-  url(r'^event/(?P<event_id>\d+)/preview/$', 'dashboard.views.pre'),
+  url(r'^event/(?P<event_id>\d+)/preview/$', 'dashboard.views.preview', name = 'db_preview'),
+  url(r'^event/(?P<event_id>\d+)/preview/(?P<state>[a-z]+)$', 'dashboard.views.preview', name = 'db_preview_state'),
   
-  url(r'^$', 'dashboard.views.event', name = 'db_event'),
+  url(r'^$', 'dashboard.views.dashboard', name = 'db_dashboard'),
 )

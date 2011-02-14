@@ -14,7 +14,7 @@
       <form action="{% url db_event_edit event.id %}" method="post" enctype="multipart/form-data">
     {% endif %}
       {{ form|render:"dashboard/form.html" }}
-      {% form_buttons "Event" 0 %}
+      {% form_buttons "Event" 1 1 continue_button %}
     </form>
   </div>
 {% endblock %}

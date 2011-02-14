@@ -5,7 +5,9 @@ TDWebinar = {
       videoWidget: ".video-widget-container",
       bitsOnTheRunBaseUrl: "http://content.bitsontherun.com/players/",
       videoPlayerBaseUrl: "/presentation/video-player/",
-      playerUpdateInterval: 2000
+      playerUpdateInterval: 2000,
+      previewStateLinks: ".preview-fieldset ul.preview-states",
+      previewIframe: ".preview-fieldset iframe"
     },
     eventPage: { 
       slideshowContainer: "#slideshow",

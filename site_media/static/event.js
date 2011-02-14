@@ -140,6 +140,7 @@ o.changeState = function(state) {
 
 o.onPlayerReady = function(player) {
   this.player = player;
+  this.coverPlayer(false);
   if(this.state == 'live') {
     if(this.startOffset < this.player.getDuration() && this.startOffset > 0) {
       this.player.seek(this.startOffset);
@@ -149,9 +150,8 @@ o.onPlayerReady = function(player) {
     this.player.play();
   } else if(this.state == 'archive') {
     this.startPresentation();
-    this.coverPlayer(false);
-  } else {
-    this.coverPlayer(false);
+  } else if(this.state == 'lobby') {
+    this.player.play();
   }
 }
 

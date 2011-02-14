@@ -21,7 +21,7 @@ class EventForm(BetterModelForm):
   archive_start_date = forms.DateTimeField(widget = SplitDateTimeWidget())
 
   lobby_video = form_fields.VideoField()
-  image = forms.FileField(required = False)
+  image = forms.ImageField(required = False, widget = form_fields.ImageWidget)
   resource_guide = forms.FileField(required = False)
 
   class Meta:
@@ -45,7 +45,7 @@ class PresentationForm(BetterModelForm):
   presenter_type = forms.ChoiceField(choices = PresenterType.objects.all().values_list())
   name = forms.CharField()
   job_title = forms.CharField()
-  photo = forms.FileField(required = False)
+  photo = forms.ImageField(required = False, widget = form_fields.ImageWidget)
   description = forms.CharField(widget = AutoResizeTextarea)
   
   class Meta:
