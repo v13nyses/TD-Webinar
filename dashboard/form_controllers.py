@@ -2,9 +2,11 @@ import os, ipdb
 from django.conf import settings
 from events.models import Event, event_upload_base_path
 from presentations.models import Presentation, PresenterType, Presenter, Video, SlideSet, slide_upload_to
+from polls.models import Poll, Choice
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from forms import PresentationForm, EventForm, SlideForm
 import datetime
+import ipdb
 
 class FormController():
 
@@ -98,9 +100,9 @@ class EventFormController(FormController):
     return True
 
 class PresentationFormController(FormController):
-  def __init__(self, request, event, instance = None):
+  def __init__(self, request, event, instance = None, initial = {}):
     self.event = event
-    FormController.__init__(self, request, PresentationForm, instance)
+    FormController.__init__(self, request, PresentationForm, instance, initial = initial)
 
   def set_action(self, action, presenter = None):
     if action == 'add':
@@ -146,6 +148,14 @@ class SlideFormController(FormController):
       initial = {'video': self.event.presentation.video.id}
     else:
       initial = {}
+
+    # make sure we grab the proper poll object, if it is one
+    instance = instance.as_leaf_class()
+    if type(instance) == Poll:
+      initial['slide_type'] = 'poll'
+      initial['poll_choices'] = '\n'.join([choice.choice for choice in instance.choice_set.all()])
+      initial['poll_question'] = instance.question
+
     FormController.__init__(self, request, SlideForm, instance, initial = initial)
 
   def set_action(self, action):
@@ -172,6 +182,14 @@ class SlideFormController(FormController):
       self.event.presentation.slide_set = slide_set
 
     slide = self.form.instance
+    if data['slide_type'] == 'poll':
+      # delete the old slide if it has been changed to a poll
+      if slide.id != None:
+        slide.delete()
+
+      slide = Poll()
+      slide.question = data['poll_question']
+
     slide.slide_set = slide_set
     slide.offset = data['offset']
     if data['image']:
@@ -181,5 +199,14 @@ class SlideFormController(FormController):
     self.event.presentation.video = data['video']
     slide.save()
     self.event.presentation.save()
+
+    # we need to save the poll choices here, after the poll is saved and has an id
+    if data['slide_type'] == 'poll':
+      for choice_text in data['poll_choices'].split('\n'):
+        print '!!!! choice: %s' % choice_text
+        choice = Choice()
+        choice.choice = choice_text
+        choice.poll = slide
+        choice.save()
 
     return True

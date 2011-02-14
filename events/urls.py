@@ -8,5 +8,6 @@ urlpatterns = patterns('',
   url(r'^event/[\d+]/slide/(?P<slide_id>\d+)/$', 'presentations.views.displaySlide', name = "display_slide"),
 #  url(r'^event/(?P<event_id>\d+)/register/$', 'registration.views.register', name = "register"),
   url(r'^event/(?P<event_id>\d+)/$', 'events.views.event', name = "event"),
+  url(r'^event/(?P<event_id>\d+)/register$', 'events.views.register', name = "register"),
   url(r'^$', 'events.views.event', name = "newest_event"),
 )
