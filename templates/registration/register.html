@@ -1,0 +1,12 @@
+{% load ifsetting_tag %}
+
+{% block extra_head %}
+<script type="text/javascript" src="{{ settings.STATIC_URL }}/register.js"></script>
+{% endblock %}
+
+{% ifequal request.session.user_registered None %}
+  <form id="register_form" action="." method="post">
+    {{ register_event_form.as_p }}
+    <a class="register_link" href="#">register</a>
+  </form>
+{% endifequal %}

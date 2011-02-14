@@ -1,6 +1,6 @@
 {% extends 'site_base.html' %}
 
-{% load event_login user_profile event_extras presentations_extras %}
+{% load event_login user_profile event_extras presentations_extras event_register %}
 
 {% block head_title %}{{ event.name }}{% endblock %}
 {% block extra_head %}
@@ -67,7 +67,7 @@
           {% ifequal request.session.login_email None %}
             {% user_profile request user_profile_form %}
           {% endifequal %}
-          {% event_register request %}
+          {% event_register request register_event_form %}
         </div>
         <div id="resource-panel" class="panel">
           <h3>Resource Panel</h3>

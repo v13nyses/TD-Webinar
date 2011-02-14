@@ -87,7 +87,6 @@ def event(request, event_id = None, state = None):
       logout_user(request)
 
     if register_event_form.is_valid():
-      print "SNTAHEUSNTHOENU"
       if user_is_logged_in(request):
         register_user_for_event(request)      
   
@@ -114,6 +113,12 @@ def user_profile_exists(email):
 def login_user(email, request):
   request.session['login_email'] = email
 
+def user_is_logged_in(request):
+  return not request.session['login_email'] is None
+
+def logout_user(request):
+  request.session['login_email'] = None
+
 def register_user_for_event(request):
   registration = Registration.objects.filter(email=request.session['login_email']).filter(event=request.session['event_id'])
 
@@ -125,9 +130,6 @@ def register_user_for_event(request):
     registration.save()
 
   request.session['user_registered'] = "True"
-
-def logout_user(request):
-  request.session['login_email'] = None
 
 def presentation(request, event_id, state = None):
   event = Event.objects.get(id = event_id)
