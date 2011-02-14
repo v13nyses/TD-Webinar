@@ -3,11 +3,14 @@ from django.db import models
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from snippetscream import PolyModel
-from events.models import event_upload_base_path
+from events.models import event_upload_base_path, Event
 from django.conf import settings
 
 def slide_upload_to(slide, filename):
-  event = slide.slide_set.presentation.event
+  if type(slide) == Event:
+    event = slide
+  else:
+    event = slide.slide_set.presentation.event
   return "%s/slides/%s" % (event_upload_base_path(event), filename)
 
 # Presentation model

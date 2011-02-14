@@ -23,6 +23,7 @@ class EventForm(BetterModelForm):
   lobby_video = form_fields.VideoField()
   image = forms.ImageField(required = False, widget = form_fields.ImageWidget)
   resource_guide = forms.FileField(required = False)
+  slides = forms.FileField(required = False)
 
   class Meta:
     model = Event
@@ -38,6 +39,7 @@ class EventForm(BetterModelForm):
                  ('Event Files', {'fields': [
                     'image',
                     'resource_guide',
+                    'slides',
                     'lobby_video'
                   ]})]
 

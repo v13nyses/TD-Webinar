@@ -1,0 +1,20 @@
+{% extends "dashboard/base.html" %} 
+{% load form_utils_tags dashboard_extras %}
+
+{% block head_title %}TDWebinar Dashboard{% endblock %}
+{% block header_right %}
+  <h4>TDWebinar Dashboard</h4>
+{% endblock %}
+
+{% block content %}
+  <div class="dashboard-panel events">
+    <fieldset>
+      <legend>Events (<a href="{% url db_event_add %}">Add an Event</a>)</legend>
+      <ul>
+        {% for event in events %}
+          <li><a href="{% url db_event_edit event.id %}">{{ event.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </fieldset>
+  </div>
+{% endblock %}

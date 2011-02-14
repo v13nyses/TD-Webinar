@@ -1,12 +1,13 @@
 import os, ipdb
 from django.conf import settings
 from events.models import Event, event_upload_base_path
-from presentations.models import Presentation, PresenterType, Presenter, Video, SlideSet, slide_upload_to
+from presentations.models import Presentation, PresenterType, Presenter, Video, Slide, SlideSet, slide_upload_to
 from polls.models import Poll, Choice
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from forms import PresentationForm, EventForm, SlideForm
 import datetime
 import ipdb
+import utils
 
 class FormController():
 
@@ -79,6 +80,9 @@ class EventFormController(FormController):
     data = self.form.cleaned_data
     event = self.form.instance
 
+    # remove the slides field, since its not part of the event model
+    slides_value = data.pop('slides')
+
     for field_name in data:
       field_value = data[field_name]
       # figure out a better way to do this... __dict__ stores 'lobby_video_id'
@@ -90,12 +94,45 @@ class EventFormController(FormController):
       else:
         event.__dict__[field_name] = field_value
     
+    # save the event now to generate an id
+    event.save()
+
     if event.presentation_id == None:
       presentation = Presentation()
+      presentation.save()
       event.presentation = presentation
-      event.presentation.save()
 
-    event.save()
+    if event.presentation.slide_set == None:
+      slide_set = SlideSet()
+      slide_set.presentation = self.event.presentation
+      slide_set.save()
+      self.event.presentation.slide_set = slide_set
+
+    # convert the slides pdf into images
+    if slides_value:
+      base_path = event_upload_base_path(event)
+      slides_path = self.upload_file(slides_value, upload_to = base_path)
+
+      image_path = slide_upload_to(event, 'slide.png')
+      utils.pdf_to_images(slides_path, image_path)
+
+      # loop through all the images
+      image_format = slide_upload_to(event, 'slide-%s.png')
+      image = image_format % 0
+
+      i = 0
+      slides_test = []
+      while os.path.exists(os.path.join(settings.MEDIA_ROOT, image)):
+        slide = Slide()
+        slide.slide_set = event.presentation.slide_set
+        slide.offset = 0
+        slide.image = image
+        slide.save()
+
+        slides_test.append(slide)
+
+        i += 1
+        image = image_format % i
 
     return True
 
@@ -150,11 +187,12 @@ class SlideFormController(FormController):
       initial = {}
 
     # make sure we grab the proper poll object, if it is one
-    instance = instance.as_leaf_class()
-    if type(instance) == Poll:
-      initial['slide_type'] = 'poll'
-      initial['poll_choices'] = '\n'.join([choice.choice for choice in instance.choice_set.all()])
-      initial['poll_question'] = instance.question
+    if instance != None:
+      instance = instance.as_leaf_class()
+      if type(instance) == Poll:
+        initial['slide_type'] = 'poll'
+        initial['poll_choices'] = '\n'.join([choice.choice for choice in instance.choice_set.all()])
+        initial['poll_question'] = instance.question
 
     FormController.__init__(self, request, SlideForm, instance, initial = initial)
 
