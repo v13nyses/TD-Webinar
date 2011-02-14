@@ -77,7 +77,7 @@ def event(request, event_id = None, state = None, template = 'event.html'):
       if not user_profile_exists(user_profile_form.cleaned_data['email']):
         user_profile_form.save()
         login_user(user_profile_form.cleaned_data['email'], request)
-        register_user_for_event(user_profile_form.cleaned_data['email'], event)
+        register_user_for_event(request)
       else:
         # the user already exists
         # TO DO
@@ -90,9 +90,10 @@ def event(request, event_id = None, state = None, template = 'event.html'):
         pass
     elif logout_form.is_valid():
       logout_user(request)
-    elif register_event_form.is_valid():
+
+    if register_event_form.is_valid():
       if user_is_logged_in(request):
-        register_user_for_event(logged_in_user(request), event)      
+        register_user_for_event(request)      
   
   context_data = {
     'event': event,
@@ -117,18 +118,23 @@ def user_profile_exists(email):
 def login_user(email, request):
   request.session['login_email'] = email
 
-def register_user_for_event(email, event):
-  registration = Registration.objects.filter(email=email).filter(event=event.id)
-
-  if len(registration) == 0:
-    registration = Registration()
-    registration.email = email
-    registration.event = event
-    #registration.ip = # TO DO
-    registration.save()
+def user_is_logged_in(request):
+  return not request.session['login_email'] is None
 
 def logout_user(request):
   request.session['login_email'] = None
+
+def register_user_for_event(request):
+  registration = Registration.objects.filter(email=request.session['login_email']).filter(event=request.session['event_id'])
+
+  if len(registration) == 0:
+    registration = Registration()
+    registration.email = request.session['login_email']
+    registration.event = Event.objects.get(id=request.session['event_id'])
+    #registration.ip = # TO DO
+    registration.save()
+
+  request.session['user_registered'] = "True"
 
 def presentation(request, event_id, state = None):
   event = Event.objects.get(id = event_id)
