@@ -61,35 +61,6 @@
         </div>
       </div>
       <div id="information-right" class="information-right">
-        <div id="login-panel" class="panel">
-          {% ifequal request.session.login_email None %}
-            <h3>Login</h3>
-            <p>Already registered? Please login with your email address below:<p>
-          {% endifequal %}
-          {% event_login request login_form logout_form %}
-        </div>
-        {% ifequal request.session.login_email None %}
-          <div id="registration-panel" class="panel">
-            <h3>Register</h3>
-            <p>New user? Register here.</p>
-            {% user_profile request user_profile_form %}
-          </div>
-        {% else %}
-          {% ifequal request.session.user_registered None %}
-            <!-- TO DO - registration form 
-            <form name="register_event_form" action="." method="post">
-              {{ register_event_form.as_p }}
-              <div style="visibility:hidden">
-                <input type="text" name="email" value="{{ request.session.login_email }}"></input>
-                <input type="text" name="event" value="{{ request.session.event_id }}"></input>
-              </div>
-              <div class="rp-item">
-                <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-register.png" width="20" height="20" alt="Register" /></div>
-                <div class="rp-description"><a class="register_for_event" href="#" >Register for this Event</a></div>
-              </div>
-            </form>-->
-          {% endifequal %}
-        {% endifequal %}
         <div id="resource-panel" class="panel">
           <h3>Resource Panel</h3>
           <div class="rp-item">

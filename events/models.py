@@ -140,3 +140,8 @@ class Event(models.Model):
   STATE_LIVE = 'live'
   STATE_POST = 'post'
   STATE_ARCHIVE = 'archive'
+
+  class Meta:
+    permissions = (
+      ("can_view_dashboard", "Can view event dashboard"),
+    )

@@ -28,6 +28,11 @@ body {
 
 }
 
+#body {
+  margin: 0;
+  padding: 0;
+}
+
 #header {
 	height: 65px;
 }
@@ -183,6 +188,7 @@ body {
 	width: 100%;
 	padding-bottom: 20px;
 	margin-bottom: -30px;
+  float: left;
 }
 
 #information-tabs {
@@ -240,7 +246,7 @@ body {
 }
 
 #information-left {
-	width: 530px;
+	/*width: 530px;*/
 	padding-left: 10px;
 	float: left;
 }
@@ -257,12 +263,14 @@ body {
 	background: #E7E8EA;
 }
 
-#footer-wrapper {
+#footer {
 	background: url(../images/footerbg.png) repeat-x center 50px;
 	height: 100px;
+  float: left;
+  width: 100%;
 }
 
-#footer {
+#footer .container {
 	text-align: right;
 	padding: 70px 0 10px 0;
 }
@@ -426,6 +434,32 @@ input#question-submit {
 
 .rp-description {
 	padding: 2px 0 10px ;
+}
+
+/** Registration Page **/
+#information-wrapper.register {
+  background-image: none;
+}
+
+#information-wrapper #information {
+  width: 480px;
+  padding-top: 10px;
+}
+
+#information-wrapper.register .information-right {
+  width: 320px;
+}
+
+#information-wrapper.register .information-right .panel {
+  width: 270px;
+  margin-top: 10px;
+}
+
+#information-wrapper.register #presenters {
+  border-top: 1px solid #EFEFEF;
+  padding: 10px 0;
+  margin: 10px 20px;
+  width: 810px;
 }
 
 /** HACKS **/

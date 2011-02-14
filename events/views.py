@@ -26,9 +26,14 @@ def slide(request, slide_id = None):
   pass
 
 # used by urls:
+#   event/<event_id>/register
+def register(request, event_id = None):
+  return event(request, event_id, 'pre', 'register.html')
+
+# used by urls:
 #   event/
 #   event/<event_id>/
-def event(request, event_id = None, state = None):
+def event(request, event_id = None, state = None, template = 'event.html'):
   # if we didn't get an event id, grab the newest event
   event = None
 
@@ -99,7 +104,7 @@ def event(request, event_id = None, state = None):
     'user_profile_form': UserProfileForm(),
   }
 
-  return render_to_response('event.html', context_data, context_instance = RequestContext(request))
+  return render_to_response(template, context_data, context_instance = RequestContext(request))
 
 def user_profile_exists(email):
   user = UserProfile.objects.filter(email=email)

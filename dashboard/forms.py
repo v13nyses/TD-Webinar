@@ -64,11 +64,18 @@ class SlideForm(BetterModelForm):
   image = forms.ImageField(required = False, widget = form_fields.ImageWidget)
   offset = form_fields.TimeOffsetField()
 
+  slide_type = forms.ChoiceField(choices = [('slide', 'Slide'), ('poll', 'Poll')])
+  poll_question = forms.CharField(required = False)
+  poll_choices = forms.CharField(widget = AutoResizeTextarea, required = False)
+
   class Meta:
     model = Slide
 
     fieldsets = [('Video', {'fields': ['video']}),
                  ('Add Slide', {'fields': [
+                    'slide_type',
                     'image',
-                    'offset'
+                    'offset',
+                    'poll_question',
+                    'poll_choices'
                 ]})]
