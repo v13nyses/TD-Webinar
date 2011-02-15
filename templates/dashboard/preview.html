@@ -1,0 +1,28 @@
+{% extends "dashboard/base.html" %}
+{% load form_utils_tags dashboard_extras event_extras %}
+
+{% block extra_body_class %}preview{% endblock %}
+{% block head_title %}Step 4 of 4: Preview Event{% endblock %}
+{% block header_right %}
+  <h4>Step 4 of 4: Preview Event</h4>
+{% endblock %}
+
+{% block content %}
+  <div class="dashboard-panel event-preview">
+    <form action="{% url db_preview event.id %}" method="post" enctype="multipart/form-data">
+      <fieldset class="preview-fieldset">
+        <legend>
+        <ul class="preview-states">
+          <li><a href="#{% url event_state event.id "pre" %}">Registration</a></li>
+          <li><a href="#{% url event_state event.id "lobby" %}">Lobby</a></li>
+          <li><a href="#{% url event_state event.id "live" %}">Live</a></li>
+          <li><a href="#{% url event_state event.id "post" %}">After Live</a></li>
+          <li><a href="#{% url event_state event.id "archive" %}">Archive</a></li>
+        </ul>
+        </legend>
+        <iframe src="{% url event_state event.id state %}"></iframe>
+      </fieldset>
+      {% form_buttons '' 1 0 %}
+    </form>
+  </div>
+{% endblock %}
