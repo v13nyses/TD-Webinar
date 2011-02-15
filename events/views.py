@@ -1,3 +1,4 @@
+from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
@@ -59,9 +60,11 @@ def event(request, event_id = None, state = None, template = 'event.html'):
 
   if not request.session.has_key('login_email'):
     request.session['login_email'] = None
+    request.session['user_registered'] = None
   else:
     reg = Registration.objects.filter(email=request.session['login_email']).filter(event=event.id)
 
+    print len(reg)
     if len(reg) == 0:
       request.session['user_registered'] = None
     else:
@@ -83,8 +86,11 @@ def event(request, event_id = None, state = None, template = 'event.html'):
         # TO DO
         pass
     elif login_form.is_valid():
+      print "logging in.."
       if user_profile_exists(login_form.cleaned_data['email']):
+        print "login user exists"
         login_user(login_form.cleaned_data['email'], request)
+        return HttpResponseRedirect(reverse('event', args=(event_id)))
       else:
         # Do Nothing (page will reload with no one logged in)
         pass
@@ -92,7 +98,9 @@ def event(request, event_id = None, state = None, template = 'event.html'):
       logout_user(request)
 
     if register_event_form.is_valid():
+      print "reg form valid"
       if user_is_logged_in(request):
+        print "user logged in"
         register_user_for_event(request)      
   
   context_data = {
@@ -127,12 +135,14 @@ def logout_user(request):
 def register_user_for_event(request):
   registration = Registration.objects.filter(email=request.session['login_email']).filter(event=request.session['event_id'])
 
+  print len(registration)
   if len(registration) == 0:
     registration = Registration()
     registration.email = request.session['login_email']
     registration.event = Event.objects.get(id=request.session['event_id'])
     #registration.ip = # TO DO
     registration.save()
+    print "saved"
 
   request.session['user_registered'] = "True"
 

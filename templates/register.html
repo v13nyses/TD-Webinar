@@ -42,20 +42,6 @@
             {% user_profile request user_profile_form %}
           </div>
         {% else %}
-          {% ifequal request.session.user_registered None %}
-            <!-- TO DO - registration form 
-            <form name="register_event_form" action="." method="post">
-              {{ register_event_form.as_p }}
-              <div style="visibility:hidden">
-                <input type="text" name="email" value="{{ request.session.login_email }}"></input>
-                <input type="text" name="event" value="{{ request.session.event_id }}"></input>
-              </div>
-              <div class="rp-item">
-                <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-register.png" width="20" height="20" alt="Register" /></div>
-                <div class="rp-description"><a class="register_for_event" href="#" >Register for this Event</a></div>
-              </div>
-            </form>-->
-          {% endifequal %}
         {% endifequal %}
       </div>
       <div id="presenters">
