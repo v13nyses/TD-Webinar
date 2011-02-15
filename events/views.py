@@ -53,11 +53,19 @@ def event(request, event_id = None, state = None, template = 'event.html'):
   else:
     event.debug = False
 
+  if not request.session.has_key('was_redirected'):
+    request.session['was_redirected'] = "False"
+
+  if request.session['was_redirected'] == "True":
+    request.session['was_redirected'] = "False"
+  else:
+    request.session['first_redirect'] = "True"
+
   if state == None:
     state = event.state
 
   request.session['event_id'] = event.id
-
+  
   if not request.session.has_key('login_email'):
     request.session['login_email'] = None
     request.session['user_registered'] = None
@@ -102,7 +110,13 @@ def event(request, event_id = None, state = None, template = 'event.html'):
       if user_is_logged_in(request):
         print "user logged in"
         register_user_for_event(request)      
-  
+
+  if user_is_logged_in(request):
+    if request.session['user_registered'] is None and is_first_redirect(request):
+      request.session['first_redirect'] = "False"
+      request.session['was_redirected'] = "True"
+      return HttpResponseRedirect(reverse('register', args=(event_id)))
+ 
   context_data = {
     'event': event,
     'state': state,
@@ -114,6 +128,9 @@ def event(request, event_id = None, state = None, template = 'event.html'):
   }
 
   return render_to_response(template, context_data, context_instance = RequestContext(request))
+
+def is_first_redirect(request):
+  return request.session['first_redirect'] is None or request.session['first_redirect'] == "True"
 
 def user_profile_exists(email):
   user = UserProfile.objects.filter(email=email)
@@ -127,6 +144,7 @@ def login_user(email, request):
   request.session['login_email'] = email
 
 def user_is_logged_in(request):
+  print request.session['login_email']
   return not request.session['login_email'] is None
 
 def logout_user(request):

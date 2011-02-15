@@ -1,6 +1,6 @@
 {% extends 'site_base.html' %}
 
-{% load event_login user_profile event_extras presentations_extras event_register %}
+{% load event_login user_profile event_extras presentations_extras %}
 
 {% block head_title %}{{ event.name }}{% endblock %}
 {% block extra_head %}
@@ -61,7 +61,6 @@
         </div>
       </div>
       <div id="information-right" class="information-right">
-        {% event_register request register_event_form %}
         <div id="resource-panel" class="panel">
           <h3>Resource Panel</h3>
           <div class="rp-item">
