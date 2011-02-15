@@ -82,6 +82,7 @@ class EventFormController(FormController):
 
     # remove the slides field, since its not part of the event model
     slides_value = data.pop('slides')
+    timing_value = data.pop('timing')
 
     for field_name in data:
       field_value = data[field_name]
@@ -94,26 +95,32 @@ class EventFormController(FormController):
       else:
         event.__dict__[field_name] = field_value
     
-    # save the event now to generate an id
-    event.save()
-
     if event.presentation_id == None:
       presentation = Presentation()
       presentation.save()
       event.presentation = presentation
 
+    # save the event now to generate an id
+    event.save()
+
     if event.presentation.slide_set == None:
       slide_set = SlideSet()
-      slide_set.presentation = self.event.presentation
+      slide_set.presentation = event.presentation
       slide_set.save()
-      self.event.presentation.slide_set = slide_set
+      event.presentation.slide_set = slide_set
+      event.presentation.save()
 
+    base_path = event_upload_base_path(event)
     # convert the slides pdf into images
     if slides_value:
-      base_path = event_upload_base_path(event)
       slides_path = self.upload_file(slides_value, upload_to = base_path)
-
       image_path = slide_upload_to(event, 'slide.png')
+
+      # create the slides/ directory
+      dir_path = os.path.join(settings.MEDIA_ROOT, base_path, 'slides')
+      if not os.path.exists(dir_path):
+        os.mkdir(dir_path)
+
       utils.pdf_to_images(slides_path, image_path)
 
       # loop through all the images
@@ -133,6 +140,18 @@ class EventFormController(FormController):
 
         i += 1
         image = image_format % i
+
+    # update the timing if a timing csv was uploaded
+    if timing_value:
+      timing_path = self.upload_file(timing_value, upload_to = base_path)
+      offsets = utils.csv_to_offsets(timing_path)
+      slides = event.presentation.slide_set.slide_set.order_by('id')
+      cur_slide = 0
+      for offset in offsets:
+        if cur_slide < len(slides):
+          slides[cur_slide].offset = offset
+          slides[cur_slide].save()
+          cur_slide += 1
 
     return True
 
