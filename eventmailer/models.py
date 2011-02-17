@@ -27,6 +27,11 @@ class MailChimpEvent(models.Model):
     except MailChimpError as error:
       logger.error("MailChimp segment already exists: %s" % error.msg)
       # find the matching segment
+      logger.info("Finding segments with name: %s" % self.event.name)
+      for segment in mailchimp.listStaticSegments(id = settings.MAILCHIMP_LIST_ID):
+        if segment['name'] == self.event.name:
+          self.list_segment_id = segment['id']
+          logger.info("Found matching segment for '%s': %s" % (self.event.name, segment['id']))
 
   def create_campaign(self, subject_format, time_str, schedule_time = None):
     mailchimp = MailChimp(settings.MAILCHIMP_API_KEY)
@@ -51,7 +56,6 @@ class MailChimpEvent(models.Model):
       try:
         mailchimp.campaignSchedule(cid = campaign_id, schedule_time = schedule_time)
       except MailChimpError as error:
-        print "!!! Campaign scheduled in the past %s" % error.msg
         logger.error("Campaign scheduled in the past: %s" % error.msg)
 
     return campaign_id
@@ -71,6 +75,15 @@ class MailChimpEvent(models.Model):
     self.create_campaign(settings.MAILCHIMP_SUBJECTS['reminder'], '24 hours', time_24_hours)
     self.create_campaign(settings.MAILCHIMP_SUBJECTS['reminder'], '1 hour', time_1_hour)
 
+def mailchimp_template_choices():
+  mailchimp = MailChimp(settings.MAILCHIMP_API_KEY)
+  templates = mailchimp.campaignTemplates()
+
+  choices = []
+  for template in templates:
+    choices.append((template['id'], template['name']))
+
+  return choices
 
 def setup_event(sender, instance = None, created = False, **kwargs):
   if created:
@@ -80,12 +93,13 @@ def setup_event(sender, instance = None, created = False, **kwargs):
     event_mailer.save()
 
 def register_user(sender, instance = None, created = False, **kwargs):
+  logger.info("Registering user: %s, created: %s" % (instance.email, created))
   if created:
     # lookup the profile for the registered user
     profile = UserProfile.objects.get(email = instance.email)
     mailchimp_event = MailChimpEvent.objects.get(event = instance.event)
     mailchimp = MailChimp(settings.MAILCHIMP_API_KEY)
-    mailchimp.listSubscribe(
+    result = mailchimp.listSubscribe(
         id = settings.MAILCHIMP_LIST_ID, 
         email_address = instance.email,
         merge_vars = {
@@ -103,11 +117,13 @@ def register_user(sender, instance = None, created = False, **kwargs):
         welcome_email = True,
         update_existing = True
     )
-    mailchimp.listStaticSegmentAddMembers(
+    logger.info("Adding %s to list '%s', result: %s" % (instance.email, settings.MAILCHIMP_LIST_ID, result))
+    result = mailchimp.listStaticSegmentAddMembers(
         id = settings.MAILCHIMP_LIST_ID,
         seg_id = mailchimp_event.list_segment_id,
         batch = [instance.email]
     )
+    logger.info("Adding %s to list segment '%s': %s" % (instance.email, mailchimp_event.list_segment_id, result))
                             
 
 

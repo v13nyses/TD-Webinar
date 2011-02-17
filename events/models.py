@@ -31,6 +31,12 @@ class Event(models.Model):
   live_stop_date = models.DateTimeField()
   archive_start_date = models.DateTimeField()
 
+  # templates for use with mailchimp
+  template_1_hour = models.CharField(max_length = 50)
+  template_24_hour = models.CharField(max_length = 50)
+  template_thank_you = models.CharField(max_length = 50)
+  template_missed_you = models.CharField(max_length = 50)
+
   debug = False
 
   def live_offset(self, time_delta):

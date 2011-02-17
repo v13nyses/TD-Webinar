@@ -2,6 +2,7 @@ from form_utils.forms import BetterForm, BetterModelForm
 from form_utils.widgets import AutoResizeTextarea
 from events.models import Event, event_upload_to
 from presentations.models import Video, Presentation, PresenterType, Presenter, Slide
+from eventmailer.models import mailchimp_template_choices
 from django import forms
 from django.template.loader import render_to_string
 from django.forms.widgets import SplitDateTimeWidget, HiddenInput
@@ -26,6 +27,11 @@ class EventForm(BetterModelForm):
   slides = forms.FileField(required = False)
   timing = forms.FileField(required = False)
 
+  template_1_hour = forms.ChoiceField(choices = mailchimp_template_choices())
+  template_24_hour = forms.ChoiceField(choices = mailchimp_template_choices())
+  template_missed_you = forms.ChoiceField(choices = mailchimp_template_choices())
+  template_thank_you = forms.ChoiceField(choices = mailchimp_template_choices())
+
   class Meta:
     model = Event
     fieldsets = [('Event Details', {'fields': [
@@ -43,7 +49,13 @@ class EventForm(BetterModelForm):
                     'slides',
                     'timing',
                     'lobby_video'
-                  ]})]
+                  ]}),
+                 ('MailChimp Templates', {'fields': [
+                    'template_1_hour',
+                    'template_24_hour',
+                    'template_missed_you',
+                    'template_thank_you'
+                 ]})]
 
 class PresentationForm(BetterModelForm):
   presenter_type = forms.ChoiceField(choices = PresenterType.objects.all().values_list())
