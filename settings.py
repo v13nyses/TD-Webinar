@@ -133,6 +133,7 @@ INSTALLED_APPS = (
     'reporting',
     'registration',
 		'userprofiles',
+    'eventmailer',
     'sorl.thumbnail',
     #'autofixture',
     # included
@@ -211,3 +212,13 @@ except ImportError:
 
 # sorl-thumbnail settings
 THUMBNAIL_DEBUG = True
+
+# eventmailer
+MAILCHIMP_API_KEY = "a9bd7260067c1faf8f2e52268b8cd855-us2"
+MAILCHIMP_LIST_ID = '68a096ab69'
+MAILCHIMP_SUBJECTS = {
+    'reminder': 'Reminder! {event} starts in {time}',
+}
+MAILCHIMP_FROM_EMAIL = "v13inc@gmail.com"
+MAILCHIMP_FROM_NAME = "Sean"
+MAILCHIMP_TO_EMAIL = "Event Members"

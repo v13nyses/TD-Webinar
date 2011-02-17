@@ -98,7 +98,7 @@ def event(request, event_id = None, state = None, template = 'event.html'):
       if user_profile_exists(login_form.cleaned_data['email']):
         print "login user exists"
         login_user(login_form.cleaned_data['email'], request)
-        return HttpResponseRedirect(reverse('event', args=(event_id)))
+        return HttpResponseRedirect(reverse('event', args=[event_id]))
       else:
         # Do Nothing (page will reload with no one logged in)
         pass
@@ -115,7 +115,7 @@ def event(request, event_id = None, state = None, template = 'event.html'):
     if request.session['user_registered'] is None and is_first_redirect(request):
       request.session['first_redirect'] = "False"
       request.session['was_redirected'] = "True"
-      return HttpResponseRedirect(reverse('register', args=(event_id)))
+      return HttpResponseRedirect(reverse('register', args=[event_id]))
  
   context_data = {
     'event': event,
