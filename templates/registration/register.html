@@ -5,8 +5,12 @@
 {% endblock %}
 
 {% ifequal request.session.user_registered None %}
-  <form id="register_form" action="." method="post">
-    {{ register_event_form.as_p }}
-    <a class="register_link" href="#">register</a>
-  </form>
+  <div id="registration-panel" class="panel">
+    <h3>Register</h3>
+    <form id="register_form" action="." method="post">
+      {{ register_event_form.as_p }}
+      You are not registered for this event.  To register,
+      <a class="register_link" href="#">click here</a>
+    </form>
+  </div>
 {% endifequal %}
