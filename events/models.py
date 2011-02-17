@@ -33,6 +33,11 @@ class Event(models.Model):
 
   debug = False
 
+  def live_offset(self, time_delta):
+    lobby_start_date = self.lobby_start_date.replace(tzinfo = timezone(settings.TIME_ZONE))
+
+    return lobby_start_date + time_delta
+    
   def time_difference(self, time_a, time_b = None):
     """ Returns time_a - time_b in seconds. If time_a < time_b, returns -1. """
     if time_b == None:
