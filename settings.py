@@ -135,6 +135,7 @@ INSTALLED_APPS = (
 		'userprofiles',
     'eventmailer',
     'sorl.thumbnail',
+    'mailfriend',
     #'autofixture',
     # included
     'django.contrib.auth',
