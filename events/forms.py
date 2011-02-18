@@ -5,3 +5,6 @@ class LoginForm(forms.Form):
 
 class LogoutForm(forms.Form):
   logout = forms.CharField(widget=forms.HiddenInput, initial="false")
+
+class RecommendForm(forms.Form):
+  to_list = forms.EmailField(label="Friend's Email Address:")

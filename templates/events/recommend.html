@@ -1,0 +1,16 @@
+{% load ifsetting_tag %}
+
+{% block extra_head %}
+<script type="text/javascript" src="{{ settings.STATIC_URL }}/recommend.js"></script>
+{% endblock %}
+
+{% ifnotequal request.session.login_email None %}
+  <div class="rp-item">
+    <div class="rp-icon"><img src="{{ settings.STATIC_URL }}/images/icon-mail.png" width="20" height="20" alt="Recommend this webinar"></img></div>
+    Recommend this Webinar
+    <form id="recommend_form" action="" method="post">
+      {{ recommend_form.as_p }}
+      <a class="recommend_link" href="#">Recommend!</a>
+    </form>
+  </div>
+{% endifnotequal %}

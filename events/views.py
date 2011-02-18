@@ -1,18 +1,25 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render_to_response
-from django.template import RequestContext
+from django.template import RequestContext, loader, Context
 from django.conf import settings
 from events.models import Event
 from datetime import datetime
 from pytz import timezone
+from django.core.mail import EmailMessage
 
-from events.forms import LoginForm, LogoutForm
+from events.forms import LoginForm, LogoutForm, RecommendForm
 from userprofiles.forms import UserProfileForm
 from registration.forms import RegisterEventForm
 
 from registration.models import Registration
 from userprofiles.models import UserProfile
+
+try:
+  from mailer import send_mail
+except ImportError:
+  from django.core.mail import send_mail
+
 
 # used by urls:
 #   event/<event_id>/slides/
@@ -79,10 +86,12 @@ def event(request, event_id = None, state = None, template = 'event.html'):
       request.session['user_registered'] = "True"
 
   if request.method == "POST":
+    print "posting"
     login_form = LoginForm(request.POST)
     logout_form = LogoutForm(request.POST)
     register_event_form = RegisterEventForm(request.POST)
     user_profile_form = UserProfileForm(request.POST)
+    recommend_form = RecommendForm(request.POST)
 
     if user_profile_form.is_valid():
       if not user_profile_exists(user_profile_form.cleaned_data['email']):
@@ -105,11 +114,32 @@ def event(request, event_id = None, state = None, template = 'event.html'):
     elif logout_form.is_valid():
       logout_user(request)
 
-    if register_event_form.is_valid():
+    print "aoeu"
+    if recommend_form.is_valid() and user_is_logged_in(request):
+      subject = "You have recieved a link"
+      message_template = loader.get_template('events/recommend.txt')
+      message_context = Context({
+        'event': event,
+        'from': request.session['login_email'],
+      })
+      message = message_template.render(message_context)
+      email = EmailMessage(
+        subject,
+        message,
+        request.session['login_email'],
+        [recommend_form.cleaned_data['to_list']],
+      )
+
+      #email = EmailMessage('hello', 'some boddyy', 'aoeulover@gmail.com',
+      #['dionyses@gmail.com'])
+      email.send()
+
+    elif register_event_form.is_valid():
       print "reg form valid"
       if user_is_logged_in(request):
         print "user logged in"
         register_user_for_event(request)      
+
 
   if user_is_logged_in(request):
     if request.session['user_registered'] is None and is_first_redirect(request):
@@ -125,6 +155,7 @@ def event(request, event_id = None, state = None, template = 'event.html'):
     'logout_form': LogoutForm(),
     'register_event_form': RegisterEventForm(),
     'user_profile_form': UserProfileForm(),
+    'recommend_form': RecommendForm(),
   }
 
   return render_to_response(template, context_data, context_instance = RequestContext(request))
