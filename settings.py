@@ -4,6 +4,7 @@
 import os.path
 import posixpath
 import pinax
+import logging
 
 PINAX_ROOT = os.path.abspath(os.path.dirname(pinax.__file__))
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
@@ -223,3 +224,8 @@ MAILCHIMP_SUBJECTS = {
 MAILCHIMP_FROM_EMAIL = "v13inc@gmail.com"
 MAILCHIMP_FROM_NAME = "Sean"
 MAILCHIMP_TO_EMAIL = "Event Members"
+
+# logging
+if not hasattr(logging, "set_up_done"):
+  logging.set_up_done = True
+  logging.basicConfig(level = logging.INFO)
