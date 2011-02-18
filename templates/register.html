@@ -27,20 +27,17 @@
           </div>
         </div>
       </div>
+      <!--login and registration template tag-->
       <div id="information-right" class="information-right">
         <div id="login-panel" class="panel">
           {% ifequal request.session.login_email None %}
             <h3>Login</h3>
             <p>Already registered? Please login with your email address below:<p>
           {% endifequal %}
-          {% event_login request login_form logout_form %}
+            {% event_login request login_form logout_form %}
         </div>
         {% ifequal request.session.login_email None %}
-          <div id="registration-panel" class="panel">
-            <h3>Register</h3>
-            <p>New user? Register here.</p>
             {% user_profile request user_profile_form %}
-          </div>
         {% else %}
             {% event_register request register_event_form %}
         {% endifequal %}

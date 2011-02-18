@@ -1,6 +1,6 @@
 {% extends 'site_base.html' %}
 
-{% load event_login user_profile event_extras presentations_extras %}
+{% load event_login user_profile event_extras presentations_extras recommend %}
 
 {% block head_title %}{{ event.name }}{% endblock %}
 {% block extra_head %}
@@ -79,9 +79,10 @@
             <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-td.png" width="20" height="20" alt="Find a TD Commercial Banking Centre" /></div>
             <div class="rp-description">Find a TD Commercial Banking Centre</div>
           </div>
-          <div class="rp-item">
+          {% recommend request recommend_form %}
+          <!--<div class="rp-item">
             <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-mail.png" width="20" height="20" alt="Recommend this webinar" /></div>
-            <div class="rp-description">Recommend this webinar</div>
+            <a class="rp-description">Recommend this webinar</div>-->
           </div>
         </div>
       </div>

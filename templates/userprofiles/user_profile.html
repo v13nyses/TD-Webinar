@@ -1,5 +1,9 @@
 {% load ifsetting_tag %}
-<form name='user_profile_form' action="." method="post">
-  {{ user_profile_form.as_p }}
-  <input type='submit' value='Sign Up'></input>
-</form>
+<div id="registration-panel" class="panel">
+  <h3>Register</h3>
+  <p>New user?  Register here</p>
+  <form name='user_profile_form' action="." method="post">
+    {{ user_profile_form.as_p }}
+    <input type='submit' value='Sign Up'></input>
+  </form>
+</div>

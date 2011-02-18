@@ -200,6 +200,14 @@ SITE_NAME = "Pinax"
 LOGIN_URL = "/account/login/"
 LOGIN_REDIRECT_URLNAME = "what_next"
 
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'v13nyses@gmail.com'
+EMAIL_HOST_PASSWORD = 's34nandl1nds3y'
+DEFAULT_FROM_EMAIL = 'v13nyses@gmail.com'
+SERVER_EMAIL = 'v13nyses@gmail.com'
+EMAIL_USE_TLS = True
+
 # TD Webinar Specific Settings
 EVENT_SLUG_WORDS = 4 # the number of words to use when creating an event 'slug'
 VIDEO_URL = "http://content.bitsontherun.com/players/%s-%s.js"

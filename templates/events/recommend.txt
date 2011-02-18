@@ -1,0 +1,12 @@
+Hi!
+
+Your friend, {{ from }}, has recommend you join us for the live webinar session {{ event.name }}.
+
+{{ event.description }}
+
+{{ event.name }} will be going live on {{ event.live_start_date }} so make so you sign up quick!  To join us for the live webinar, please come visit home.v13inc.com.
+
+Hope to see you soon!
+
+Sincerely,
+TD Small Business Banking
