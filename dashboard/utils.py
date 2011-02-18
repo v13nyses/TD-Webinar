@@ -4,6 +4,9 @@ import os
 import subprocess
 import csv
 import ipdb
+import logging
+
+logger = logging.getLogger(__name__)
 
 def pdf_to_images(pdf_file, image_path):
   media_root = settings.MEDIA_ROOT
@@ -21,3 +24,14 @@ def csv_to_offsets(csv_path):
     offsets.append(parse_date_offset_string(row[0]))
 
   return offsets
+
+def presentation_to_pdf(presentation, pdf_file):
+  logger.info("Converting presentation (%s) to pdf (%s)" % (presentation.event.name, pdf_file))
+  images = [slide.image.path for slide in presentation.slide_set.slide_set.order_by("offset")]
+  convert_call = ['convert']
+  convert_call.extend(images)
+  convert_call.extend([pdf_file])
+  logger.info("Convert call: %s" % (' '.join(convert_call)))
+
+  return subprocess.call(convert_call)
+

@@ -7,10 +7,7 @@ from django.template.defaultfilters import slugify
 
 # setup some helper functions to find the upload paths at runtime
 def event_upload_base_path(event):
-  # truncate the event name and turn it into a valid url
-  event_slug = slugify(truncate_words(event.name, settings.EVENT_SLUG_WORDS))
-
-  return "events/%s" % (event_slug)
+  return "events/%s" % (event.slug)
 
 def event_upload_to(event, filename):
   return "%s/%s" % (event_upload_base_path(event), filename)
@@ -36,6 +33,9 @@ class Event(models.Model):
   template_24_hour = models.CharField(max_length = 50)
   template_thank_you = models.CharField(max_length = 50)
   template_missed_you = models.CharField(max_length = 50)
+
+  # generated pdf file (used for caching)
+  presentation_pdf = models.FileField(blank = True, upload_to = event_upload_to)
 
   debug = False
 
@@ -138,6 +138,9 @@ class Event(models.Model):
         'archive': self.time_difference(self.archive_start_date)
     }
 
+  def get_slug(self):
+    return slugify(truncate_words(self.name, settings.EVENT_SLUG_WORDS))
+
   def __unicode__(self):
     return self.name
 
@@ -145,6 +148,7 @@ class Event(models.Model):
   start_offset = property(get_start_offset, doc = 'The number of seconds the event has been live.')
   presenters = property(get_presenters, doc = 'A special array of presenters for use in templates.')
   state_offsets = property(get_state_offsets)
+  slug = property(get_slug)
 
   STATE_PRE = 'pre' 
   STATE_LOBBY = 'lobby'

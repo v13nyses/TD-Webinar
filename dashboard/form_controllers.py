@@ -225,9 +225,20 @@ class SlideFormController(FormController):
 
     self.set_fieldset_label(label, 1)
 
+  def reset_pdf_cache(self):
+    self.event.presentation_pdf = ''
+    self.event.save()
+
+  def delete(self):
+    self.reset_pdf_cache()
+
+    FormController.delete(self)
+
   def save(self):
     if not self.form.is_valid():
       return False
+    
+    self.reset_pdf_cache()
 
     data = self.form.cleaned_data
     slide_set = self.event.presentation.slide_set

@@ -1,11 +1,16 @@
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.conf import settings
+from django.template.defaultfilters import slugify
 from events.models import Event
+from dashboard.utils import presentation_to_pdf
+from presentations.models import slide_upload_to
 from datetime import datetime
 from pytz import timezone
+import os
+import logging
 
 from events.forms import LoginForm, LogoutForm
 from userprofiles.forms import UserProfileForm
@@ -14,17 +19,30 @@ from registration.forms import RegisterEventForm
 from registration.models import Registration
 from userprofiles.models import UserProfile
 
-# used by urls:
-#   event/<event_id>/slides/
-def slides(request):
-  # TO DO
-  pass
+logger = logging.getLogger(__name__)
 
 # used by urls:
-#   event/<event_id>/slide/<slide_id>/
-def slide(request, slide_id = None):
-  # TO DO
-  pass
+#   event/<event_id>/<filename>.pdf
+def pdf(request, event_id = None):
+  event = Event.objects.get(id = event_id)
+  logger.info("Requesting PDF for '%s' (%d), presentation_pdf = %s" %
+      (event.name, event.id, event.presentation_pdf))
+  if event.presentation_pdf == '' or \
+     not os.path.exists(os.path.join(settings.MEDIA_ROOT, event.presentation_pdf.path)):
+    # grab a list of slides from the presentation
+    slide = event.presentation.slide_set.slide_set.order_by("offset")[0]
+    pdf_path = slide_upload_to(slide, event.slug + ".pdf")
+    pdf_full_path = os.path.join(settings.MEDIA_ROOT, pdf_path)
+    result = presentation_to_pdf(event.presentation, pdf_full_path)
+    if result == 0:
+      logger.info("Conversion successful")
+    else:
+      logger.info("Error converting to pdf: %d" % result)
+
+    event.presentation_pdf = pdf_path
+    event.save()
+
+  return HttpResponseRedirect("%s/%s" % (settings.MEDIA_URL, event.presentation_pdf))
 
 # used by urls:
 #   event/<event_id>/register
