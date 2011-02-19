@@ -11,6 +11,7 @@ class UserProfile(models.Model):
   postal_code = models.CharField(max_length=6)
   upcoming_events = models.BooleanField()
   refer_type = models.ForeignKey('ReferType')
+  ip_address = models.IPAddressField()
 
 class Title(models.Model):
   name = models.CharField(max_length=10)

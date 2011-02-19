@@ -24,6 +24,14 @@
       archive: "{{ stateOffsets.archive }}"
     };
   </script>
+
+  {% ifnotequal custom_variable None %}
+    <script type="text/javascript">
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-20665158-2']);
+      _gaq.push({{ custom_variable }});
+    </script>
+  {% endifnotequal %}
 {% endblock %}
 
 {% block header_right %}
