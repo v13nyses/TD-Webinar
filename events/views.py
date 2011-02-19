@@ -20,6 +20,7 @@ from registration.forms import RegisterEventForm
 from registration.models import Registration
 from userprofiles.models import UserProfile
 import simplejson as json
+import ipdb
 
 try:
   from mailer import send_mail
@@ -68,11 +69,14 @@ def register(request, event_id = None):
 def submit_question(request, event_id = None):
   result = False
 
+  logger.info("Question submitted")
   if event_id and request.POST:
     question = Question()
     question.event = Event.objects.get(id = event_id)
     question.question = request.POST['question']
     question.save()
+
+    logger.info("Question submitted: %s" % question.question)
 
     result = True
 

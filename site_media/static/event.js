@@ -245,8 +245,21 @@ $(document).ready(function() {
 
   // show a thank you message when the question form is submitted
   $("#questionform").submit(function() {
-    $("#questionform label").html("Thank you for submitting your question.");
-    $("#questionform-right").hide();
+    // submit the data with ajax
+    $.ajax({
+      url: $("#questionform").attr("action"),
+      dataType: 'json',
+      data: $("#questionform").serialize(),
+      type: 'post',
+      success: function(data) {
+        console.log(data);
+        $("#questionform label").html("Thank you for submitting your question.");
+        $("#questionform-right").hide();
+      }
+    });
+
+    $("#questionform input").attr("disabled", "disabled");
+
     return false;
   });
 });
