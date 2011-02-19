@@ -65,7 +65,7 @@
           <h3>Resource Panel</h3>
           <div class="rp-item">
             <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-download.png" width="20" height="20" alt="Download Presentation" /></div>
-            <div class="rp-description"><a href="{{ MEDIA_URL }}{{ event.resource_guide.name }}" >Download Presentation</a></div>
+            <div class="rp-description"><a href="{% url pdf event.id %}" >Download Presentation</a></div>
           </div>
           <div class="rp-item">
             <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-resourceguide.png" width="20" height="20" alt="Resource Guide" /></div>
