@@ -121,7 +121,7 @@ def statistics(request, event_id = None):
 
 def statistics_registrants(request, event_id = None):
   event = Event.objects.get(id = event_id)
-  registrants = Registration.objects.order_by("email")
+  registrants = Registration.objects.order_by("id")
 
   context = {
     'event': event,
