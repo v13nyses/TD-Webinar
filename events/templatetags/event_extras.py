@@ -35,3 +35,7 @@ def presentation(event, state = None):
 
   return render_to_string(['events/presentation_%s.html' % state, 
                            'events/presentation.html'], context)
+
+@register.inclusion_tag('events/question_form.html')
+def question_form(event):
+  return {'event': event}

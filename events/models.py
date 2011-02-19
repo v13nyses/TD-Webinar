@@ -160,3 +160,7 @@ class Event(models.Model):
     permissions = (
       ("can_view_dashboard", "Can view event dashboard"),
     )
+
+class Question(models.Model):
+  question = models.TextField()
+  event = models.ForeignKey('Event')

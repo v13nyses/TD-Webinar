@@ -4,7 +4,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext, loader, Context
 from django.conf import settings
 from django.template.defaultfilters import slugify
-from events.models import Event
+from events.models import Event, Question
 from dashboard.utils import presentation_to_pdf
 from presentations.models import slide_upload_to
 from datetime import datetime
@@ -13,12 +13,13 @@ import os
 import logging
 from django.core.mail import EmailMessage
 
-from events.forms import LoginForm, LogoutForm, RecommendForm
+from events.forms import LoginForm, LogoutForm, RecommendForm, QuestionForm
 from userprofiles.forms import UserProfileForm
 from registration.forms import RegisterEventForm
 
 from registration.models import Registration
 from userprofiles.models import UserProfile
+import simplejson as json
 
 try:
   from mailer import send_mail
@@ -61,6 +62,22 @@ def pdf(request, event_id = None):
 #   event/<event_id>/register
 def register(request, event_id = None):
   return event(request, event_id, 'pre', 'register.html')
+
+# used by urls:
+#   event/<event_id>/submit_question
+def submit_question(request, event_id = None):
+  result = False
+
+  if event_id and request.POST:
+    question = Question()
+    question.event = Event.objects.get(id = event_id)
+    question.question = request.POST['question']
+    question.save()
+
+    result = True
+
+  return HttpResponse(json.dumps({'result': result}), mimetype = 'application/javascript')
+    
 
 # used by urls:
 #   event/

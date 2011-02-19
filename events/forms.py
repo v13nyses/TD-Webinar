@@ -1,4 +1,9 @@
 from django import forms
+from models import Question
+
+class QuestionForm(forms.ModelForm):
+  class Meta:
+    model = Question
 
 class LoginForm(forms.Form):
   email = forms.EmailField(max_length=200)
