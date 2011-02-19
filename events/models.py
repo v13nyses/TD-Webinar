@@ -139,7 +139,7 @@ class Event(models.Model):
     }
 
   def get_slug(self):
-    return slugify(truncate_words(self.name, settings.EVENT_SLUG_WORDS))
+    return slugify(truncate_words(self.name, settings.EVENT_SLUG_WORDS))[:settings.EVENT_SLUG_CHARS]
 
   def __unicode__(self):
     return self.name
@@ -160,3 +160,7 @@ class Event(models.Model):
     permissions = (
       ("can_view_dashboard", "Can view event dashboard"),
     )
+
+class Question(models.Model):
+  question = models.TextField()
+  event = models.ForeignKey('Event')

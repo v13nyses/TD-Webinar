@@ -4,7 +4,7 @@ from django.shortcuts import render_to_response
 from django.template import RequestContext, loader, Context
 from django.conf import settings
 from django.template.defaultfilters import slugify
-from events.models import Event
+from events.models import Event, Question
 from dashboard.utils import presentation_to_pdf
 from presentations.models import slide_upload_to
 from datetime import datetime
@@ -13,12 +13,14 @@ import os
 import logging
 from django.core.mail import EmailMessage
 
-from events.forms import LoginForm, LogoutForm, RecommendForm
+from events.forms import LoginForm, LogoutForm, RecommendForm, QuestionForm
 from userprofiles.forms import UserProfileForm
 from registration.forms import RegisterEventForm
 
 from registration.models import Registration
 from userprofiles.models import UserProfile
+import simplejson as json
+import ipdb
 
 try:
   from mailer import send_mail
@@ -63,6 +65,25 @@ def register(request, event_id = None):
   return event(request, event_id, 'pre', 'register.html')
 
 # used by urls:
+#   event/<event_id>/submit_question
+def submit_question(request, event_id = None):
+  result = False
+
+  logger.info("Question submitted")
+  if event_id and request.POST:
+    question = Question()
+    question.event = Event.objects.get(id = event_id)
+    question.question = request.POST['question']
+    question.save()
+
+    logger.info("Question submitted: %s" % question.question)
+
+    result = True
+
+  return HttpResponse(json.dumps({'result': result}), mimetype = 'application/javascript')
+    
+
+# used by urls:
 #   event/
 #   event/<event_id>/
 def event(request, event_id = None, state = None, template = 'event.html'):
@@ -103,12 +124,16 @@ def event(request, event_id = None, state = None, template = 'event.html'):
     request.session['user_registered'] = None
     conversion = "False"
   else:
-    reg = Registration.objects.filter(email=request.session['login_email']).filter(event=event.id)
+    try:
+      profile = UserProfile.objects.get(email = request.session['login_email'])
+      reg = Registration.objects.filter(user_profile = profile, event=event.id)
 
-    if len(reg) == 0:
+      if len(reg) == 0:
+        request.session['user_registered'] = None
+      else:
+        request.session['user_registered'] = "True"
+    except UserProfile.DoesNotExist:
       request.session['user_registered'] = None
-    else:
-      request.session['user_registered'] = "True"
 
   print request.META['REMOTE_ADDR']
   print "%s before post work" % conversion
@@ -225,11 +250,12 @@ def logout_user(request):
   request.session['login_email'] = None
 
 def register_user_for_event(request):
-  registration = Registration.objects.filter(email=request.session['login_email']).filter(event=request.session['event_id'])
+  profile = UserProfile.objects.get(email = request.session['login_email'])
+  registration = Registration.objects.filter(user_profile=profile, event=request.session['event_id'])
 
   if len(registration) == 0:
     registration = Registration()
-    registration.email = request.session['login_email']
+    registration.user_profile = profile
     registration.event = Event.objects.get(id=request.session['event_id'])
     registration.ip_address = request.META['REMOTE_ADDR']
     registration.save()

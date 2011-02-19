@@ -2,7 +2,6 @@ from django.db import models
 #from foobar.events import Event
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from snippetscream import PolyModel
 from events.models import event_upload_base_path, Event
 from django.conf import settings
 
@@ -38,7 +37,7 @@ class PresenterType(models.Model):
   def __unicode__(self):
     return self.name
 
-class Slide(PolyModel):
+class Slide(models.Model):
   image = models.ImageField(upload_to = slide_upload_to)
   slide_set = models.ForeignKey('SlideSet')
   offset = models.IntegerField()
@@ -48,6 +47,15 @@ class Slide(PolyModel):
       return '%s (Slide %d)' % (self.slide_set.__unicode__(), self.id)
     else:
       return self.slide_set.__unicode__()
+
+  def as_leaf_class(self):
+    from polls.models import Poll
+
+    try:
+      instance = Poll.objects.get(id = self.id)
+      return instance
+    except Poll.DoesNotExist:
+      return self
 
   def display(self, request, slide):
     return render_to_response('presentations/slide.html', {'slide': slide, 'settings': settings},

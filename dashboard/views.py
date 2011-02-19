@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 from form_controllers import FormController, EventFormController, PresentationFormController, SlideFormController
 from events.models import Event
 from events.views import logout_user
+from registration.models import Registration
 from presentations.models import Presenter, Slide
 
 # used by urls:
@@ -108,3 +109,22 @@ def dashboard(request):
   }
   context_instance = RequestContext(request)
   return render_to_response('dashboard/dashboard.html', context, context_instance)
+
+def statistics(request, event_id = None):
+  event = Event.objects.get(id = event_id)
+  
+  context = {
+    'event': event
+  }
+  return render_to_response('dashboard/stats/stats.html', context,
+      RequestContext(request))
+
+def statistics_registrants(request, event_id = None):
+  event = Event.objects.get(id = event_id)
+  registrants = Registration.objects.order_by("email")
+
+  context = {
+    'event': event,
+    'registrants': registrants
+  }
+  return render_to_response('dashboard/stats/registrants.html', context, RequestContext(request))

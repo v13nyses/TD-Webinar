@@ -1,0 +1,10 @@
+{% extends "dashboard/base.html" %}
+{% load dashboard_extras %}
+
+{% block content %}
+  <h2>TD Webinar Statistics</h2>
+  <h3>{{ event.name }}</h3>
+  {% stats_nav event %}
+  <h3>All Registrants</h3>
+  {% registrants_table registrants %}
+{% endblock %}

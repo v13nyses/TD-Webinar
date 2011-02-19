@@ -1,4 +1,4 @@
-{% load presentations_extras %}
+{% load presentations_extras event_extras %}
 <div id="presentation" class="container">
   <div id="presentation-left">
     <div id="presentation-webinar">
@@ -10,12 +10,6 @@
     {% first_slide event %}
   </div>
   <div id="presentation-question">
-    <form id="questionform" name="questionform" method="post" action="">
-      <label for="question">Do you have a question or comment for our panel?</label>
-      <div id="questionform-right">
-        <input type="text" name="question" id="question" />
-        <input type="submit" class="form-submit" name="question-submit" id="question-submit" value="Submit" />
-      </div>
-    </form>
+    {% question_form event %}
   </div>
 </div>
