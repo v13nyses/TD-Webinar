@@ -66,6 +66,7 @@ def register(request, event_id = None):
 #   event/
 #   event/<event_id>/
 def event(request, event_id = None, state = None, template = 'event.html'):
+  conversion = "None"
   # if we didn't get an event id, grab the newest event
   event = None
 
@@ -100,17 +101,19 @@ def event(request, event_id = None, state = None, template = 'event.html'):
   if not request.session.has_key('login_email'):
     request.session['login_email'] = None
     request.session['user_registered'] = None
+    conversion = "False"
   else:
     reg = Registration.objects.filter(email=request.session['login_email']).filter(event=event.id)
 
-    print len(reg)
     if len(reg) == 0:
       request.session['user_registered'] = None
     else:
       request.session['user_registered'] = "True"
 
+  print request.META['REMOTE_ADDR']
+  print "%s before post work" % conversion
+
   if request.method == "POST":
-    print "posting"
     login_form = LoginForm(request.POST)
     logout_form = LogoutForm(request.POST)
     register_event_form = RegisterEventForm(request.POST)
@@ -119,26 +122,28 @@ def event(request, event_id = None, state = None, template = 'event.html'):
 
     if user_profile_form.is_valid():
       if not user_profile_exists(user_profile_form.cleaned_data['email']):
-        user_profile_form.save()
+        usr = user_profile_form.save(commit=False)
+        usr.ip_address = request.META['REMOTE_ADDR']
+        usr.save()
         login_user(user_profile_form.cleaned_data['email'], request)
         register_user_for_event(request)
+        conversion = "True"
       else:
         # the user already exists
         # TO DO
         pass
     elif login_form.is_valid():
-      print "logging in.."
       if user_profile_exists(login_form.cleaned_data['email']):
-        print "login user exists"
         login_user(login_form.cleaned_data['email'], request)
+        conversion = "None"
         return HttpResponseRedirect(reverse('event', args=[event_id]))
       else:
         # Do Nothing (page will reload with no one logged in)
         pass
     elif logout_form.is_valid():
       logout_user(request)
+      conversion = "None"
 
-    print "aoeu"
     if recommend_form.is_valid() and user_is_logged_in(request):
       subject = "You have recieved a link"
       message_template = loader.get_template('events/recommend.txt')
@@ -153,24 +158,38 @@ def event(request, event_id = None, state = None, template = 'event.html'):
         request.session['login_email'],
         [recommend_form.cleaned_data['to_list']],
       )
-
-      #email = EmailMessage('hello', 'some boddyy', 'aoeulover@gmail.com',
-      #['dionyses@gmail.com'])
       email.send()
-
     elif register_event_form.is_valid():
-      print "reg form valid"
       if user_is_logged_in(request):
-        print "user logged in"
-        register_user_for_event(request)      
-
+        register_user_for_event(request)
 
   if user_is_logged_in(request):
     if request.session['user_registered'] is None and is_first_redirect(request):
       request.session['first_redirect'] = "False"
       request.session['was_redirected'] = "True"
       return HttpResponseRedirect(reverse('register', args=[event_id]))
+  else:
+    conversion = "False"
  
+  push_analytics = []
+  if not conversion == "None":
+    if conversion == "True":
+      push_analytics.append(['_setCustomVar', 1, 'NewRegistration', 'Yes', 2])
+      push_analytics.append(['_trackEvent', 'Registrations', 'NewRegistrations'])
+      if request.session.has_key('conversion_counted_already'):
+        push_analytics.append(['_setCustomVar', 1, 'NewRegistration', 'No', 2])
+        push_analytics.append(['_trackEvent', 'Registrations', 'NewRegistrations'])
+    else:
+      if not request.session.has_key('conversion_counted_already'):
+        push_analytics.append(['_setCustomVar', 1, 'NewRegistration', 'No', 2])
+        push_analytics.append(['_trackEvent', 'Registrations', 'NewRegistrations'])
+        request.session['conversion_counted_already'] = True
+  else:
+    push_analytics = None
+
+  print "custom_variables:"
+  print push_analytics
+
   context_data = {
     'event': event,
     'state': state,
@@ -180,6 +199,7 @@ def event(request, event_id = None, state = None, template = 'event.html'):
     'register_event_form': RegisterEventForm(),
     'user_profile_form': UserProfileForm(),
     'recommend_form': RecommendForm(),
+    'custom_variable': push_analytics,
   }
 
   return render_to_response(template, context_data, context_instance = RequestContext(request))
@@ -199,7 +219,6 @@ def login_user(email, request):
   request.session['login_email'] = email
 
 def user_is_logged_in(request):
-  print request.session['login_email']
   return not request.session['login_email'] is None
 
 def logout_user(request):
@@ -208,14 +227,12 @@ def logout_user(request):
 def register_user_for_event(request):
   registration = Registration.objects.filter(email=request.session['login_email']).filter(event=request.session['event_id'])
 
-  print len(registration)
   if len(registration) == 0:
     registration = Registration()
     registration.email = request.session['login_email']
     registration.event = Event.objects.get(id=request.session['event_id'])
-    #registration.ip = # TO DO
+    registration.ip_address = request.META['REMOTE_ADDR']
     registration.save()
-    print "saved"
 
   request.session['user_registered'] = "True"
 
