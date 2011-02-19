@@ -1,15 +1,18 @@
 {% extends "slide_base.html" %}
+{% load thumbnail %}
 
 {% block body %}
   <script type="application/javascript" src="{{ STATIC_URL }}poll.js"></script>
-  <img src="{{ MEDIA_URL }}{{ poll.image }}" />
+  {% thumbnail poll.image "360x270" crop="center" as image %}
+    <img src="{{ image.url }}" />
+  {% endthumbnail %}
   
   <div class="poll"> 
     <h1>{{ poll.question }}</h1>
     {% if error_message %}<p><strong>{{ error_message }}</strong><p>{% endif %}
   
     <div id="form_div">
-    <form action="/presentations/slides/{{ poll.id }}/" method="post">
+      <form action="{% url vote_poll poll.id %}" method="post">
       {% for choice in poll.choice_set.all %}
         <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" onclick="enableSubmit()"/>
         <label for="choice{{ forloop.counter }}">{{ choice.choice }}</label><br />
