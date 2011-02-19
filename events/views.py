@@ -122,13 +122,17 @@ def event(request, event_id = None, state = None, template = 'event.html'):
     request.session['login_email'] = None
     request.session['user_registered'] = None
   else:
-    reg = Registration.objects.filter(email=request.session['login_email']).filter(event=event.id)
+    try:
+      profile = UserProfile.objects.get(email = request.session['login_email'])
+      reg = Registration.objects.filter(user_profile = profile, event=event.id)
 
-    print len(reg)
-    if len(reg) == 0:
+      print len(reg)
+      if len(reg) == 0:
+        request.session['user_registered'] = None
+      else:
+        request.session['user_registered'] = "True"
+    except UserProfile.DoesNotExist:
       request.session['user_registered'] = None
-    else:
-      request.session['user_registered'] = "True"
 
   if request.method == "POST":
     print "posting"
@@ -227,12 +231,13 @@ def logout_user(request):
   request.session['login_email'] = None
 
 def register_user_for_event(request):
-  registration = Registration.objects.filter(email=request.session['login_email']).filter(event=request.session['event_id'])
+  profile = UserProfile.objects.get(email = request.session['login_email'])
+  registration = Registration.objects.filter(user_profile=profile, event=request.session['event_id'])
 
   print len(registration)
   if len(registration) == 0:
     registration = Registration()
-    registration.email = request.session['login_email']
+    registration.user_profile = profile
     registration.event = Event.objects.get(id=request.session['event_id'])
     #registration.ip = # TO DO
     registration.save()

@@ -151,15 +151,15 @@ def setup_event(sender, instance = None, created = False, **kwargs):
     event_mailer.save()
 
 def register_user(sender, instance = None, created = False, **kwargs):
-  logger.info("Registering user: %s, created: %s" % (instance.email, created))
+  logger.info("Registering user: %s, created: %s" % (instance.user_profile.email, created))
   if created:
     # lookup the profile for the registered user
-    profile = UserProfile.objects.get(email = instance.email)
+    profile = instance.user_profile
     mailchimp_event = MailChimpEvent.objects.get(event = instance.event)
     mailchimp = MailChimp(settings.MAILCHIMP_API_KEY)
     result = mailchimp.listSubscribe(
         id = settings.MAILCHIMP_LIST_ID, 
-        email_address = instance.email,
+        email_address = profile.email,
         merge_vars = {
           'FNAME': profile.first_name,
           'LNAME': profile.last_name,
@@ -175,13 +175,13 @@ def register_user(sender, instance = None, created = False, **kwargs):
         welcome_email = True,
         update_existing = True
     )
-    logger.info("Adding %s to list '%s', result: %s" % (instance.email, settings.MAILCHIMP_LIST_ID, result))
+    logger.info("Adding %s to list '%s', result: %s" % (profile.email, settings.MAILCHIMP_LIST_ID, result))
     result = mailchimp.listStaticSegmentAddMembers(
         id = settings.MAILCHIMP_LIST_ID,
         seg_id = mailchimp_event.list_segment_id,
-        batch = [instance.email]
+        batch = [profile.email]
     )
-    logger.info("Adding %s to list segment '%s': %s" % (instance.email, mailchimp_event.list_segment_id, result))
+    logger.info("Adding %s to list segment '%s': %s" % (profile.email, mailchimp_event.list_segment_id, result))
                             
 
 

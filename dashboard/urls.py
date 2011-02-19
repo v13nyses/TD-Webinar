@@ -15,6 +15,12 @@ urlpatterns = patterns('',
 
   url(r'^event/(?P<event_id>\d+)/preview/$', 'dashboard.views.preview', name = 'db_preview'),
   url(r'^event/(?P<event_id>\d+)/preview/(?P<state>[a-z]+)$', 'dashboard.views.preview', name = 'db_preview_state'),
+
+  # statistics
+  url(r'^event/(?P<event_id>\d+)/stats/$', 'dashboard.views.statistics', name = 'db_statistics'),
+  url(r'^event/(?P<event_id>\d+)/stats/registrants/$',
+    'dashboard.views.statistics_registrants', name = 'db_stats_registrants'),
   
   url(r'^$', 'dashboard.views.dashboard', name = 'db_dashboard'),
+
 )

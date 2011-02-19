@@ -36,3 +36,15 @@ def form_buttons(name, back_button = True, save_buttons = True, continue_button 
     'continue_button': continue_button,
     'save_buttons': save_buttons
   }
+
+@register.inclusion_tag('dashboard/stats/nav.html')
+def stats_nav(event):
+  return {
+    'event': event
+  }
+
+@register.inclusion_tag('dashboard/stats/registrants_table.html')
+def registrants_table(registrants):
+  return {
+    'registrants': registrants
+  }
