@@ -12,28 +12,34 @@ logger = logging.getLogger(__name__)
 
 class MailChimpEvent(models.Model):
   list_segment_id = models.CharField(max_length = 30)
+  participated_segment_id = models.CharField(max_length = 30)
   campaign_24_hour_id = models.CharField(max_length = 30)
   campaign_1_hour_id = models.CharField(max_length = 30)
+  campaign_sorry_id = models.CharField(max_length = 30)
+  campaign_thanks_id = models.CharField(max_length = 30)
 
   event = models.OneToOneField('events.Event')
 
-  def create_segment(self):
+  def create_segment(self, name):
+    segment_name = name[:25]
     mailchimp = MailChimp(settings.MAILCHIMP_API_KEY)
     try:
-      self.list_segment_id = mailchimp.listAddStaticSegment(
+      segment_id = mailchimp.listAddStaticSegment(
           id = settings.MAILCHIMP_LIST_ID,
-          name = self.event.name
+          name = segment_name
       )
     except MailChimpError as error:
       logger.error("MailChimp segment already exists: %s" % error.msg)
       # find the matching segment
-      logger.info("Finding segments with name: %s" % self.event.name)
+      logger.info("Finding segments with name: %s" % segment_name)
       for segment in mailchimp.listStaticSegments(id = settings.MAILCHIMP_LIST_ID):
-        if segment['name'] == self.event.name:
-          self.list_segment_id = segment['id']
-          logger.info("Found matching segment for '%s': %s" % (self.event.name, segment['id']))
+        if segment['name'] == segment_name:
+          segment_id = segment['id']
+          logger.info("Found matching segment for '%s': %s" % (segment_name, segment['id']))
+    
+    return segment_id
 
-  def create_campaign(self, subject_format, time_str, schedule_time = None):
+  def create_campaign(self, subject_format, schedule_time = None, time_str = None):
     mailchimp = MailChimp(settings.MAILCHIMP_API_KEY)
     campaign_id = mailchimp.campaignCreate(
         type = 'regular',
@@ -63,6 +69,56 @@ class MailChimpEvent(models.Model):
   def gmt_timestamp(self, datetime):
     return datetime.astimezone(timezone('GMT')).replace(tzinfo = None).isoformat(sep = " ")
 
+  def create_event_finished_campaigns(self):
+    finished_date = self.event.live_stop_date.replace(tzinfo = timezone(settings.TIME_ZONE))
+    event_finished_time = self.gmt_timestamp(finished_date)
+
+    mailchimp = MailChimp(settings.MAILCHIMP_API_KEY)
+    self.campaign_sorry_id = mailchimp.campaignCreate(
+        type = 'regular',
+        content = {'html': self.event.description},
+        segment_opts = {'match': 'all', 'conditions': [{
+                              'field': 'static_segment',
+                              'op': 'eq',
+                              'value': self.participated_segment_id
+                        }]},
+        options = {
+          'list_id': settings.MAILCHIMP_LIST_ID,
+          'subject': settings.MAILCHIMP_SUBJECTS['finished_thank_you'],
+          'from_email': settings.MAILCHIMP_FROM_EMAIL,
+          'from_name': settings.MAILCHIMP_FROM_NAME,
+          'to_email': settings.MAILCHIMP_TO_EMAIL,
+        }
+    )
+
+    self.campaign_thanks = mailchimp.campaignCreate(
+        type = 'regular',
+        content = {'html': self.event.description},
+        segment_opts = {'match': 'all', 'conditions': [
+                            {
+                              'field': 'static_segment',
+                              'op': 'ne',
+                              'value': self.participated_segment_id
+                            },
+                            {
+                              'field': 'static_segment',
+                              'op': 'eq',
+                              'value': self.list_segment_id
+                            }]},
+        options = {
+          'list_id': settings.MAILCHIMP_LIST_ID,
+          'subject': settings.MAILCHIMP_SUBJECTS['finished_thank_you'],
+          'from_email': settings.MAILCHIMP_FROM_EMAIL,
+          'from_name': settings.MAILCHIMP_FROM_NAME,
+          'to_email': settings.MAILCHIMP_TO_EMAIL,
+        }
+    )
+    try:
+      mailchimp.campaignSchedule(cid = self.campaign_thanks_id, schedule_time = event_finished_time)
+      mailchimp.campaignSchedule(cid = self.campaign_sorry_id, schedule_time = event_finished_time)
+    except MailChimpError as error:
+      logger.error("Campaign scheduled in the past: %s" % error.msg)
+
   def create_campaigns(self):
     time_24_hours = self.gmt_timestamp(self.event.live_offset(timedelta(hours = -24)))
     time_1_hour = self.gmt_timestamp(self.event.live_offset(timedelta(hours = -1)))
@@ -71,9 +127,11 @@ class MailChimpEvent(models.Model):
     logger.info(" - 24 Hour Reminder (%s)" % time_24_hours)
     logger.info(" - 1 Hour reminder (%s)" % time_1_hour)
 
-    self.create_segment()
-    self.create_campaign(settings.MAILCHIMP_SUBJECTS['reminder'], '24 hours', time_24_hours)
-    self.create_campaign(settings.MAILCHIMP_SUBJECTS['reminder'], '1 hour', time_1_hour)
+    self.list_segment_id = self.create_segment(self.event.slug)
+    self.participated_segment_id = self.create_segment("attended: %s" % self.event.slug)
+    self.create_campaign(settings.MAILCHIMP_SUBJECTS['reminder'], time_24_hours, '24 hours')
+    self.create_campaign(settings.MAILCHIMP_SUBJECTS['reminder'], time_1_hour, '1 hour')
+    self.create_event_finished_campaigns()
 
 def mailchimp_template_choices():
   mailchimp = MailChimp(settings.MAILCHIMP_API_KEY)

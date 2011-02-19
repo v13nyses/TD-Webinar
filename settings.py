@@ -210,6 +210,7 @@ EMAIL_USE_TLS = True
 
 # TD Webinar Specific Settings
 EVENT_SLUG_WORDS = 4 # the number of words to use when creating an event 'slug'
+EVENT_SLUG_CHARS = 25
 VIDEO_URL = "http://content.bitsontherun.com/players/%s-%s.js"
 
 # local_settings.py can be used to override environment-specific settings
@@ -227,6 +228,8 @@ MAILCHIMP_API_KEY = "a9bd7260067c1faf8f2e52268b8cd855-us2"
 MAILCHIMP_LIST_ID = '68a096ab69'
 MAILCHIMP_SUBJECTS = {
     'reminder': 'Reminder! {event} starts in {time}',
+    'finished_thank_you': 'Thank you for participating',
+    'finished_sorry_we_missed': 'Sorry we missed you'
 }
 MAILCHIMP_FROM_EMAIL = "v13inc@gmail.com"
 MAILCHIMP_FROM_NAME = "Sean"

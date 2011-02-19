@@ -139,7 +139,7 @@ class Event(models.Model):
     }
 
   def get_slug(self):
-    return slugify(truncate_words(self.name, settings.EVENT_SLUG_WORDS))
+    return slugify(truncate_words(self.name, settings.EVENT_SLUG_WORDS))[:settings.EVENT_SLUG_CHARS]
 
   def __unicode__(self):
     return self.name
