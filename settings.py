@@ -134,6 +134,7 @@ INSTALLED_APPS = (
     'reporting',
     'registration',
 		'userprofiles',
+    'exitsurvey',
     'eventmailer',
     'sorl.thumbnail',
     #'autofixture',
