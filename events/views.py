@@ -69,11 +69,15 @@ def register(request, event_id = None):
 def submit_question(request, event_id = None):
   result = False
 
-  logger.info("Question submitted")
   if event_id and request.POST:
     question = Question()
     question.event = Event.objects.get(id = event_id)
     question.question = request.POST['question']
+
+    if user_is_logged_in(request):
+      profile = UserProfile.objects.get(email = request.session['login_email'])
+      question.registration = Registration.objects.get(user_profile = profile)
+
     question.save()
 
     logger.info("Question submitted: %s" % question.question)

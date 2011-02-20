@@ -9,6 +9,7 @@
     <th>Postal Code</th>
     <th>Upcoming Events</th>
     <th>Referral Type</th>
+    <th>Do you have a question or comment for the panel?</th>
   </tr>
   {% for registrant in registrants %}
     {% with registrant.user_profile as profile %}
@@ -22,6 +23,7 @@
         <td>{{ profile.postal_code }}</td>
         <td>{{ profile.upcoming_events }}</td>
         <td>{{ profile.refer_type }}</td>
+        <td>{{ registrant.question.question }}</td>
       </tr>
     {% endwith %}
   {% endfor %}

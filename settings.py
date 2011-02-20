@@ -239,3 +239,4 @@ MAILCHIMP_TO_EMAIL = "Event Members"
 if not hasattr(logging, "set_up_done"):
   logging.set_up_done = True
   logging.basicConfig(level = logging.INFO)
+  logging.basicConfig(file_name = "letstry.log")

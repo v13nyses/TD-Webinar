@@ -164,3 +164,4 @@ class Event(models.Model):
 class Question(models.Model):
   question = models.TextField()
   event = models.ForeignKey('Event')
+  registration = models.OneToOneField('registration.Registration', blank = True, null = True)
