@@ -194,6 +194,8 @@ def event(request, event_id = None, state = None, template = 'event.html'):
         register_user_for_event(request)
 
   if user_is_logged_in(request):
+    push_analytics.append(['_setCustomVar', 1, 'UserEmail', request.session['login_email'], 1])
+    push_analytics.append(['_trackEvent', 'Conversions', 'UserEmail'])
     if request.session['user_registered'] is None and is_first_redirect(request):
       request.session['first_redirect'] = "False"
       request.session['was_redirected'] = "True"
@@ -201,6 +203,11 @@ def event(request, event_id = None, state = None, template = 'event.html'):
  
   if len(push_analytics) == 0:
     push_analytics = None
+
+  json_analytics = []
+  if push_analytics:
+    for analytic_call in push_analytics:
+      json_analytics.append(json.dumps(analytic_call))
 
   context_data = {
     'event': event,
@@ -211,7 +218,7 @@ def event(request, event_id = None, state = None, template = 'event.html'):
     'register_event_form': RegisterEventForm(),
     'user_profile_form': UserProfileForm(),
     'recommend_form': RecommendForm(),
-    'custom_variable': push_analytics,
+    'custom_variables': json_analytics
   }
 
   return render_to_response(template, context_data, context_instance = RequestContext(request))
