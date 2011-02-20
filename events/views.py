@@ -87,7 +87,7 @@ def submit_question(request, event_id = None):
 #   event/
 #   event/<event_id>/
 def event(request, event_id = None, state = None, template = 'event.html'):
-  conversion = "None"
+  push_analytics = []
   # if we didn't get an event id, grab the newest event
   event = None
 
@@ -122,7 +122,6 @@ def event(request, event_id = None, state = None, template = 'event.html'):
   if not request.session.has_key('login_email'):
     request.session['login_email'] = None
     request.session['user_registered'] = None
-    conversion = "False"
   else:
     try:
       profile = UserProfile.objects.get(email = request.session['login_email'])
@@ -135,8 +134,9 @@ def event(request, event_id = None, state = None, template = 'event.html'):
     except UserProfile.DoesNotExist:
       request.session['user_registered'] = None
 
-  print request.META['REMOTE_ADDR']
-  print "%s before post work" % conversion
+  if request.GET.has_key('partnerref'):
+    push_analytics.append(['_setCustomVar', 2, 'ReferralCode', request.GET['partnerref'], 1])
+    push_analytics.append(['_trackEvent', 'Referrals', 'ReferralCode'])
 
   if request.method == "POST":
     login_form = LoginForm(request.POST)
@@ -152,7 +152,8 @@ def event(request, event_id = None, state = None, template = 'event.html'):
         usr.save()
         login_user(user_profile_form.cleaned_data['email'], request)
         register_user_for_event(request)
-        conversion = "True"
+        push_analytics.append(['_setCustomVar', 1, 'UserEmail', request.session['login_email'], 1])
+        push_analytics.append(['_trackEvent', 'Conversions', 'UserEmail'])
       else:
         # the user already exists
         # TO DO
@@ -160,14 +161,14 @@ def event(request, event_id = None, state = None, template = 'event.html'):
     elif login_form.is_valid():
       if user_profile_exists(login_form.cleaned_data['email']):
         login_user(login_form.cleaned_data['email'], request)
-        conversion = "None"
+        push_analytics.append(['_setCustomVar', 1, 'UserEmail', request.session['login_email'], 1])
+        push_analytics.append(['_trackEvent', 'Conversions', 'UserEmail'])
         return HttpResponseRedirect(reverse('event', args=[event_id]))
       else:
         # Do Nothing (page will reload with no one logged in)
         pass
     elif logout_form.is_valid():
       logout_user(request)
-      conversion = "None"
 
     if recommend_form.is_valid() and user_is_logged_in(request):
       subject = "You have recieved a link"
@@ -193,27 +194,9 @@ def event(request, event_id = None, state = None, template = 'event.html'):
       request.session['first_redirect'] = "False"
       request.session['was_redirected'] = "True"
       return HttpResponseRedirect(reverse('register', args=[event_id]))
-  else:
-    conversion = "False"
  
-  push_analytics = []
-  if not conversion == "None":
-    if conversion == "True":
-      push_analytics.append(['_setCustomVar', 1, 'NewRegistration', 'Yes', 2])
-      push_analytics.append(['_trackEvent', 'Registrations', 'NewRegistrations'])
-      if request.session.has_key('conversion_counted_already'):
-        push_analytics.append(['_setCustomVar', 1, 'NewRegistration', 'No', 2])
-        push_analytics.append(['_trackEvent', 'Registrations', 'NewRegistrations'])
-    else:
-      if not request.session.has_key('conversion_counted_already'):
-        push_analytics.append(['_setCustomVar', 1, 'NewRegistration', 'No', 2])
-        push_analytics.append(['_trackEvent', 'Registrations', 'NewRegistrations'])
-        request.session['conversion_counted_already'] = True
-  else:
+  if len(push_analytics) == 0:
     push_analytics = None
-
-  print "custom_variables:"
-  print push_analytics
 
   context_data = {
     'event': event,
