@@ -91,7 +91,7 @@ class MailChimpEvent(models.Model):
         }
     )
 
-    self.campaign_thanks = mailchimp.campaignCreate(
+    self.campaign_thanks_id = mailchimp.campaignCreate(
         type = 'regular',
         content = {'html': self.event.description},
         segment_opts = {'match': 'all', 'conditions': [
@@ -183,6 +183,16 @@ def register_user(sender, instance = None, created = False, **kwargs):
     )
     logger.info("Adding %s to list segment '%s': %s" % (profile.email, mailchimp_event.list_segment_id, result))
                             
+def view_event_live(event, profile):
+    mailchimp_event = MailChimpEvent.objects.get(event = event)
+    mailchimp = MailChimp(settings.MAILCHIMP_API_KEY)
+    result = mailchimp.listStaticSegmentAddMembers(
+        id = settings.MAILCHIMP_LIST_ID,
+        seg_id = mailchimp_event.participated_segment_id,
+        batch = [profile.email]
+    )
+    logger.info("Adding %s to 'thank you' segment '%s': %s" % (profile.email, mailchimp_event.list_segment_id, result))
+
 
 
 models.signals.post_save.connect(setup_event, sender = Event)

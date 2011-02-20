@@ -10,6 +10,9 @@
     <th>Upcoming Events</th>
     <th>Referral Type</th>
     <th>Do you have a question or comment for the panel?</th>
+    {% for poll in polls %}
+      <th>{{ poll.question }}</th>
+    {% endfor %}
   </tr>
   {% for registrant in registrants %}
     {% with registrant.user_profile as profile %}
@@ -24,6 +27,9 @@
         <td>{{ profile.upcoming_events }}</td>
         <td>{{ profile.refer_type }}</td>
         <td>{{ registrant.question.question }}</td>
+        {% for poll in registrant.polls %}
+          <td>{{ poll }}</td>
+        {% endfor %}
       </tr>
     {% endwith %}
   {% endfor %}

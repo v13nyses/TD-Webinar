@@ -25,7 +25,10 @@ class Poll(Slide):
 class Choice(models.Model):
   poll = models.ForeignKey('Poll')
   choice = models.CharField(max_length=200)
-  votes = models.IntegerField(default=0)
 
   def __unicode__(self):
     return "%s (Choice %s)" % (self.poll.__unicode__(), self.choice)
+
+class Vote(models.Model):
+  choice = models.ForeignKey('Choice')
+  user_profile = models.ForeignKey('userprofiles.UserProfile', blank = True, null = True)

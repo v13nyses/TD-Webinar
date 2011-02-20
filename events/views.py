@@ -19,6 +19,7 @@ from registration.forms import RegisterEventForm
 
 from registration.models import Registration
 from userprofiles.models import UserProfile
+from eventmailer.models import view_event_live
 import simplejson as json
 import ipdb
 
@@ -107,7 +108,15 @@ def event(request, event_id = None, state = None, template = 'event.html'):
   if state == 'debug':
     state = None
     event.debug()
-  else:
+  elif state == 'live':
+    if user_is_logged_in(request):
+      profile = UserProfile.objects.get(email = request.session['login_email'])
+      registration = Registration.objects.get(user_profile = profile)
+      if not registration.viewed_live:
+        registration.viewed_live = True
+        view_event_live(event, profile)
+        registration.save()
+
     event.debug = False
 
   if not request.session.has_key('was_redirected'):
@@ -238,7 +247,7 @@ def login_user(email, request):
   request.session['login_email'] = email
 
 def user_is_logged_in(request):
-  return not request.session['login_email'] is None
+  return request.session.has_key('login_email') and request.session['login_email'] != None
 
 def logout_user(request):
   request.session['login_email'] = None
