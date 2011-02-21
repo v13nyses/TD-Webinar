@@ -8,6 +8,8 @@ from events.models import Event
 from events.views import logout_user
 from registration.models import Registration
 from presentations.models import Presenter, Slide
+from polls.models import Poll, Vote
+import ipdb
 
 # used by urls:
 #   dashboard/event/add/
@@ -121,10 +123,23 @@ def statistics(request, event_id = None):
 
 def statistics_registrants(request, event_id = None):
   event = Event.objects.get(id = event_id)
-  registrants = Registration.objects.order_by("email")
+  registrants = Registration.objects.order_by("id")
+  polls = Poll.objects.all()
+
+  # attach poll votes to profile object
+  for registrant in registrants:
+    registrant.polls = []
+    for poll in polls:
+      choice_str = ''
+      for choice in poll.choice_set.all():
+        vote = Vote.objects.filter(choice = choice, user_profile = registrant.user_profile)
+        if len(vote) > 0:
+          choice_str = choice.choice
+      registrant.polls.append(choice_str)
 
   context = {
     'event': event,
-    'registrants': registrants
+    'registrants': registrants,
+    'polls': polls
   }
   return render_to_response('dashboard/stats/registrants.html', context, RequestContext(request))

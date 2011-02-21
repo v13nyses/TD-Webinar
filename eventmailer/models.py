@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage, EmailMultiAlternatives
 from greatape import MailChimp, MailChimpError
 from userprofiles.models import UserProfile
 from registration.models import Registration
@@ -91,7 +93,7 @@ class MailChimpEvent(models.Model):
         }
     )
 
-    self.campaign_thanks = mailchimp.campaignCreate(
+    self.campaign_thanks_id = mailchimp.campaignCreate(
         type = 'regular',
         content = {'html': self.event.description},
         segment_opts = {'match': 'all', 'conditions': [
@@ -157,6 +159,10 @@ def register_user(sender, instance = None, created = False, **kwargs):
     profile = instance.user_profile
     mailchimp_event = MailChimpEvent.objects.get(event = instance.event)
     mailchimp = MailChimp(settings.MAILCHIMP_API_KEY)
+    event = instance.event
+    event_start_datetime = event.start_date_timezone('America/Toronto').strftime('%A, %b %d, %I:%M %p')
+    event_start_date = event.start_date_timezone('America/Toronto').strftime('%A, %b %d')
+    event_start_time = event.start_date_timezone('America/Toronto').strftime('%I:%M %p')
     result = mailchimp.listSubscribe(
         id = settings.MAILCHIMP_LIST_ID, 
         email_address = profile.email,
@@ -169,7 +175,13 @@ def register_user(sender, instance = None, created = False, **kwargs):
             'zip': profile.postal_code,
             'country': 'Canada'
           },
-          'EVENT_NAME': instance.event.name,
+          'EVENT_TITLE': instance.event.name,
+          'EVENT_DATETIME': event_start_datetime,
+          'EVENT_DATE': event_start_date,
+          'EVENT_TIME': event_start_time,
+          'EVENT_TAGLINE': event.short_description,
+          'EVENT_LONGDESC': event.description,
+          'EVENT_OUTLOOKLINK': "http://home.v13inc.com/%s/%s" % (settings.MEDIA_URL, event.outlook_file)
         },
         double_optin = False,
         welcome_email = True,
@@ -182,8 +194,39 @@ def register_user(sender, instance = None, created = False, **kwargs):
         batch = [profile.email]
     )
     logger.info("Adding %s to list segment '%s': %s" % (profile.email, mailchimp_event.list_segment_id, result))
+    send_welcome_email(instance)
                             
+def view_event_live(event, profile):
+    mailchimp_event = MailChimpEvent.objects.get(event = event)
+    mailchimp = MailChimp(settings.MAILCHIMP_API_KEY)
+    result = mailchimp.listStaticSegmentAddMembers(
+        id = settings.MAILCHIMP_LIST_ID,
+        seg_id = mailchimp_event.participated_segment_id,
+        batch = [profile.email]
+    )
+    logger.info("Adding %s to 'thank you' segment '%s': %s" % (profile.email, mailchimp_event.list_segment_id, result))
 
+def send_welcome_email(registration):
+  profile = registration.user_profile
+  context = {
+    'event': registration.event,
+    'registration': registration,
+    'profile': profile,
+    'settings': settings
+  }
+  html_message = render_to_string('events/welcome_email.html', context)
+  message = ''
+  email = EmailMultiAlternatives(
+    settings.WELCOME_EMAIL_SUBJECT.format(
+      first_name = profile.first_name, 
+      last_name = profile.last_name,
+      event = registration.event.name),
+    message,
+    settings.MAILCHIMP_FROM_EMAIL,
+    [profile.email]
+  )
+  email.attach_alternative(html_message, "text/html")
+  email.send()
 
 models.signals.post_save.connect(setup_event, sender = Event)
 models.signals.post_save.connect(register_user, sender = Registration)

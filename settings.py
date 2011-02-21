@@ -226,8 +226,10 @@ except ImportError:
 THUMBNAIL_DEBUG = True
 
 # eventmailer
-MAILCHIMP_API_KEY = "a9bd7260067c1faf8f2e52268b8cd855-us2"
-MAILCHIMP_LIST_ID = '68a096ab69'
+#MAILCHIMP_API_KEY = "a9bd7260067c1faf8f2e52268b8cd855-us2"
+MAILCHIMP_API_KEY = "4a6f04fce75f55d03cae2c46ecb2fc43-us1"
+#MAILCHIMP_LIST_ID = '68a096ab69'
+MAILCHIMP_LIST_ID = '4970ced8ae'
 MAILCHIMP_SUBJECTS = {
     'reminder': 'Reminder! {event} starts in {time}',
     'finished_thank_you': 'Thank you for participating',
@@ -236,8 +238,10 @@ MAILCHIMP_SUBJECTS = {
 MAILCHIMP_FROM_EMAIL = "v13inc@gmail.com"
 MAILCHIMP_FROM_NAME = "Sean"
 MAILCHIMP_TO_EMAIL = "Event Members"
+WELCOME_EMAIL_SUBJECT = 'Thank you for registering for {event}, {first_name}!'
 
 # logging
 if not hasattr(logging, "set_up_done"):
   logging.set_up_done = True
   logging.basicConfig(level = logging.INFO)
+  logging.basicConfig(file_name = "letstry.log")

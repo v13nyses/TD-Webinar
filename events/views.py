@@ -19,6 +19,7 @@ from registration.forms import RegisterEventForm
 
 from registration.models import Registration
 from userprofiles.models import UserProfile
+from eventmailer.models import view_event_live
 import simplejson as json
 import ipdb
 
@@ -69,11 +70,15 @@ def register(request, event_id = None):
 def submit_question(request, event_id = None):
   result = False
 
-  logger.info("Question submitted")
   if event_id and request.POST:
     question = Question()
     question.event = Event.objects.get(id = event_id)
     question.question = request.POST['question']
+
+    if user_is_logged_in(request):
+      profile = UserProfile.objects.get(email = request.session['login_email'])
+      question.registration = Registration.objects.get(user_profile = profile)
+
     question.save()
 
     logger.info("Question submitted: %s" % question.question)
@@ -108,7 +113,15 @@ def event(request, event_id = None, state = None, template = 'event.html'):
   if state == 'debug':
     state = None
     event.debug()
-  else:
+  elif state == 'live':
+    if user_is_logged_in(request):
+      profile = UserProfile.objects.get(email = request.session['login_email'])
+      registration = Registration.objects.get(user_profile = profile)
+      if not registration.viewed_live:
+        registration.viewed_live = True
+        view_event_live(event, profile)
+        registration.save()
+
     event.debug = False
 
   if not request.session.has_key('was_redirected'):
@@ -201,6 +214,8 @@ def event(request, event_id = None, state = None, template = 'event.html'):
         register_user_for_event(request)
 
   if user_is_logged_in(request):
+    push_analytics.append(['_setCustomVar', 1, 'UserEmail', request.session['login_email'], 1])
+    push_analytics.append(['_trackEvent', 'Conversions', 'UserEmail'])
     if request.session['user_registered'] is None and is_first_redirect(request):
       request.session['first_redirect'] = "False"
       request.session['was_redirected'] = "True"
@@ -208,6 +223,11 @@ def event(request, event_id = None, state = None, template = 'event.html'):
  
   if len(push_analytics) == 0:
     push_analytics = None
+
+  json_analytics = []
+  if push_analytics:
+    for analytic_call in push_analytics:
+      json_analytics.append(json.dumps(analytic_call))
 
   context_data = {
     'event': event,
@@ -218,7 +238,7 @@ def event(request, event_id = None, state = None, template = 'event.html'):
     'register_event_form': RegisterEventForm(),
     'user_profile_form': UserProfileForm(),
     'recommend_form': RecommendForm(),
-    'custom_variable': push_analytics,
+    'custom_variables': json_analytics
   }
 
   return render_to_response(template, context_data, context_instance = RequestContext(request))
@@ -238,7 +258,7 @@ def login_user(email, request):
   request.session['login_email'] = email
 
 def user_is_logged_in(request):
-  return not request.session['login_email'] is None
+  return request.session.has_key('login_email') and request.session['login_email'] != None
 
 def logout_user(request):
   request.session['login_email'] = None
