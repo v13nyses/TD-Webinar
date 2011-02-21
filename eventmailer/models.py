@@ -41,11 +41,11 @@ class MailChimpEvent(models.Model):
     
     return segment_id
 
-  def create_campaign(self, subject_format, schedule_time = None, time_str = None):
+  def create_campaign(self, subject_format, schedule_time = None, time_str = None, template_id = None):
     mailchimp = MailChimp(settings.MAILCHIMP_API_KEY)
     campaign_id = mailchimp.campaignCreate(
         type = 'regular',
-        content = {'html': self.event.description},
+        content = {'html_mid_content00': self.event.description},
         segment_opts = {'match': 'all', 'conditions': [{
                               'field': 'static_segment',
                               'op': 'eq',
@@ -57,6 +57,7 @@ class MailChimpEvent(models.Model):
           'from_email': settings.MAILCHIMP_FROM_EMAIL,
           'from_name': settings.MAILCHIMP_FROM_NAME,
           'to_email': settings.MAILCHIMP_TO_EMAIL,
+          'template_id': template_id,
         }
     )
 
@@ -78,7 +79,7 @@ class MailChimpEvent(models.Model):
     mailchimp = MailChimp(settings.MAILCHIMP_API_KEY)
     self.campaign_sorry_id = mailchimp.campaignCreate(
         type = 'regular',
-        content = {'html': self.event.description},
+        content = {'html_mid_content00': self.event.description},
         segment_opts = {'match': 'all', 'conditions': [{
                               'field': 'static_segment',
                               'op': 'eq',
@@ -86,16 +87,17 @@ class MailChimpEvent(models.Model):
                         }]},
         options = {
           'list_id': settings.MAILCHIMP_LIST_ID,
-          'subject': settings.MAILCHIMP_SUBJECTS['finished_thank_you'],
+          'subject': settings.MAILCHIMP_SUBJECTS['finished_sorry_we_missed'],
           'from_email': settings.MAILCHIMP_FROM_EMAIL,
           'from_name': settings.MAILCHIMP_FROM_NAME,
           'to_email': settings.MAILCHIMP_TO_EMAIL,
+          'template_id': self.event.template_missed_you,
         }
     )
 
     self.campaign_thanks_id = mailchimp.campaignCreate(
         type = 'regular',
-        content = {'html': self.event.description},
+        content = {'html_mid_content00': self.event.description},
         segment_opts = {'match': 'all', 'conditions': [
                             {
                               'field': 'static_segment',
@@ -113,6 +115,7 @@ class MailChimpEvent(models.Model):
           'from_email': settings.MAILCHIMP_FROM_EMAIL,
           'from_name': settings.MAILCHIMP_FROM_NAME,
           'to_email': settings.MAILCHIMP_TO_EMAIL,
+          'template_id': self.event.template_thank_you,
         }
     )
     try:
@@ -131,8 +134,10 @@ class MailChimpEvent(models.Model):
 
     self.list_segment_id = self.create_segment(self.event.slug)
     self.participated_segment_id = self.create_segment("attended: %s" % self.event.slug)
-    self.create_campaign(settings.MAILCHIMP_SUBJECTS['reminder'], time_24_hours, '24 hours')
-    self.create_campaign(settings.MAILCHIMP_SUBJECTS['reminder'], time_1_hour, '1 hour')
+    self.create_campaign(settings.MAILCHIMP_SUBJECTS['reminder'], 
+                         time_24_hours, '24 hours', self.event.template_24_hour)
+    self.create_campaign(settings.MAILCHIMP_SUBJECTS['reminder'], 
+                         time_1_hour, '1 hours', self.event.template_1_hour)
     self.create_event_finished_campaigns()
 
 def mailchimp_template_choices():

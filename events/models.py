@@ -67,12 +67,13 @@ class Event(models.Model):
     
   def debug(self):
     self.debug = True
+    offsets = self.get_state_offsets_debug()
 
     now = datetime.now(timezone(settings.TIME_ZONE))
-    self.lobby_start_date = now + timedelta(seconds = 10)
-    self.live_start_date = now + timedelta(seconds = 20)
-    self.live_stop_date = now + timedelta(seconds = 50)
-    self.archive_start_date = now + timedelta(seconds = 60)
+    self.lobby_start_date = now + timedelta(seconds = offsets['lobby'])
+    self.live_start_date = now + timedelta(seconds = offsets['live'])
+    self.live_stop_date = now + timedelta(seconds = offsets['post'])
+    self.archive_start_date = now + timedelta(seconds = offsets['archive'])
     self.save()
 
   def get_state(self):
@@ -128,10 +129,10 @@ class Event(models.Model):
 
   def get_state_offsets_debug(self):
     return {
-        'lobby': 10,
-        'live': 20,
-        'post': 50,
-        'archive': 60
+        'lobby': 20,
+        'live': 40,
+        'post': 85,
+        'archive': 105
     }
 
   def get_state_offsets(self):
