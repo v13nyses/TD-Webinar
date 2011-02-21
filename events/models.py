@@ -21,6 +21,7 @@ class Event(models.Model):
   resource_guide = models.FileField(upload_to = event_upload_to)
   lobby_video = models.OneToOneField('presentations.Video', blank = True, null = True)
   presentation = models.OneToOneField('presentations.Presentation', blank = True, null = True)
+  outlook_file = models.FileField(upload_to = event_upload_to)
 
   # these dates are used to find the current state of the event
   lobby_start_date = models.DateTimeField()
@@ -39,10 +40,16 @@ class Event(models.Model):
 
   debug = False
 
+  def start_date_timezone(self, timezone_name):
+    return self.lobby_start_date.replace(tzinfo = timezone(timezone_name))
+
   def live_offset(self, time_delta):
     lobby_start_date = self.lobby_start_date.replace(tzinfo = timezone(settings.TIME_ZONE))
 
     return lobby_start_date + time_delta
+
+  def get_start_time_eastern(self):
+    return self.start_date_timezone('America/Toronto')
     
   def time_difference(self, time_a, time_b = None):
     """ Returns time_a - time_b in seconds. If time_a < time_b, returns -1. """
@@ -149,6 +156,7 @@ class Event(models.Model):
   presenters = property(get_presenters, doc = 'A special array of presenters for use in templates.')
   state_offsets = property(get_state_offsets)
   slug = property(get_slug)
+  start_time_eastern = property(get_start_time_eastern)
 
   STATE_PRE = 'pre' 
   STATE_LOBBY = 'lobby'

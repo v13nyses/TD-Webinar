@@ -26,6 +26,7 @@ class EventForm(BetterModelForm):
   resource_guide = forms.FileField(required = False)
   slides = forms.FileField(required = False)
   timing = forms.FileField(required = False)
+  outlook_file = forms.FileField(required = False)
 
   template_1_hour = forms.ChoiceField(choices = mailchimp_template_choices())
   template_24_hour = forms.ChoiceField(choices = mailchimp_template_choices())
