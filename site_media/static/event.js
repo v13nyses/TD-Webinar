@@ -36,6 +36,26 @@ o.attachPlayerEvents = function() {
   });
 }
 
+o.attachPollEvents = function() {
+  $(".poll form").submit(function() {
+    var form = this;
+    // submit the data with ajax
+    $.ajax({
+      url: $(form).attr("action"),
+      dataType: 'json',
+      data: $(form).serialize(),
+      type: 'post',
+      success: function(data) {
+      }
+    });
+    $(form).html("Thank you for your input.");
+
+    $(".poll form input").attr("disabled", "disabled");
+
+    return false;
+  });
+}
+
 o.slideUrl = function() {
   var slideId = this.queuePoints[this.currentQueuePoint].slideId;
   return TDWebinar.settings.eventPage.slideUrl + slideId + "/";
@@ -44,6 +64,7 @@ o.slideUrl = function() {
 o.loadSlide = function(event) {
   var queuePoint = this.queuePoints[this.currentQueuePoint];
   var lastQueuePoint = this.currentQueuePoint;
+  var self = this;
 
   var nextQueuePoint = this.currentQueuePoint + 1;
   if(queuePoint.timeOffset < event.position) {
@@ -61,7 +82,9 @@ o.loadSlide = function(event) {
   }
 
   if(this.currentQueuePoint != lastQueuePoint) {
-    $(TDWebinar.settings.eventPage.slideshowContainer).load(this.slideUrl());
+    $(TDWebinar.settings.eventPage.slideshowContainer).load(this.slideUrl(), function() {
+      self.attachPollEvents();
+    });
   }
 }
 
@@ -252,7 +275,6 @@ $(document).ready(function() {
       data: $("#questionform").serialize(),
       type: 'post',
       success: function(data) {
-        console.log(data);
         $("#questionform label").html("Thank you for submitting your question.");
         $("#questionform-right").hide();
       }
@@ -262,4 +284,5 @@ $(document).ready(function() {
 
     return false;
   });
+
 });

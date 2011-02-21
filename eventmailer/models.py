@@ -6,7 +6,7 @@ from greatape import MailChimp, MailChimpError
 from userprofiles.models import UserProfile
 from registration.models import Registration
 from events.models import Event
-from datetime import timedelta
+from datetime import timedelta, datetime
 from pytz import timezone
 import logging
 
@@ -151,7 +151,7 @@ def mailchimp_template_choices():
   return choices
 
 def setup_event(sender, instance = None, created = False, **kwargs):
-  if created:
+  if created and instance.live_start_date > datetime.now():
     event_mailer = MailChimpEvent()
     event_mailer.event = instance
     event_mailer.create_campaigns()

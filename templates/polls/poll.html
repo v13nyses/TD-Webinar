@@ -2,7 +2,6 @@
 {% load thumbnail %}
 
 {% block body %}
-  <script type="application/javascript" src="{{ STATIC_URL }}poll.js"></script>
   {% thumbnail poll.image "360x270" crop="center" as image %}
     <img src="{{ image.url }}" />
   {% endthumbnail %}
@@ -14,10 +13,10 @@
     <div id="form_div">
       <form action="{% url vote_poll poll.id %}" method="post">
       {% for choice in poll.choice_set.all %}
-        <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" onclick="enableSubmit()"/>
+        <input type="radio" name="choice" id="choice{{ forloop.counter }}" value="{{ choice.id }}" />
         <label for="choice{{ forloop.counter }}">{{ choice.choice }}</label><br />
       {% endfor %}
-      <input id="submit_button" type="submit" value="Vote" disabled="true"/>
+      <input id="submit_button" type="submit" value="Vote" />
     </form>
     </div>
 

@@ -38,7 +38,7 @@ class Event(models.Model):
   # generated pdf file (used for caching)
   presentation_pdf = models.FileField(blank = True, upload_to = event_upload_to)
 
-  debug = False
+  debug_mode = False
 
   def start_date_timezone(self, timezone_name):
     return self.lobby_start_date.replace(tzinfo = timezone(timezone_name))
@@ -66,7 +66,7 @@ class Event(models.Model):
     return (time_a - time_b).seconds
     
   def debug(self):
-    self.debug = True
+    self.debug_mode = True
     offsets = self.get_state_offsets_debug()
 
     now = datetime.now(timezone(settings.TIME_ZONE))
@@ -136,7 +136,7 @@ class Event(models.Model):
     }
 
   def get_state_offsets(self):
-    if self.debug:
+    if self.debug_mode:
       return self.get_state_offsets_debug()
 
     return {
