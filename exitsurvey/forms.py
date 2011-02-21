@@ -17,6 +17,7 @@ def make_exit_survey_form(questions):
           result_choices.append([n.id, n.answer])
       
       result_type_flag = False
+      results = question.exitresult_set.all().order_by('number')
       for n in results:
         if n.result_type == CHOOSE_ONE and not result_type_flag:
           result_type_flag = True
@@ -29,9 +30,11 @@ def make_exit_survey_form(questions):
             widget=forms.CheckboxSelectMultiple(choices = result_choices))
         elif n.result_type == COMMENT:
           fields['_%s' % question.id] = forms.CharField(required=False,
+            label = "Comment",
             widget=forms.TextInput)
         elif n.result_type == COMMENT_REQUIRED:
-          fields['_%s' % question.id] = forms.CharField(widget=forms.TextInput)
-        
+          fields['_%s' % question.id] = forms.CharField(widget=forms.TextInput,
+            label = "Comment")
+             
       
   return type('ExitSurveyForm', (forms.BaseForm,), { 'base_fields': fields })
