@@ -1,0 +1,56 @@
+from django import forms
+from django.forms.widgets import RadioSelect, CheckboxSelectMultiple
+import ipdb
+
+from exitsurvey.models import ExitQuestion, ExitResult
+from exitsurvey.models import CHOOSE_ONE, CHOOSE_MANY, COMMENT
+
+class ExitSurveyForm(forms.Form):
+  #__metaclass__ = forms.forms.DeclarativeFieldsMetaclass
+  
+  def __init__(self, *args, **kwargs):
+    self.questions = kwargs.pop('questions')
+    super(ExitSurveyForm, self).__init__(*args, **kwargs)
+    self.fields['dummy'] = forms.CharField(widget=forms.TextInput())
+
+    for question in self.questions:
+      print question
+      results = question.exitresult_set.all().order_by('number')
+
+      if len(results) > 0:
+        result_choices = []
+        for n in results:
+          if n.result_type == CHOOSE_ONE or n.result_type == CHOOSE_MANY:
+            result_choices.append([n.id, n.answer])
+      
+        result_list_flag = False
+        for n in results:
+          print n
+          if n.result_type == CHOOSE_ONE and not result_list_flag:
+            result_list_flag = True
+          #self.base_fields[question.id] = forms.ChoiceField(label = question.question,
+            self.fields[question.id] = MyChoiceField(label = question.question,
+              choices = result_choices, widget=forms.RadioSelect(choices=result_choices))
+          elif n.result_type == CHOOSE_MANY and not result_list_flag:
+            result_list_flag = True
+            self.fields[question.id] = MyMultipleChoiceField(label = question.question,
+              choices = result_choices,
+              widget=forms.CheckboxSelectMultiple(choices = result_choices))
+          elif n.result_type == COMMENT:
+            print "comment result"
+            self.fields[question.id] = forms.CharField(required=False,
+              widget=forms.TextInput)
+      
+    #ipdb.set_trace()     
+
+        
+class MyChoiceField(forms.ChoiceField):
+  def clean(self, value):
+    print "Warning - You are using a dummy clean function.  Please be sure to fix this before release!"
+    return True        
+        
+class MyMultipleChoiceField(forms.MultipleChoiceField):
+  def clean(self, value):
+    print "Warning - You are using a dummy clean function.  Please be sure to fix this before release!"
+    return True        
+

@@ -1,0 +1,7 @@
+{% load ifsetting_tag %}
+
+{% ifnotequal request.session.thank_you None %}
+  <div class="panel">
+    <strong>Thank you for your participation!</strong>
+  </div>
+{% endifnotequal %}

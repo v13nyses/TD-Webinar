@@ -134,6 +134,7 @@ INSTALLED_APPS = (
     'reporting',
     'registration',
 		'userprofiles',
+    'exitsurvey',
     'eventmailer',
     'sorl.thumbnail',
     #'autofixture',
@@ -170,6 +171,7 @@ FIXTURE_DIRS = (
   'events/fixtures',
   'userprofiles/fixtures',
   #'presentations/fixtures',
+  'exitsurvey/fixtures',
   'fixtures'
 )
 
