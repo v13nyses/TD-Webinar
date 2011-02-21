@@ -8,3 +8,4 @@ class Registration(models.Model):
   user_profile = models.ForeignKey('userprofiles.UserProfile')
   event = models.ForeignKey('events.Event')
   ip_address = models.IPAddressField()
+  completed_exit_survey = models.CharField(max_length=200,default="False")

@@ -87,6 +87,11 @@ def submit_question(request, event_id = None):
 #   event/
 #   event/<event_id>/
 def event(request, event_id = None, state = None, template = 'event.html'):
+  if request.session.has_key('login_email'):
+    print request.session['login_email']
+  else:
+    print "no login email"
+  request.session['thank_you'] = None
   push_analytics = []
   # if we didn't get an event id, grab the newest event
   event = None
@@ -124,13 +129,19 @@ def event(request, event_id = None, state = None, template = 'event.html'):
     request.session['user_registered'] = None
   else:
     try:
+      print "getting reg"
       profile = UserProfile.objects.get(email = request.session['login_email'])
+      print profile
       reg = Registration.objects.filter(user_profile = profile, event=event.id)
 
       if len(reg) == 0:
+        print "reg len = 0"
         request.session['user_registered'] = None
       else:
+        print "reg found!"
         request.session['user_registered'] = "True"
+        if reg[0].completed_exit_survey == "True":
+          request.session['thank_you'] = "thanks"
     except UserProfile.DoesNotExist:
       request.session['user_registered'] = None
 

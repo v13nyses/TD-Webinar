@@ -1,6 +1,6 @@
 {% extends 'site_base.html' %}
 
-{% load event_login user_profile event_extras presentations_extras thumbnail event_register%}
+{% load event_login user_profile event_extras presentations_extras thumbnail event_register thank_you %}
 
 {% block head_title %}{{ event.name }}{% endblock %}
 {% block extra_head %}
@@ -41,6 +41,7 @@
         {% else %}
             {% event_register request register_event_form %}
         {% endifequal %}
+        {% thank_you request %}
       </div>
       <div id="presenters">
         {% presenter_list event.presenters %}

@@ -12,5 +12,7 @@ urlpatterns = patterns('',
   url(r'^event/(?P<event_id>\d+)/register$', 'events.views.register', name = "register"),
   url(r'^event/(?P<event_id>\d+)/pdf$', 'events.views.pdf', name = "pdf"),
   url(r'^event/(?P<event_id>\d+)/submit_question$', 'events.views.submit_question', name = "submit_question"),
+  url(r'^event/(?P<event_id>\d+)/exit_survey$', 'exitsurvey.views.exit_survey', name = "exit_survey"),
+  url(r'^event/(?P<event_id>\d+)/thank_you$', 'events.views.register', name = "thank_you"),
   url(r'^$', 'events.views.event', name = "newest_event"),
 )

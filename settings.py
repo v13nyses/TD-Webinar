@@ -171,6 +171,7 @@ FIXTURE_DIRS = (
   'events/fixtures',
   'userprofiles/fixtures',
   #'presentations/fixtures',
+  'exitsurvey/fixtures',
   'fixtures'
 )
 
