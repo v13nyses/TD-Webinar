@@ -95,6 +95,7 @@ EventController = function() {
   // call the onChangeState callback to setup variables
   this.onChangeState();
   this.setupStateTransitions();
+  this.attachQuestionEvents();
 }
 
 o = EventController.prototype;
@@ -151,6 +152,7 @@ o.changeState = function(state) {
     self.presentationWrapper
       .load(self.presentationUrl, function(data) {
         self.onChangeState();
+        self.attachQuestionEvents();
         self.presentation.hide().slideDown(self.slideAnimationDuration);
       });
   }
@@ -176,6 +178,26 @@ o.onPlayerReady = function(player) {
   } else if(this.state == 'lobby') {
     this.player.play();
   }
+}
+
+o.attachQuestionEvents = function() {
+  // show a thank you message when the question form is submitted
+  $("#questionform").submit(function() {
+    // submit the data with ajax
+    $.ajax({
+      url: $("#questionform").attr("action"),
+      dataType: 'json',
+      data: $("#questionform").serialize(),
+      type: 'post',
+      success: function(data) {
+      }
+    });
+
+    $("#questionform label").html("Thank you for submitting your question.");
+    $("#questionform-right").hide();
+
+    return false;
+  });
 }
 
 o.startPresentation = function() {
@@ -266,23 +288,5 @@ $(document).ready(function() {
   // add the fancybox popup for bios on the presenters tab
   $("#presenters a").fancybox();
 
-  // show a thank you message when the question form is submitted
-  $("#questionform").submit(function() {
-    // submit the data with ajax
-    $.ajax({
-      url: $("#questionform").attr("action"),
-      dataType: 'json',
-      data: $("#questionform").serialize(),
-      type: 'post',
-      success: function(data) {
-        $("#questionform label").html("Thank you for submitting your question.");
-        $("#questionform-right").hide();
-      }
-    });
-
-    $("#questionform input").attr("disabled", "disabled");
-
-    return false;
-  });
 
 });
