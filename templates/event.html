@@ -71,21 +71,17 @@
       <div id="information-right" class="information-right">
         <div id="resource-panel" class="panel">
           <h3>Resource Panel</h3>
-          <div class="rp-item">
-            <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-download.png" width="20" height="20" alt="Download Presentation" /></div>
-            <div class="rp-description"><a href="{% url pdf event.id %}" >Download Presentation</a></div>
+          <div class="rp-item rp-download">
+            <a href="{% url pdf event.id %}" ><div class="rp-description">Download Presentation</div></a>
           </div>
-          <div class="rp-item">
-            <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-resourceguide.png" width="20" height="20" alt="Resource Guide" /></div>
-            <div class="rp-description"><a href="{{ MEDIA_URL}}{{ event.resource_guide.name }}">Resource Guide</a></div>
+          <div class="rp-item rp-resourceguide">
+            <a href="{{ MEDIA_URL}}{{ event.resource_guide.name }}"><div class="rp-description">Resource Guide</div></a>
           </div>
-          <div class="rp-item">
-            <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-td.png" width="20" height="20" alt="Locate a TD Small Business Advisor" /></div>
-            <div class="rp-description">Locate a TD Small Business Advisor</div>
+          <div class="rp-item rp-td">
+            <a href="http://www.tdcanadatrust.com/smallbusiness/advisor/index.jsp" target="_blank"><div class="rp-description">Locate a TD Small Business Advisor</div></a>
           </div>
-          <div class="rp-item">
-            <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-td.png" width="20" height="20" alt="Find a TD Commercial Banking Centre" /></div>
-            <div class="rp-description">Find a TD Commercial Banking Centre</div>
+          <div class="rp-item rp-td">
+            <a href="http://www.tdcommercialbanking.com/cbc_dir.jsp" target="_blank"><div class="rp-description">Find a TD Commercial Banking Centre</div></a>
           </div>
           {% recommend request recommend_form %}
           <!--<div class="rp-item">
