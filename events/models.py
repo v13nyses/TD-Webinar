@@ -38,7 +38,7 @@ class Event(models.Model):
   # generated pdf file (used for caching)
   presentation_pdf = models.FileField(blank = True, upload_to = event_upload_to)
 
-  debug = False
+  debug_mode = False
 
   def start_date_timezone(self, timezone_name):
     return self.lobby_start_date.replace(tzinfo = timezone(timezone_name))
@@ -66,13 +66,14 @@ class Event(models.Model):
     return (time_a - time_b).seconds
     
   def debug(self):
-    self.debug = True
+    self.debug_mode = True
+    offsets = self.get_state_offsets_debug()
 
     now = datetime.now(timezone(settings.TIME_ZONE))
-    self.lobby_start_date = now + timedelta(seconds = 10)
-    self.live_start_date = now + timedelta(seconds = 20)
-    self.live_stop_date = now + timedelta(seconds = 50)
-    self.archive_start_date = now + timedelta(seconds = 60)
+    self.lobby_start_date = now + timedelta(seconds = offsets['lobby'])
+    self.live_start_date = now + timedelta(seconds = offsets['live'])
+    self.live_stop_date = now + timedelta(seconds = offsets['post'])
+    self.archive_start_date = now + timedelta(seconds = offsets['archive'])
     self.save()
 
   def get_state(self):
@@ -128,14 +129,14 @@ class Event(models.Model):
 
   def get_state_offsets_debug(self):
     return {
-        'lobby': 10,
-        'live': 20,
-        'post': 50,
-        'archive': 60
+        'lobby': 20,
+        'live': 40,
+        'post': 85,
+        'archive': 105
     }
 
   def get_state_offsets(self):
-    if self.debug:
+    if self.debug_mode:
       return self.get_state_offsets_debug()
 
     return {

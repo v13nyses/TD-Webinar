@@ -100,6 +100,7 @@ body {
 .slide .poll #submit_button {
   padding: 10px 20px;
   margin-top: 30px;
+  margin-left: 145px;
 }
 
 #slideshow {
@@ -414,6 +415,29 @@ input#question {
 
 input#question-submit {
 	display: inline-block;
+}
+
+/* Login Form */
+#login-panel label {
+  display: none;
+}
+
+#login-panel p, #login-panel input {
+  float: left;
+}
+
+#login-panel #login_form {
+  height: 90px;
+}
+
+#login-panel p input {
+  width: 190px;
+  margin-right: 10px;
+}
+
+#login-panel input.submit {
+  margin-top: 13px;
+  float: right;
 }
 
 /* Resource Panel */

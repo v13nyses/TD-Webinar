@@ -6,7 +6,7 @@ from greatape import MailChimp, MailChimpError
 from userprofiles.models import UserProfile
 from registration.models import Registration
 from events.models import Event
-from datetime import timedelta
+from datetime import timedelta, datetime
 from pytz import timezone
 import logging
 
@@ -41,11 +41,11 @@ class MailChimpEvent(models.Model):
     
     return segment_id
 
-  def create_campaign(self, subject_format, schedule_time = None, time_str = None):
+  def create_campaign(self, subject_format, schedule_time = None, time_str = None, template_id = None):
     mailchimp = MailChimp(settings.MAILCHIMP_API_KEY)
     campaign_id = mailchimp.campaignCreate(
         type = 'regular',
-        content = {'html': self.event.description},
+        content = {'html_mid_content00': self.event.description},
         segment_opts = {'match': 'all', 'conditions': [{
                               'field': 'static_segment',
                               'op': 'eq',
@@ -57,6 +57,7 @@ class MailChimpEvent(models.Model):
           'from_email': settings.MAILCHIMP_FROM_EMAIL,
           'from_name': settings.MAILCHIMP_FROM_NAME,
           'to_email': settings.MAILCHIMP_TO_EMAIL,
+          'template_id': template_id,
         }
     )
 
@@ -78,7 +79,7 @@ class MailChimpEvent(models.Model):
     mailchimp = MailChimp(settings.MAILCHIMP_API_KEY)
     self.campaign_sorry_id = mailchimp.campaignCreate(
         type = 'regular',
-        content = {'html': self.event.description},
+        content = {'html_mid_content00': self.event.description},
         segment_opts = {'match': 'all', 'conditions': [{
                               'field': 'static_segment',
                               'op': 'eq',
@@ -86,16 +87,17 @@ class MailChimpEvent(models.Model):
                         }]},
         options = {
           'list_id': settings.MAILCHIMP_LIST_ID,
-          'subject': settings.MAILCHIMP_SUBJECTS['finished_thank_you'],
+          'subject': settings.MAILCHIMP_SUBJECTS['finished_sorry_we_missed'],
           'from_email': settings.MAILCHIMP_FROM_EMAIL,
           'from_name': settings.MAILCHIMP_FROM_NAME,
           'to_email': settings.MAILCHIMP_TO_EMAIL,
+          'template_id': self.event.template_missed_you,
         }
     )
 
     self.campaign_thanks_id = mailchimp.campaignCreate(
         type = 'regular',
-        content = {'html': self.event.description},
+        content = {'html_mid_content00': self.event.description},
         segment_opts = {'match': 'all', 'conditions': [
                             {
                               'field': 'static_segment',
@@ -113,6 +115,7 @@ class MailChimpEvent(models.Model):
           'from_email': settings.MAILCHIMP_FROM_EMAIL,
           'from_name': settings.MAILCHIMP_FROM_NAME,
           'to_email': settings.MAILCHIMP_TO_EMAIL,
+          'template_id': self.event.template_thank_you,
         }
     )
     try:
@@ -131,8 +134,10 @@ class MailChimpEvent(models.Model):
 
     self.list_segment_id = self.create_segment(self.event.slug)
     self.participated_segment_id = self.create_segment("attended: %s" % self.event.slug)
-    self.create_campaign(settings.MAILCHIMP_SUBJECTS['reminder'], time_24_hours, '24 hours')
-    self.create_campaign(settings.MAILCHIMP_SUBJECTS['reminder'], time_1_hour, '1 hour')
+    self.create_campaign(settings.MAILCHIMP_SUBJECTS['reminder'], 
+                         time_24_hours, '24 hours', self.event.template_24_hour)
+    self.create_campaign(settings.MAILCHIMP_SUBJECTS['reminder'], 
+                         time_1_hour, '1 hours', self.event.template_1_hour)
     self.create_event_finished_campaigns()
 
 def mailchimp_template_choices():
@@ -146,7 +151,7 @@ def mailchimp_template_choices():
   return choices
 
 def setup_event(sender, instance = None, created = False, **kwargs):
-  if created:
+  if created and instance.live_start_date > datetime.now():
     event_mailer = MailChimpEvent()
     event_mailer.event = instance
     event_mailer.create_campaigns()
@@ -155,46 +160,49 @@ def setup_event(sender, instance = None, created = False, **kwargs):
 def register_user(sender, instance = None, created = False, **kwargs):
   logger.info("Registering user: %s, created: %s" % (instance.user_profile.email, created))
   if created:
+    send_welcome_email(instance)
     # lookup the profile for the registered user
     profile = instance.user_profile
-    mailchimp_event = MailChimpEvent.objects.get(event = instance.event)
-    mailchimp = MailChimp(settings.MAILCHIMP_API_KEY)
-    event = instance.event
-    event_start_datetime = event.start_date_timezone('America/Toronto').strftime('%A, %b %d, %I:%M %p')
-    event_start_date = event.start_date_timezone('America/Toronto').strftime('%A, %b %d')
-    event_start_time = event.start_date_timezone('America/Toronto').strftime('%I:%M %p')
-    result = mailchimp.listSubscribe(
-        id = settings.MAILCHIMP_LIST_ID, 
-        email_address = profile.email,
-        merge_vars = {
-          'FNAME': profile.first_name,
-          'LNAME': profile.last_name,
-          'ADDRESS': {
-            'city': profile.city,
-            'state': profile.province,
-            'zip': profile.postal_code,
-            'country': 'Canada'
+    try:
+      mailchimp_event = MailChimpEvent.objects.get(event = instance.event)
+      mailchimp = MailChimp(settings.MAILCHIMP_API_KEY)
+      event = instance.event
+      event_start_datetime = event.start_date_timezone('America/Toronto').strftime('%A, %b %d, %I:%M %p')
+      event_start_date = event.start_date_timezone('America/Toronto').strftime('%A, %b %d')
+      event_start_time = event.start_date_timezone('America/Toronto').strftime('%I:%M %p')
+      result = mailchimp.listSubscribe(
+          id = settings.MAILCHIMP_LIST_ID, 
+          email_address = profile.email,
+          merge_vars = {
+            'FNAME': profile.first_name,
+            'LNAME': profile.last_name,
+            'ADDRESS': {
+              'city': profile.city,
+              'state': profile.province,
+              'zip': profile.postal_code,
+              'country': 'Canada'
+            },
+            'EVENT_TITLE': instance.event.name,
+            'EVENT_DATETIME': event_start_datetime,
+            'EVENT_DATE': event_start_date,
+            'EVENT_TIME': event_start_time,
+            'EVENT_TAGLINE': event.short_description,
+            'EVENT_LONGDESC': event.description,
+            'EVENT_OUTLOOKLINK': "http://home.v13inc.com/%s/%s" % (settings.MEDIA_URL, event.outlook_file)
           },
-          'EVENT_TITLE': instance.event.name,
-          'EVENT_DATETIME': event_start_datetime,
-          'EVENT_DATE': event_start_date,
-          'EVENT_TIME': event_start_time,
-          'EVENT_TAGLINE': event.short_description,
-          'EVENT_LONGDESC': event.description,
-          'EVENT_OUTLOOKLINK': "http://home.v13inc.com/%s/%s" % (settings.MEDIA_URL, event.outlook_file)
-        },
-        double_optin = False,
-        welcome_email = True,
-        update_existing = True
-    )
-    logger.info("Adding %s to list '%s', result: %s" % (profile.email, settings.MAILCHIMP_LIST_ID, result))
-    result = mailchimp.listStaticSegmentAddMembers(
-        id = settings.MAILCHIMP_LIST_ID,
-        seg_id = mailchimp_event.list_segment_id,
-        batch = [profile.email]
-    )
-    logger.info("Adding %s to list segment '%s': %s" % (profile.email, mailchimp_event.list_segment_id, result))
-    send_welcome_email(instance)
+          double_optin = False,
+          welcome_email = True,
+          update_existing = True
+      )
+      logger.info("Adding %s to list '%s', result: %s" % (profile.email, settings.MAILCHIMP_LIST_ID, result))
+      result = mailchimp.listStaticSegmentAddMembers(
+          id = settings.MAILCHIMP_LIST_ID,
+          seg_id = mailchimp_event.list_segment_id,
+          batch = [profile.email]
+      )
+      logger.info("Adding %s to list segment '%s': %s" % (profile.email, mailchimp_event.list_segment_id, result))
+    except MailChimpEvent.DoesNotExist:
+      logger.info("Unable to add user to list, no MailChimpEvent for current event")
                             
 def view_event_live(event, profile):
     mailchimp_event = MailChimpEvent.objects.get(event = event)
@@ -227,6 +235,7 @@ def send_welcome_email(registration):
   )
   email.attach_alternative(html_message, "text/html")
   email.send()
+  logger.info("sending welcome email to: %s" % profile.email)
 
 models.signals.post_save.connect(setup_event, sender = Event)
 models.signals.post_save.connect(register_user, sender = Registration)
