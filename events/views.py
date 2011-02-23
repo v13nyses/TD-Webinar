@@ -58,7 +58,7 @@ def pdf(request, event_id = None):
     event.presentation_pdf = pdf_path
     event.save()
 
-  return HttpResponseRedirect("%s/%s" % (settings.MEDIA_URL, event.presentation_pdf))
+  return HttpResponseRedirect("%s%s" % (settings.MEDIA_URL, event.presentation_pdf))
 
 # used by urls:
 #   event/<event_id>/register

@@ -426,7 +426,7 @@ input#question-submit {
   float: left;
 }
 
-#login-panel form {
+#login-panel #login_form {
   height: 90px;
 }
 

@@ -1,4 +1,14 @@
-<form id="exit_survey" action="" method="post">
-  {{ exit_survey.as_p }}
-  <input type="submit" value="Submit"></input>
-</form>
+{% extends "base.html" %}
+
+{% block header %}
+  <h3>Exit Survey</h3>
+{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <form id="exit_survey" action="" method="post">
+      {{ exit_survey.as_p }}
+      <input type="submit" value="Submit"></input>
+    </form>
+  </div>
+{% endblock %}
