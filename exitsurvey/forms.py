@@ -1,5 +1,5 @@
 from django import forms
-from django.forms.widgets import RadioSelect, CheckboxSelectMultiple
+from django.forms.widgets import RadioSelect, CheckboxSelectMultiple#, TextArea
 import ipdb
 
 from exitsurvey.models import ExitQuestion, ExitResult
@@ -17,6 +17,7 @@ def make_exit_survey_form(questions):
           result_choices.append([n.id, n.answer])
       
       result_type_flag = False
+      results = question.exitresult_set.all().order_by('number')
       for n in results:
         if n.result_type == CHOOSE_ONE and not result_type_flag:
           result_type_flag = True
@@ -28,10 +29,12 @@ def make_exit_survey_form(questions):
             choices = result_choices,
             widget=forms.CheckboxSelectMultiple(choices = result_choices))
         elif n.result_type == COMMENT:
-          fields['_%s' % question.id] = forms.CharField(required=False,
-            widget=forms.TextInput)
+          fields['%s0%d' % (question.id, n.number)] = forms.CharField(required=False,
+            label = n.label,
+            widget=forms.Textarea)
         elif n.result_type == COMMENT_REQUIRED:
-          fields['_%s' % question.id] = forms.CharField(widget=forms.TextInput)
-        
-      
+          fields['%s0%d' % (question.id, n.number)] = forms.CharField(widget=forms.Textarea,
+            label = n.label)
+             
+  #print fields    
   return type('ExitSurveyForm', (forms.BaseForm,), { 'base_fields': fields })

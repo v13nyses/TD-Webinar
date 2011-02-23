@@ -22,6 +22,7 @@ class ExitResult(models.Model):
   result_type = models.CharField(max_length=200)
   question = models.ForeignKey('ExitQuestion')
   answer = models.CharField(max_length=500, blank=True)
+  label = models.CharField(max_length=200, blank=True)
   results = models.IntegerField(default=0)
   number = models.IntegerField()
 
