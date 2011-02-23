@@ -61,14 +61,14 @@ def exit_survey(request, event_id = None):
         for n in results:
           if not result_choose_flag:
             if n.result_type == CHOOSE_ONE or n.result_type == CHOOSE_MANY: 
-              aoeu = exit_survey.cleaned_data['%s' % question.id]
+              aoeu = exit_survey.cleaned_data['%s-1' % question.id]
               if isinstance(aoeu, list):
                 result_list = result_list + aoeu
               else:
                 result_list.append(aoeu)
               result_choose_flag = True
           elif n.result_type == COMMENT:
-              aoeu = exit_survey.cleaned_data['%s0%d' % (question.id, n.number)]
+              aoeu = exit_survey.cleaned_data['%s-1-%d' % (question.id, n.number)]
               if isinstance(aoeu, list):
                 result_list = result_list + aoeu
               else:

@@ -8,10 +8,18 @@ CHOOSE_MANY = "choose_many"
 COMMENT = "comment"
 COMMENT_REQUIRED = "comment_required"
 
+
+class ExitSection(models.Model):
+  name = models.CharField(max_length=200)
+
+  def __unicode__(self):
+    return "ExitSection: %s" % self.name
+
 # Create your models here.
 class ExitQuestion(models.Model):
   question = models.CharField(max_length=255)
-  event = models.ForeignKey('events.Event')
+  event = models.ForeignKey('events.Event') 
+  section = models.ForeignKey('ExitSection')
   number = models.IntegerField()
 
   def __unicode__(self):
