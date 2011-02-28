@@ -185,10 +185,7 @@ o.onPlayerReady = function(player) {
   this.player = player;
   this.coverPlayer(false);
   if(this.state == 'live') {
-    console.log("startOffset", this.startOffset);
-    console.log("Duration", this.player.getDuration());
     if(this.startOffset < this.player.getDuration() && this.startOffset > 0) {
-      console.log("seeking");
       this.player.seek(this.startOffset);
     }
     this.startPresentation();
@@ -197,6 +194,7 @@ o.onPlayerReady = function(player) {
   } else if(this.state == 'archive') {
     this.startPresentation();
   } else if(this.state == 'lobby') {
+    this.coverPlayer(true);
     this.player.play();
   }
 }

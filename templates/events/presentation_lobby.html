@@ -1,4 +1,11 @@
 {% load presentations_extras event_extras %}
+<script type="text/javascript">
+  var settings = TDWebinar.settings.eventPage;
+  settings.startOffset = "0";
+  settings.state = "{{ state }}";
+  _old_doc_write = document.write;
+  document.write = function() {};
+</script>
 <div id="presentation" class="container">
   <div id="presentation-left">
     <div id="presentation-webinar">
@@ -14,3 +21,6 @@
     {% question_form event %}
   </div>
 </div>
+</script>
+  document.write = _old_doc_write;
+</script>
