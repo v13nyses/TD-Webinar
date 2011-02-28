@@ -41,6 +41,9 @@
         {% else %}
             {% event_register request register_event_form %}
         {% endifequal %}
+        <div id="browser-check-panel" class="panel">
+          <a href="{% url browser_check %}" target="_blank">Check your browser for compatibility</a>
+        </div>
         {% ifnotequal message "" %}
           <div id="message" class="panel">
             {{ message }}

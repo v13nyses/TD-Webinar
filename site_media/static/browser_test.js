@@ -43,7 +43,7 @@ $(document).ready(function() {
   if(typeof(browser.msie) == 'undefined' || parseInt(browser.version) > 6) {
     pass(".browser");
   } else {
-    fail(".flash", "FAILED: Internet Explorer 7 or greater required.");
+    fail(".browser", "FAILED: Internet Explorer 7 or greater required.");
   }
 
   if(flashVersion.major >= 9) {
