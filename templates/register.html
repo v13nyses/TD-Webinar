@@ -41,8 +41,7 @@
         {% else %}
             {% event_register request register_event_form %}
         {% endifequal %}
-        {% thank_you request %}
-        {% ifnotequal message None %}
+        {% ifnotequal message "" %}
           <div id="message" class="panel">
             {{ message }}
           </div>

@@ -2,6 +2,7 @@ from django import template
 from django.conf import settings
 from presentations.models import Slide
 import simplejson
+from sorl.thumbnail import get_thumbnail
 
 register = template.Library()
 
@@ -31,7 +32,8 @@ def slide_set_json(event):
   for slide in slides:
     slides_data.append({
       'slideId': slide.id,
-      'timeOffset': slide.offset
+      'timeOffset': slide.offset,
+      'image': get_thumbnail(slide.image, '360x270').url
     })
 
   return simplejson.dumps(slides_data)

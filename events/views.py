@@ -89,6 +89,11 @@ def submit_question(request, event_id = None):
     
 
 # used by urls:
+#   event/browser-check
+def browser_check(request):
+  return render_to_response('browser_check.html', {}, context_instance = RequestContext(request))
+
+# used by urls:
 #   event/
 #   event/<event_id>/
 def event(request, event_id = None, state = None, template = 'event.html', message = None):

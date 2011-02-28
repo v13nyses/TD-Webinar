@@ -107,6 +107,10 @@ body {
   margin-left: 145px;
 }
 
+#slideshow-preload {
+  display: none;
+}
+
 #slideshow {
 	width: 360px;
 	height: 270px;

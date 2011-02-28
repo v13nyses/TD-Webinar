@@ -11,6 +11,7 @@ TDWebinar = {
     },
     eventPage: { 
       slideshowContainer: "#slideshow",
+      slideshowPreloadContainer: "#slideshow-preload",
       presentationWrapper: "#presentation-wrapper",
       presentationContainer: "#presentation",
       playerCover: "#presentation-cover",

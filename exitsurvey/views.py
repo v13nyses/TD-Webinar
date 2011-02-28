@@ -11,13 +11,15 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.http import HttpResponseRedirect
+from django.conf import settings
 import simplejson as json
 import ipdb
 
 
 # Create your views here.
 def thank_you(request, event_id = None):
-  return render_to_response('exitsurvey/thank_you.html')
+  return render_to_response('exitsurvey/thank_you.html',
+      {}, context_instance = RequestContext(request))
 
 def exit_survey(request, event_id = None):
   if request.session.has_key('login_email'):

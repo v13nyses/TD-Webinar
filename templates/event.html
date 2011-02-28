@@ -69,7 +69,7 @@
             <div class="description start-time">The Webinar Workshop {{ event.name }} will begin on {{ event.start_time_eastern|date:"F d" }} at {{ event.start_time_eastern|date:"f A"|lower }} EST.</div>
           {% endifequal %}
           <div class="description">
-            {{ event.short_description|safe }}
+            {{ event.description|safe }}
           </div>
         </div>
       </div>

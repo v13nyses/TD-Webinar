@@ -7,6 +7,7 @@
 //
 
 // PresentationController listens for events from the video player, and switches slides.
+// {{{
 PresentationController = function(player) {
   // queuePoints contains the slide timing and ids (used for ajax loading of slides)
   this.queuePoints = TDWebinar.settings.eventPage.queuePoints;
@@ -22,6 +23,10 @@ o = PresentationController.prototype;
 o.initPlayer = function(player) {
   this.player = player;
   this.attachPlayerEvents();
+
+  if(this.queuePoints.length > 1) {
+    this.preloadSlide(1);
+  }
 }
 
 o.attachPlayerEvents = function() {
@@ -56,8 +61,11 @@ o.attachPollEvents = function() {
   });
 }
 
-o.slideUrl = function() {
-  var slideId = this.queuePoints[this.currentQueuePoint].slideId;
+o.slideUrl = function(queuePoint) {
+  if(queuePoint == undefined) {
+    queuePoint = this.currentQueuePoint;
+  }
+  var slideId = this.queuePoints[queuePoint].slideId;
   return TDWebinar.settings.eventPage.slideUrl + slideId + "/";
 }
 
@@ -85,11 +93,20 @@ o.loadSlide = function(event) {
     $(TDWebinar.settings.eventPage.slideshowContainer).load(this.slideUrl(), function() {
       self.attachPollEvents();
     });
+    this.preloadSlide(nextQueuePoint);
   }
 }
 
+o.preloadSlide = function(queuePointNum) {
+  if(queuePointNum < this.queuePoints.length) {
+    $(TDWebinar.settings.eventPage.slideshowPreloadContainer).load(this.slideUrl(queuePointNum));
+  }
+}
+// }}}
+
 // EventController loads new event states and animates the transitions. It also sets
 // up a PresentationController when necessary to control the slides.
+// {{{
 EventController = function() {
   this.presentationController = null;
   // call the onChangeState callback to setup variables
@@ -240,6 +257,10 @@ function playerReady(obj) {
   TDWebinar.eventController.onPlayerReady(player);
 }
 
+// }}}
+
+// TabController
+// {{{
 TabController = function(tabContainer, tabDefaultState, tabHoverState) {
   this.tabDefaultState = tabDefaultState;
   this.tabHoverState = tabHoverState;
@@ -295,6 +316,7 @@ o.selectTab = function(tab) {
     $('#' + tab.attr('rel')).show();
   }
 }
+// }}}
 
 $(document).ready(function() {
   TDWebinar.tabController = new TabController(TDWebinar.settings.eventPage.tabContainer,
