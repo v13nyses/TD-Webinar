@@ -34,7 +34,13 @@
             <h3>Login</h3>
             <p>Already registered? Please login with your email address below:<p>
           {% endifequal %}
-            {% event_login request login_form logout_form %}
+          {% event_login request login_form logout_form %}
+          {% ifnotequal message "" %}
+            <span class="message">
+              {{ message }}
+              <a href="{% url event event.id %}">View Event</a>
+            </span>
+          {% endifnotequal %}
         </div>
         {% ifequal request.session.login_email None %}
             {% user_profile request user_profile_form %}
@@ -44,11 +50,6 @@
         <div id="browser-check-panel" class="panel">
           <a href="{% url browser_check %}" target="_blank">Check your browser for compatibility</a>
         </div>
-        {% ifnotequal message "" %}
-          <div id="message" class="panel">
-            {{ message }}
-          </div>
-        {% endifnotequal %}
       </div>
       <div id="presenters">
         {% presenter_list event.presenters %}

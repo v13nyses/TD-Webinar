@@ -223,9 +223,9 @@ def event(request, event_id = None, state = None, template = 'event.html', messa
         register_user_for_event(request)
 
   if user_is_logged_in(request):
-    message = settings.REGISTRATION_MESSAGE
     push_analytics.append(['_setCustomVar', 1, 'UserEmail', request.session['login_email'], 1])
     push_analytics.append(['_trackEvent', 'Conversions', 'UserEmail'])
+    message = settings.REGISTRATION_MESSAGE
     if request.session['user_registered'] is None and is_first_redirect(request):
       request.session['was_redirected'] = "True"
       return HttpResponseRedirect(reverse('register', args=[event_id]))
