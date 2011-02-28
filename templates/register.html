@@ -42,6 +42,11 @@
             {% event_register request register_event_form %}
         {% endifequal %}
         {% thank_you request %}
+        {% ifnotequal message None %}
+          <div id="message" class="panel">
+            {{ message }}
+          </div>
+        {% endifnotequal %}
       </div>
       <div id="presenters">
         {% presenter_list event.presenters %}

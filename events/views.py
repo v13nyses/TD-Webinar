@@ -62,8 +62,8 @@ def pdf(request, event_id = None):
 
 # used by urls:
 #   event/<event_id>/register
-def register(request, event_id = None):
-  return event(request, event_id, 'pre', 'register.html')
+def register(request, event_id = None, message = None):
+  return event(request, event_id, 'pre', 'register.html', message)
 
 # used by urls:
 #   event/<event_id>/submit_question
@@ -91,7 +91,7 @@ def submit_question(request, event_id = None):
 # used by urls:
 #   event/
 #   event/<event_id>/
-def event(request, event_id = None, state = None, template = 'event.html'):
+def event(request, event_id = None, state = None, template = 'event.html', message = None):
   if request.session.has_key('login_email'):
     print request.session['login_email']
   else:
@@ -187,7 +187,11 @@ def event(request, event_id = None, state = None, template = 'event.html'):
         login_user(login_form.cleaned_data['email'], request)
         push_analytics.append(['_setCustomVar', 1, 'UserEmail', request.session['login_email'], 1])
         push_analytics.append(['_trackEvent', 'Conversions', 'UserEmail'])
-        return HttpResponseRedirect(reverse('event', args=[event_id]))
+        if is_first_redirect(request):
+          request.session['first_redirect'] = "False"
+          return HttpResponseRedirect(reverse('register', args=[event_id, settings.REGISTRATION_MESSAGE]))
+        else:
+          return HttpResponseRedirect(reverse('event', args=[event_id]))
       else:
         # Do Nothing (page will reload with no one logged in)
         pass
@@ -214,10 +218,10 @@ def event(request, event_id = None, state = None, template = 'event.html'):
         register_user_for_event(request)
 
   if user_is_logged_in(request):
+    message = settings.REGISTRATION_MESSAGE
     push_analytics.append(['_setCustomVar', 1, 'UserEmail', request.session['login_email'], 1])
     push_analytics.append(['_trackEvent', 'Conversions', 'UserEmail'])
     if request.session['user_registered'] is None and is_first_redirect(request):
-      request.session['first_redirect'] = "False"
       request.session['was_redirected'] = "True"
       return HttpResponseRedirect(reverse('register', args=[event_id]))
  
@@ -238,7 +242,8 @@ def event(request, event_id = None, state = None, template = 'event.html'):
     'register_event_form': RegisterEventForm(),
     'user_profile_form': UserProfileForm(),
     'recommend_form': RecommendForm(),
-    'custom_variables': json_analytics
+    'custom_variables': json_analytics,
+    'message': message
   }
 
   return render_to_response(template, context_data, context_instance = RequestContext(request))

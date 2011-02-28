@@ -164,10 +164,14 @@ o.changeState = function(state) {
 }
 
 o.onPlayerReady = function(player) {
+  this.startOffset = TDWebinar.settings.eventPage.startOffset;
   this.player = player;
   this.coverPlayer(false);
   if(this.state == 'live') {
+    console.log("startOffset", this.startOffset);
+    console.log("Duration", this.player.getDuration());
     if(this.startOffset < this.player.getDuration() && this.startOffset > 0) {
+      console.log("seeking");
       this.player.seek(this.startOffset);
     }
     this.startPresentation();
@@ -193,8 +197,22 @@ o.attachQuestionEvents = function() {
       }
     });
 
-    $("#questionform label").html("Thank you for submitting your question.");
-    $("#questionform-right").hide();
+    $("#questionform label").fadeOut(500, function() {
+      var oldHtml = $("#questionform label").html();
+      $("#questionform label")
+        .html("Thank you for submitting your question")
+        .fadeIn(500, function() {
+          setTimeout(function() {
+            $("#questionform label").fadeOut(500, function() {
+              $("#questionform label").html(oldHtml).fadeIn();
+              $("#questionform-right").fadeIn();
+            });
+          }, 2000);
+        });
+    });
+    $("#questionform-right").fadeOut(500, function() {
+      $("#questionform-right #question").val('');
+    });
 
     return false;
   });
@@ -286,7 +304,7 @@ $(document).ready(function() {
   TDWebinar.eventController = new EventController();
 
   // add the fancybox popup for bios on the presenters tab
-  $("#presenters a").fancybox();
+  $("#presenters a, #recommend-link").fancybox({width: 600, autoDimensions: false});
 
 
 });

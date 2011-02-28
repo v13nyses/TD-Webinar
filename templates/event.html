@@ -65,6 +65,9 @@
         <div id="information-left">
           <h1>{{ event.name }}</h1>
           <h3>{{ event.live_start_date|date:"F d, Y" }}</h3>
+          {% ifequal state "pre" %}
+            <div class="description start-time">The Webinar Workshop {{ event.name }} will begin on {{ event.start_time_eastern|date:"F d" }} at {{ event.start_time_eastern|date:"f A"|lower }} EST.</div>
+          {% endifequal %}
           <div class="description">
             {{ event.short_description|safe }}
           </div>
@@ -85,11 +88,17 @@
           <div class="rp-item rp-td">
             <a href="http://www.tdcommercialbanking.com/cbc_dir.jsp" target="_blank"><div class="rp-description">Find a TD Commercial Banking Centre</div></a>
           </div>
-          {% recommend request recommend_form %}
-          <!--<div class="rp-item">
-            <div class="rp-icon"><img src="{{ STATIC_URL }}images/icon-mail.png" width="20" height="20" alt="Recommend this webinar" /></div>
-            <a class="rp-description">Recommend this webinar</div>-->
-          </div>
+          {% ifnotequal request.session.login_email None %}
+            <div class="rp-item rp-mail">
+              <a class="rp-description" href="#recommend-container" id="recommend-link">Recommend this webinar</a>
+            </div>
+            <div class="fancy-box-wrapper">
+              <div id="recommend-container">
+                {% recommend request recommend_form %}
+              </div>
+            </div>
+          {% endifnotequal %}
+        </div>
         </div>
       </div>
     </div>

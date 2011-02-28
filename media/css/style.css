@@ -64,10 +64,14 @@ body {
 	width: 480px;
 	float: left;
 	clear: both;
-	border: 2px #0d0d0d solid;
   height: 270px;
   margin-left: -2px;
   overflow: hidden;
+  text-align: center;
+}
+
+#presentation-left h1 {
+  padding-top: 75px;
 }
 
 #presentation-info {
@@ -486,6 +490,9 @@ input#question-submit {
 .rp-td .rp-description {
 	background: url('../images/icon-td.png') no-repeat left top;
 }
+.rp-mail .rp-description {
+  background: url('../images/icon-mail.png') no-repeat left top;
+}
 
 /** Registration Page **/
 
@@ -548,6 +555,11 @@ input#question-submit {
 
 #registration-panel input[type="submit"] {
   float: right;
+}
+
+/* Recommend form */
+.information-right .fancy-box-wrapper {
+  display: none;
 }
 
 /** HACKS **/

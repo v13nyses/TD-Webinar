@@ -48,6 +48,10 @@ class Event(models.Model):
 
     return lobby_start_date + time_delta
 
+  def get_archive_time_eastern(self):
+    archive_time = self.archive_start_date.replace(tzinfo = timezone('America/Toronto'))
+    return archive_time
+
   def get_start_time_eastern(self):
     return self.start_date_timezone('America/Toronto')
     
@@ -158,6 +162,7 @@ class Event(models.Model):
   state_offsets = property(get_state_offsets)
   slug = property(get_slug)
   start_time_eastern = property(get_start_time_eastern)
+  archive_time_eastern = property(get_archive_time_eastern)
 
   STATE_PRE = 'pre' 
   STATE_LOBBY = 'lobby'
@@ -173,4 +178,4 @@ class Event(models.Model):
 class Question(models.Model):
   question = models.TextField()
   event = models.ForeignKey('Event')
-  registration = models.OneToOneField('registration.Registration', blank = True, null = True)
+  registration = models.ForeignKey('registration.Registration', blank = True, null = True)

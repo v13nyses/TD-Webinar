@@ -20,7 +20,7 @@ def presenter_list(presenters):
 
 @register.simple_tag
 def presentation(event, state = None):
-  if state == None:
+  if event.state == state:
     state = event.state
     start_offset = event.start_offset
   else:
