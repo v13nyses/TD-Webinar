@@ -205,14 +205,15 @@ def register_user(sender, instance = None, created = False, **kwargs):
       logger.info("Unable to add user to list, no MailChimpEvent for current event")
                             
 def view_event_live(event, profile):
-    mailchimp_event = MailChimpEvent.objects.get(event = event)
-    mailchimp = MailChimp(settings.MAILCHIMP_API_KEY)
-    result = mailchimp.listStaticSegmentAddMembers(
-        id = settings.MAILCHIMP_LIST_ID,
-        seg_id = mailchimp_event.participated_segment_id,
-        batch = [profile.email]
-    )
-    logger.info("Adding %s to 'thank you' segment '%s': %s" % (profile.email, mailchimp_event.list_segment_id, result))
+  pass
+  # mailchimp_event = MailChimpEvent.objects.get(event = event)
+  # mailchimp = MailChimp(settings.MAILCHIMP_API_KEY)
+  # result = mailchimp.listStaticSegmentAddMembers(
+  #     id = settings.MAILCHIMP_LIST_ID,
+  #     seg_id = mailchimp_event.participated_segment_id,
+  #     batch = [profile.email]
+  # )
+  # logger.info("Adding %s to 'thank you' segment '%s': %s" % (profile.email, mailchimp_event.list_segment_id, result))
 
 def send_welcome_email(registration):
   profile = registration.user_profile
