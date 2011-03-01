@@ -409,14 +409,18 @@ form#questionform {
 	padding-bottom: 2px;
 	margin: 0;
 	padding-top: 0;
+	display: inline-block;
 }
 
 form#questionform label {
 	position:relative;
 	top:5px;
+	display: inline-block;
+	float: left;
 }
 #questionform-right {
 	float:right;
+	display: inline-block;
 }
 
 input#question {
