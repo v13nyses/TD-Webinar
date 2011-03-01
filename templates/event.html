@@ -78,10 +78,10 @@
         <div id="resource-panel" class="panel">
           <h3>Resource Panel</h3>
           <div class="rp-item rp-download">
-            <a href="{% url pdf event.id %}" ><div class="rp-description">Download Presentation</div></a>
+            <a href="{% url pdf event.id %}" target="_blank"><div class="rp-description">Download Presentation</div></a>
           </div>
           <div class="rp-item rp-resourceguide">
-            <a href="{{ MEDIA_URL}}{{ event.resource_guide.name }}"><div class="rp-description">Resource Guide</div></a>
+            <a href="{{ MEDIA_URL}}{{ event.resource_guide.name }}" target="_blank"><div class="rp-description">Resource Guide</div></a>
           </div>
           <div class="rp-item rp-td">
             <a href="http://www.tdcanadatrust.com/smallbusiness/advisor/index.jsp" target="_blank"><div class="rp-description">Locate a TD Small Business Advisor</div></a>
