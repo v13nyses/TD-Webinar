@@ -252,7 +252,9 @@ o.coverPlayer = function(cover) {
 // called when the video player starts playing. Set up slide syncing
 function playerReady(obj) {
   var player = jwplayer(document.getElementById(obj.id));
-  TDWebinar.eventController.onPlayerReady(player);
+  setTimeout(function() {
+    TDWebinar.eventController.onPlayerReady(player);
+  }, 500);
 }
 
 // }}}

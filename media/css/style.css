@@ -119,6 +119,7 @@ body {
 	border: 2px #0d0d0d solid;
 	margin-bottom: 15px;
 	margin-right: -2px;
+  overflow: hidden;
 }
 
 #slideshow img {

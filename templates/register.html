@@ -23,7 +23,7 @@
           <h1>{{ event.name }}</h1>
           <h3>{{ event.live_start_date|date:"F d, Y" }}</h3>
           <div class="description">
-            {{ event.short_description|safe }}
+            {{ event.description|safe }}
           </div>
         </div>
       </div>
