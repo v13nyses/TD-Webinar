@@ -1,7 +1,7 @@
 from django.conf.urls.defaults import *
 
 urlpatterns = patterns('',
-  url(r'event/(?P<event_id>\d+)/presentation/$', 'events.views.presentation', name = "presentation"),
+  url(r'event/(?P<event_id>\d+)/presentation/\d*$', 'events.views.presentation', name = "presentation"),
   url(r'event/(?P<event_id>\d+)/presentation/(?P<state>[a-z]+)/$', 'events.views.presentation', name = "presentation_state"),
   url(r'^event/(?P<event_id>\d+)/slides/$', 'presentations.views.displaySlideSet', name = "display_slide_set"),
   url(r'^event/(?P<event_id>\d+)/state/(?P<state>[a-z]+)/$', 'events.views.event', name = "event_state"),

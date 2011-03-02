@@ -11,6 +11,9 @@
 
 {% block header %}
   {% block header_right %}{% endblock %}
+  <!--[if IE 6]>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/ie6.css" />
+  <![endif]-->
 {% endblock %}
 
 {% block footer %}

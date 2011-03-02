@@ -127,7 +127,9 @@ class Event(models.Model):
     # because of annoying limitations in the template for tag, we need to return an array, not a dict
     presenter_types_list = []
     for presenter_type in presenter_types:
-      presenter_types_list.append(presenter_types[presenter_type])
+      type_info = presenter_types[presenter_type]
+      type_info['presenters_length'] = len(type_info['presenters'])
+      presenter_types_list.append(type_info)
 
     return presenter_types_list
 

@@ -90,11 +90,13 @@ body {
   float: left;
   position: relative;
   top: -270px;
+  z-index: 100;
 }
 
 .slide .poll {
   margin-top: 40px;
-  width: 360px;
+  width: 320px;
+  padding: 0 20px;
   height: 230px;
   position: relative;
   top: -270px;
@@ -129,11 +131,16 @@ body {
 
 /* Presenters */
 #presenters {
-  width: 560px;
+  width: 520px;
   padding: 20px;
   margin: 0;
   clear: none;
   float: left;
+  overflow: hidden;
+}
+
+#presenters-left {
+  width: 540px;
 }
 
 #presenters span {
@@ -167,10 +174,16 @@ body {
 	margin-bottom: 20px;
 }
 
+#presenters .presenter-type-container.last {
+  margin-right: 0;
+}
+
 #presenters .presenter-container {
   margin-top: 10px;
   display: block;
   width: 250px;
+  clear: both;
+  padding-bottom: 15px;
 }
 
 #presenters .presenter-name {
@@ -183,6 +196,17 @@ body {
 #presenters .bio {
   display: none;
   width: 135px;
+}
+
+.bio-content {
+  padding: 15px 20px;
+  overflow: hidden;
+}
+
+.bio-content .presenter-img-container {
+  float: left;
+  margin: 1em 20px 20px 0;
+  height: 300px;
 }
 
 #presenters .presenter-img-container {
@@ -210,36 +234,36 @@ body {
 
 #information-tabs {
 	width: 150px;
-	height: 150px;
+	height: 155px;
 	display: block;
 	z-index: 999;
 	margin-left: -150px;
 	margin-bottom: -150px;
 }
 
-#information-tabs .infotab.webinar-info {
+#information-tabs #webinar-info-tab {
 	background-image:url(../images/webinar-info.jpg);
 	width: 150px;
-	height: 50px;
+	height: 52px;
 	background-repeat: no-repeat;
 	position: relative;
 	top: 5px;
   cursor: pointer;
 }
 
-#information-tabs .infotab.presenter-info {
+#information-tabs #presenter-info-tab {
 	background-image:url(../images/presenter-info.jpg);
 	width: 150px;
-	height: 50px;
+	height: 52px;
 	background-repeat: no-repeat;
   cursor: pointer;
 }
 
-#information-tabs .infotab.webinar-info.active {
+#information-tabs #webinar-info-tab.active {
 	background-image:url(../images/webinar-info_hover.jpg);
 }
 
-#information-tabs .infotab.presenter-info.active {
+#information-tabs #presenter-info-tab.active {
 	background-image:url(../images/presenter-info_hover.jpg);
 }
 
@@ -270,14 +294,21 @@ body {
 
 #information-right {
 	float: right;
-	width: 245px;
-	display: inline-block;
+	width: 290px;
 }
 
 .information-right .panel {
-	width: 195px;
+	width: 240px;
 	padding: 15px;
 	background: #E7E8EA;
+}
+
+.event #information-left h1 {
+  margin-top: 10px;
+}
+
+.event #information-right {
+  width: 290px;
 }
 
 #footer {
@@ -442,12 +473,12 @@ input#question-submit {
   float: left;
 }
 
-#login-panel #login_form {
-  height: 90px;
+.register .information-right .panel {
+  float: right;
 }
 
 #login-panel p input {
-  width: 190px;
+  width: 165px;
   margin-right: 10px;
 }
 
@@ -509,13 +540,22 @@ input#question-submit {
 
 /** Registration Page **/
 
+#registration-panel .question-field label {
+  width: 250px;
+  margin: 20px 0 10px 0;
+}
+
+#registration-panel .question-field textarea {
+  width: 233px;
+  height: 75px;
+}
 
 #information-wrapper.register {
   background-image: none;
 }
 
 #information-wrapper #information {
-  width: 490px;
+  width: 520px;
   padding-top: 10px;
 }
 
@@ -523,14 +563,10 @@ input#question-submit {
   padding-bottom: 15px;
 }
 
-#information-wrapper.register .information-right {
-  width: 320px;
-  
-}
-
 #information-wrapper.register .information-right .panel {
-  width: 270px;
+  width: 240px;
   margin-top: 10px;
+  overflow: hidden;
 }
 
 #information-wrapper.register #presenters {
@@ -551,20 +587,18 @@ input#question-submit {
   display: inline-block;
 }
 
-#registration-panel {
-  padding-bottom: 40px;
-}
 #registration-panel label {
-  width: 80px;
+  width: 70px;
+  margin-right: 0;
   display: inline-block;
 }
 
 #registration-panel input[type="text"] {
-  width: 165px;
+  width: 155px;
 }
 
 #registration-panel  #id_refer_type {
-  width: 170px;
+  width: 160px;
 }
 
 #registration-panel input[type="submit"] {
@@ -574,6 +608,29 @@ input#question-submit {
 /* Recommend form */
 .information-right .fancy-box-wrapper {
   display: none;
+}
+
+#recommend-container {
+  float: left;
+  width: 400px;
+  margin: 105px 100px;
+}
+
+#recommend-container label {
+  margin-right: 20px;
+}
+
+#recommend-container p input {
+  width: 200px;
+}
+
+#recommend-container #recommend-submit {
+  float: right;
+  margin-right: 25px;
+}
+
+#recommend-container h1 {
+  margin-bottom: 25px;
 }
 
 /** HACKS **/
