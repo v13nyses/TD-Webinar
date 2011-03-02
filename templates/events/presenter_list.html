@@ -1,9 +1,19 @@
 {% load event_extras %}
 {% for presenter_type in presenters %}
-  <div class="presenter-type-container">
+  {% if forloop.last %}
+    <div class="presenter-type-container last">
+  {% else %}
+    <div class="presenter-type-container">
+  {% endif %}
     <h3>{{ presenter_type.type }}</h3>
-    {% for presenter in presenter_type.presenters %}
-      {% presenter presenter %}
-    {% endfor %}
+    {% ifequal presenter_type.presenters_length 1 %}
+      {% for presenter in presenter_type.presenters %}
+          {% presenter presenter %}
+      {% endfor %}
+    {% else %}
+      {% for presenter in presenter_type.presenters %}
+          {% presenter presenter "" "small" %}
+      {% endfor %}
+    {% endifequal %}
   </div>
 {% endfor %}

@@ -1,12 +1,25 @@
 {% load thumbnail %}
-<div class="presenter-container">
-  {% thumbnail presenter.photo "80x120" crop="center" as photo %}
-    <div class="presenter-img-container"><img src="{{ photo.url }}" /></div>
-  {% endthumbnail %}
+<div class="presenter-container {{ classes }}">
+  {% ifnotequal small None %}
+    {% thumbnail presenter.photo "80x80" crop="top" as photo %}
+      <div class="presenter-img-container"><img src="{{ photo.url }}" /></div>
+    {% endthumbnail %}
+  {% else %}
+    {% thumbnail presenter.photo "80x120" crop="center" as photo %}
+      <div class="presenter-img-container"><img src="{{ photo.url }}" /></div>
+    {% endthumbnail %}
+  {% endifnotequal %}
   <div class="info-container">
     <span class="presenter-name">{{ presenter.name }}</span>
     <span class="job-title">{{ presenter.job_title }}</span>
     <a id="inline" href="#bio-{{ presenter.id }}">View Full Bio</a>
-    <div id="bio-{{ presenter.id }}" class="bio">{{ presenter.description|safe }}</div>
+    <div class="bio">
+      <div id="bio-{{ presenter.id }}" class="bio-content">
+        {% thumbnail presenter.photo "80x120" crop="center" as photo %}
+          <div class="presenter-img-container"><img src="{{ photo.url }}" /></div>
+        {% endthumbnail %}
+        {{ presenter.description|safe }}
+      </div>
+    </div>
   </div>
 </div>

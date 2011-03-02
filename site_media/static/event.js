@@ -66,7 +66,8 @@ o.slideUrl = function(queuePoint) {
     queuePoint = this.currentQueuePoint;
   }
   var slideId = this.queuePoints[queuePoint].slideId;
-  return TDWebinar.settings.eventPage.slideUrl + slideId + "/";
+  var url = TDWebinar.settings.eventPage.slideUrl + slideId + "/";
+  return url;
 }
 
 o.loadSlide = function(event) {
@@ -166,8 +167,10 @@ o.changeState = function(state) {
   }
   var self = this;
   var loadNewState = function() {
+    var randomNum = Math.round(Math.random() * 99999);
+    var url = self.presentationUrl + '/' + randomNum;
     self.presentationWrapper
-      .load(self.presentationUrl, function(data) {
+      .load(url, function(data) {
         self.onChangeState();
         self.attachQuestionEvents();
         self.presentation.hide().slideDown(self.slideAnimationDuration);
@@ -252,9 +255,7 @@ o.coverPlayer = function(cover) {
 // called when the video player starts playing. Set up slide syncing
 function playerReady(obj) {
   var player = jwplayer(document.getElementById(obj.id));
-  setTimeout(function() {
-    TDWebinar.eventController.onPlayerReady(player);
-  }, 500);
+  TDWebinar.eventController.onPlayerReady(player);
 }
 
 // }}}
@@ -267,6 +268,7 @@ TabController = function(tabContainer, tabDefaultState, tabHoverState) {
   this.tabs = $(tabContainer).find("div");
   this.tabContainer = $(tabContainer);
 
+  this.initPositions();
   this.attachEvents();
 }
 
@@ -282,6 +284,17 @@ o.attachEvents = function() {
 
   this.tabs.click(function() {
     self.onTabClick(this);
+  });
+}
+
+o.initPositions = function() {
+  // set the positions when created, since IE won't use the initial css values
+  this.tabs.each(function() {
+    if(!$(this).hasClass('active')) {
+      $(this)[0].style.backgroundPosition = '110px top';
+    } else {
+      $(this)[0].style.backgroundPosition = '50px top';
+    }
   });
 }
 
@@ -326,7 +339,7 @@ $(document).ready(function() {
   TDWebinar.eventController = new EventController();
 
   // add the fancybox popup for bios on the presenters tab
-  $("#presenters a, #recommend-link").fancybox({width: 600, autoDimensions: false});
+  $("#presenters a, #recommend-link").fancybox({width: 600, autoDimensions: false, scrolling: 'no'});
 
 
 });

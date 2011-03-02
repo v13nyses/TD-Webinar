@@ -1,0 +1,53 @@
+.register #information-right {
+  width: 270px !important;
+  overflow: hidden;
+}
+
+#information-left {
+  padding-left: 20px !important;
+}
+
+#login-panel form p input {
+  margin: 13px 0 0 0px;
+}
+
+#submit-registration {
+  float: right !important;
+}
+
+#information-tabs .infotab.presenter-info {
+  position: relative;
+}
+
+.slide .poll #submit_button {
+  margin-left: 0px !important;
+}
+
+#presentation-left {
+  z-index: 10;
+  position: absolute;
+}
+
+#presentation {
+  z-index: 9;
+  position: relative;
+}
+
+#presentation-wrapper {
+  z-index: 8;
+  position: relative;
+}
+
+#body {
+  z-index: 7;
+  position: relative;
+}
+
+body {
+  z-index: 6;
+  position: relative;
+}
+
+#presentation-webinar object {
+  z-index: 50;
+}
