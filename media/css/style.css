@@ -297,6 +297,10 @@ body {
   min-height: 300px;
 }
 
+#content-container .container {
+  background-color: white;
+}
+
 #information-left {
 	/*width: 530px;*/
 	padding-left: 10px;
@@ -629,6 +633,7 @@ input#question-submit {
   float: left;
   width: 400px;
   margin: 105px 100px;
+  background: transparent url('../images/lightboxbg.jpg') no-repeat scroll center bottom;
 }
 
 #recommend-container label {

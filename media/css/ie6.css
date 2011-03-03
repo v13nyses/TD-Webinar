@@ -23,31 +23,6 @@
   margin-left: 0px !important;
 }
 
-#presentation-left {
-  z-index: 10;
-  position: absolute;
-}
-
-#presentation {
-  z-index: 9;
-  position: relative;
-}
-
-#presentation-wrapper {
-  z-index: 8;
-  position: relative;
-}
-
-#body {
-  z-index: 7;
-  position: relative;
-}
-
-body {
-  z-index: 6;
-  position: relative;
-}
-
-#presentation-webinar object {
-  z-index: 50;
+#recommend-container {
+  margin: 105px 50px;
 }

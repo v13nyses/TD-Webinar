@@ -258,6 +258,10 @@ function playerReady(obj) {
   TDWebinar.eventController.onPlayerReady(player);
 }
 
+function clickListener() {
+  // do nothing
+}
+
 // }}}
 
 // TabController
@@ -318,15 +322,18 @@ o.selectTab = function(tab) {
   tab = $(tab);
   if(!tab.hasClass("selected")) {
     // hide the content from other tabs
-    var oldContainer = this.tabContainer.find("div.selected").attr('rel');
-    $('#' + oldContainer).hide();
+    var oldContainer = $('#' + this.tabContainer.find("div.selected").attr('rel'));
+    var newContainer = $('#' + tab.attr('rel'));
+    oldContainer.fadeOut(200, function() {
+      newContainer.fadeIn(200);
+    });
+
 
     this.tabContainer.find("div.selected")
       .animate(this.tabDefaultState)
       .removeClass("selected").removeClass("active");
 
     tab.addClass("selected").addClass("active").animate(this.tabHoverState);
-    $('#' + tab.attr('rel')).show();
   }
 }
 // }}}
