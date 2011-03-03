@@ -240,6 +240,7 @@ MAILCHIMP_FROM_NAME = "Sean"
 MAILCHIMP_TO_EMAIL = "Event Members"
 WELCOME_EMAIL_SUBJECT = 'Thank you for registering for {event}, {first_name}!'
 REGISTRATION_MESSAGE = 'Thank you for registering.'
+SITE_URL = 'http://event.blinkmediaworks.com'
 
 # logging
 if not hasattr(logging, "set_up_done"):
