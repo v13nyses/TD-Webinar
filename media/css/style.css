@@ -24,7 +24,7 @@ body {
 
 #header-wrapper {
 	width: 100%;
-	background: url(../images/headerbg.png) repeat-x #2D5C3C;
+	background: #2D5C3C url(../images/headerbg.png) repeat-x center bottom;
 
 }
 
@@ -34,15 +34,15 @@ body {
 }
 
 #header {
-	height: 65px;
+	height: 50px;
 }
 
 #logo {
 	float: left;
-	width: 60px;
-	height: 45px;
+	width: 165px;
+	height: 30px;
 	margin: 10px 0;
-	background: url(../images/logo.png) no-repeat;
+	background: url(../images/logo-wordmark.png) no-repeat;
 }
 
 #header-right {
@@ -327,15 +327,27 @@ body {
 }
 
 #footer {
-	background: url(../images/footerbg.png) repeat-x center 50px;
-	height: 100px;
+	background: #2d5c3c url(../images/footerbg.png) repeat-x center top;
+	height: 50px;
   float: left;
   width: 100%;
+  margin-top: 70px;
 }
 
 #footer .container {
-	text-align: right;
-	padding: 70px 0 10px 0;
+	padding: 10px 0 10px 0;
+}
+
+#footer-left {
+	width: 300px;
+	padding-top: 10px;
+}
+#footer-right {
+	background: url(../images/logo.png) no-repeat;
+	float: right;
+	width: 40px;
+	height: 35px;
+	display: block;
 }
 
 
