@@ -12,7 +12,7 @@
   <div class="info-container">
     <span class="presenter-name">{{ presenter.name }}</span>
     <span class="job-title">{{ presenter.job_title }}</span>
-    <a id="inline" href="#bio-{{ presenter.id }}">View Full Bio</a>
+    <span class="bio-link"><a id="inline" href="#bio-{{ presenter.id }}">View Full Bio</a></span>
     <div class="bio">
       <div id="bio-{{ presenter.id }}" class="bio-content">
         {% thumbnail presenter.photo "80x120" crop="center" as photo %}

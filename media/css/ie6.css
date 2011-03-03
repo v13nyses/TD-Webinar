@@ -3,8 +3,8 @@
   overflow: hidden;
 }
 
-#information-left {
-  padding-left: 20px !important;
+.register #information-left {
+  padding-left: 30px !important;
 }
 
 #login-panel form p input {

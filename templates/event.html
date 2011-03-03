@@ -78,16 +78,16 @@
         <div id="resource-panel" class="panel">
           <h3>Resource Panel</h3>
           <div class="rp-item rp-download">
-            <a href="{% url pdf event.id %}" target="_blank"><div class="rp-description">Download Presentation</div></a>
+            <a class="rp-description" href="{% url pdf event.id %}" target="_blank">Download Presentation</a>
           </div>
           <div class="rp-item rp-resourceguide">
-            <a href="{{ MEDIA_URL}}{{ event.resource_guide.name }}" target="_blank"><div class="rp-description">Resource Guide</div></a>
+            <a class="rp-description" href="{{ MEDIA_URL}}{{ event.resource_guide.name }}" target="_blank">Resource Guide</a>
           </div>
           <div class="rp-item rp-td">
-            <a href="http://www.tdcanadatrust.com/smallbusiness/advisor/index.jsp" target="_blank"><div class="rp-description">Locate a TD Small Business Advisor</div></a>
+            <a class="rp-description" href="http://www.tdcanadatrust.com/smallbusiness/advisor/index.jsp" target="_blank">Locate a TD Small Business Advisor</a>
           </div>
           <div class="rp-item rp-td">
-            <a href="http://www.tdcommercialbanking.com/cbc_dir.jsp" target="_blank"><div class="rp-description">Find a TD Commercial Banking Centre</div></a>
+            <a class="rp-description" href="http://www.tdcommercialbanking.com/cbc_dir.jsp" target="_blank">Find a TD Commercial Banking Centre</a>
           </div>
           {% ifnotequal request.session.login_email None %}
             <div class="rp-item rp-mail">

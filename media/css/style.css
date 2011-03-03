@@ -192,7 +192,20 @@ body {
 }
 #presenters .job-title {
 	width: 135px;
+	font-size: 12px;
+	margin-top: 5px;
 }
+
+#presenters .bio-link a {
+  margin-top: 10px;
+  color: #7d7d7d;
+  font-size: 12px;
+}
+
+#presenters .bio-link a:hover {
+	color: #ff9604;
+}
+
 #presenters .bio {
   display: none;
   width: 135px;
@@ -225,15 +238,13 @@ body {
 }
 
 #information-wrapper {
-	background: url(../images/informationbg.png) repeat-x center top;
-	width: 100%;
+	background: url(../images/informationbg.png) no-repeat 50% top;
 	padding-bottom: 20px;
 	margin-bottom: -30px;
-  float: left;
 }
 
 #information-tabs {
-	width: 150px;
+	width: 160px;
 	height: 155px;
 	display: block;
 	z-index: 999;
@@ -242,7 +253,7 @@ body {
 }
 
 #information-tabs #webinar-info-tab {
-	background-image:url(../images/webinar-info.jpg);
+	background-image:url(../images/webinar-info.png);
 	width: 150px;
 	height: 52px;
 	background-repeat: no-repeat;
@@ -252,7 +263,7 @@ body {
 }
 
 #information-tabs #presenter-info-tab {
-	background-image:url(../images/presenter-info.jpg);
+	background-image:url(../images/presenter-info.png);
 	width: 150px;
 	height: 52px;
 	background-repeat: no-repeat;
@@ -300,7 +311,7 @@ body {
 .information-right .panel {
 	width: 240px;
 	padding: 15px;
-	background: #E7E8EA;
+	background: #EFEFEF;
 }
 
 .event #information-left h1 {
@@ -506,7 +517,7 @@ input#question-submit {
 }
 
 .rp-item {
-	width: 195px;
+	width: 225px;
 	clear: both;
 }
 .rp-icon {
@@ -520,7 +531,8 @@ input#question-submit {
 
 .rp-description {
 	padding: 2px 0 5px 30px;
-	margin-bottom: 10px;
+	display: block;
+	margin-bottom: 15px;
 }
 
 .rp-item .rp-description:hover {
@@ -558,7 +570,7 @@ input#question-submit {
 }
 
 #information-wrapper #information {
-  width: 520px;
+  width: 530px;
   padding-top: 10px;
 }
 
@@ -652,3 +664,7 @@ input {
 
 /* Temporary */
 
+
+#fancybox-content {
+	background: #fff url(../images/lightboxbg.jpg) no-repeat bottom center !important;
+}
