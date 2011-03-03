@@ -645,7 +645,6 @@ input#question-submit {
   float: left;
   width: 400px;
   margin: 105px 100px;
-  background: transparent url('../images/lightboxbg.jpg') no-repeat scroll center bottom;
 }
 
 #recommend-container label {
@@ -683,5 +682,5 @@ input {
 
 
 #fancybox-content {
-	background: #fff url(../images/lightboxbg.jpg) no-repeat bottom center !important;
+	background: white url(../images/lightboxbg.jpg) no-repeat center bottom !important;
 }
