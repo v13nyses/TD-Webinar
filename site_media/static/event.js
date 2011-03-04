@@ -348,5 +348,19 @@ $(document).ready(function() {
   // add the fancybox popup for bios on the presenters tab
   $("#presenters a, #recommend-link").fancybox({width: 600, autoDimensions: false, scrolling: 'no'});
 
+  // ajaxify the recommend form
+  $("#recommend_form").submit(function() {
+    $.ajax({
+      url: $("#recommend_form").attr("action"),
+      dataType: 'json',
+      data: $("#recommend_form").serialize(),
+      type: 'post',
+      success: function(data) {
+        // do nothing
+      }
+    });
+    $.fancybox.close();
 
+    return false;
+  });
 });

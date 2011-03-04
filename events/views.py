@@ -2,6 +2,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader, Context
+from django.template.loader import render_to_string
 from django.conf import settings
 from django.template.defaultfilters import slugify
 from events.models import Event, Question
@@ -11,7 +12,7 @@ from datetime import datetime
 from pytz import timezone
 import os
 import logging
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, EmailMultiAlternatives
 
 from events.forms import LoginForm, LogoutForm, RecommendForm, QuestionForm
 from userprofiles.forms import UserProfileForm
@@ -204,20 +205,22 @@ def event(request, event_id = None, state = None, template = 'event.html', messa
       logout_user(request)
 
     if recommend_form.is_valid() and user_is_logged_in(request):
-      subject = "You have recieved a link"
-      message_template = loader.get_template('events/recommend.txt')
-      message_context = Context({
+      user_profile = UserProfile.objects.get(email = request.session['login_email'])
+      message_context = {
         'event': event,
         'from': request.session['login_email'],
-      })
-      message = message_template.render(message_context)
-      email = EmailMessage(
-        subject,
-        message,
-        request.session['login_email'],
+      }
+      html_message = render_to_string('events/recommend_email.html', message_context)
+      text_message = render_to_string('events/recommend_email.txt', message_context)
+      email = EmailMultiAlternatives(
+        settings.RECOMMEND_EMAIL_SUBJECT.format(profile = user_profile),
+        text_message,
+        user_profile.email,
         [recommend_form.cleaned_data['to_list']],
       )
+      email.attach_alternative(html_message, 'text/html')
       email.send()
+
     elif register_event_form.is_valid():
       if user_is_logged_in(request):
         register_user_for_event(request)

@@ -40,7 +40,7 @@ $(document).ready(function() {
   var flashVersion = swfobject.getFlashPlayerVersion();
   var browser = $.browser;
 
-  if(typeof(browser.msie) == 'undefined' || parseInt(browser.version) > 6) {
+  if(typeof(browser.msie) == 'undefined' || parseInt(browser.version) >= 6) {
     pass(".browser");
   } else {
     fail(".browser", "FAILED: Internet Explorer 7 or greater required.");

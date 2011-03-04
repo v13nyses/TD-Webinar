@@ -3,6 +3,7 @@
   var settings = TDWebinar.settings.eventPage;
   settings.startOffset = "{{ start_offset }}";
   settings.state = "{{ state }}";
+  settings.queuePoints = {% slide_set_json event %}
   _old_doc_write = document.write;
   document.write = function() {};
 </script>
