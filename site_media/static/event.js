@@ -8,12 +8,22 @@
 
 // PresentationController listens for events from the video player, and switches slides.
 // {{{
-PresentationController = function(player) {
+PresentationController = function(player, updateEngagement) {
   // queuePoints contains the slide timing and ids (used for ajax loading of slides)
   this.queuePoints = TDWebinar.settings.eventPage.queuePoints;
+  this.engagementUpdateInterval = TDWebinar.settings.eventPage.engagementUpdateInterval;
+  this.startTime = TDWebinar.settings.eventPage.startOffset;
+  this.eventId = TDWebinar.settings.eventPage.id;
+  this.lastEngagementUpdate = 0;
   this.currentQueuePoint = 0;
   //this.debug = true;
   this.debug = false;
+
+  if(typeof(updateEngagement) == "undefined" || !updateEngagement) {
+    this.trackEngagement = false;
+  } else {
+    this.trackEngagement = true;
+  }
 
   this.initPlayer(player);
 }
@@ -27,6 +37,10 @@ o.initPlayer = function(player) {
   if(this.queuePoints.length > 1) {
     this.preloadSlide(1);
   }
+
+  if(this.trackEngagement) {
+    this.updateEngagement(this.startTime)
+  }
 }
 
 o.attachPlayerEvents = function() {
@@ -37,7 +51,31 @@ o.attachPlayerEvents = function() {
   var self = this;
   // the onTime event is called every ~10ms
   this.player.onTime(function(event) {
-    self.loadSlide(event);
+    self.onTime(event);
+  });
+}
+
+o.onTime = function(event) {
+  this.loadSlide(event);
+
+  if(this.trackEngagement) {
+    var engagementUpdateDiff = event.position - this.lastEngagementUpdate;
+    if(engagementUpdateDiff > this.engagementUpdateInterval) {
+      this.lastEngagementUpdate = event.position;
+      this.updateEngagement(event.position);
+    }
+  }
+}
+
+o.updateEngagement = function(duration) {
+  var durationInt = Math.round(duration);
+  engagementUrl = "/event/" + this.eventId + "/engagement/" + this.startTime + "/" + durationInt;
+  $.ajax({
+    url: engagementUrl,
+    dataType: 'json',
+    success: function(data) {
+      // do nothing
+    }
   });
 }
 
@@ -191,7 +229,7 @@ o.onPlayerReady = function(player) {
     if(this.startOffset < this.player.getDuration() && this.startOffset > 0) {
       this.player.seek(this.startOffset);
     }
-    this.startPresentation();
+    this.startPresentation(true);
     this.coverPlayer(true);
     this.player.play();
   } else if(this.state == 'archive') {
@@ -236,10 +274,12 @@ o.attachQuestionEvents = function() {
   });
 }
 
-o.startPresentation = function() {
+o.startPresentation = function(trackEngagementRaw) {
+  var trackEngagement = typeof(trackEngagementRaw) != 'undefined' && trackEngagementRaw == true;
   if(!this.presentationController) {
-    this.presentationController = new PresentationController(this.player);
+    this.presentationController = new PresentationController(this.player, trackEngagement);
   } else {
+    this.presentationController.trackEngagement = trackEngagement;
     this.presentationController.initPlayer(this.player);
   }
 }

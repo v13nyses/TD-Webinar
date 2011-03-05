@@ -14,6 +14,7 @@ urlpatterns = patterns('',
   url(r'^event/(?P<event_id>\d+)/submit_question$', 'events.views.submit_question', name = "submit_question"),
   url(r'^event/(?P<event_id>\d+)/exit_survey$', 'exitsurvey.views.exit_survey', name = "exit_survey"),
   url(r'^event/(?P<event_id>\d+)/thank_you$', 'exitsurvey.views.thank_you', name = "thank_you"),
+  url(r'^event/(?P<event_id>\d+)/engagement/(?P<start_time>\d+)/(?P<duration>\d+)$', 'reporting.views.update_engagement', name = 'engagement'),
   url(r'^event/browser-check$', 'events.views.browser_check', name = "browser_check"),
   url(r'^$', 'events.views.event', name = "newest_event"),
 )
