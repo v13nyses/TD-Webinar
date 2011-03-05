@@ -1,0 +1,30 @@
+.register #information-right {
+  width: 270px !important;
+  overflow: hidden;
+}
+
+.register #information-left {
+  padding-left: 30px !important;
+}
+
+#login-panel form p input {
+  margin: 13px 0 0 0px;
+}
+
+#submit-registration {
+  float: right !important;
+}
+
+#information-tabs .infotab.presenter-info {
+  position: relative;
+}
+
+.slide .poll #submit_button {
+  margin-left: 0px !important;
+}
+
+#recommend-container {
+  margin: 105px 50px;
+}
+
+

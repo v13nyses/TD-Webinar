@@ -45,9 +45,8 @@
                                                 <table width="100%" cellspacing="0" cellpadding="0" border="0">
                                                     <tbody><tr>
                                                         <td width="60%" valign="top" rowspan="2">
-                                                            <div style="color: rgb(80, 80, 80); font-family: Arial; font-size: 14px; line-height: 150%; text-align: left;"><div style="color: rgb(80, 80, 80); font-family: Arial; font-size: 14px; line-height: 150%; text-align: left; background-color: rgb(253, 253, 253); margin: 0px; padding: 0px; min-height: 100% ! important; width: 100% ! important;">Dear {{ profile.first_name }}<br>
-	<br>
-	TD Canada Trust is pleased to confirm your registration for the upcoming webinar workshop&nbsp;<b>{{ event.name }}</b>. This webinar event will be held on {{ event.start_time_eastern|date:"l, F d" }} at {{ event.start_time_eastern|date:"h:i A" }} EST.&nbsp;<a target="_blank" style="color: rgb(255, 154, 12); font-weight: normal; text-decoration: underline;" href="http://home.v13inc.com/{{ settings.MEDIA_URL }}{{ event.outlook_file }}"><strong>Click here</strong></a>&nbsp;to add this event to your Outlook Calendar.<br>
+                                                            <div style="color: rgb(80, 80, 80); font-family: Arial; font-size: 14px; line-height: 150%; text-align: left;"><div style="color: rgb(80, 80, 80); font-family: Arial; font-size: 14px; line-height: 150%; text-align: left; background-color: rgb(253, 253, 253); margin: 0px; padding: 0px; min-height: 100% ! important; width: 100% ! important;">
+TD Canada Trust is pleased to confirm your registration for the upcoming webinar workshop&nbsp;<b>{{ event.name }}</b>. This webinar event will be held on {{ event.start_time_eastern|date:"l, F d" }} at {{ event.start_time_eastern|date:"h:i A" }} EST.
 	<br>
 	We look forward to your participation!<br>
 	<br>
@@ -60,17 +59,14 @@
 
 		
                                                         <td width="40%" valign="top" style="background-color: rgb(0, 63, 45); padding: 10px; color: rgb(255, 255, 255);">
-                                                            <div style="color: rgb(80, 80, 80); font-family: Arial; font-size: 14px; line-height: 150%; text-align: left;"><span style="color: rgb(255, 255, 255); display: block; font-family: Arial; font-size: 22px; font-weight: bold; line-height: 100%; margin-bottom: 10px; text-align: left;">View the Webinar Workshop</span> on {{ event.start_time_eastern|date:"l, F d, h:i A" }} EST<br>
-{{ event.short_description|safe }}<br>
-<br>
-<a style="color: rgb(255, 154, 12); font-weight: normal; text-decoration: underline;"><strong>Click here</strong></a></div></td>
+                                                            <div style="color: white; font-family: Arial; font-size: 14px; line-height: 150%; text-align: left;"><span style="color: rgb(255, 255, 255); display: block; font-family: Arial; font-size: 22px; font-weight: bold; line-height: 100%; margin-bottom: 10px; text-align: left;">View the Webinar Workshop</span> on {{ event.start_time_eastern|date:"l, F d, h:i A" }} EST<br>
+{{ event.short_description|safe }}
+</div></td>
                                                     </tr>
                                                     <tr>
                                                         <td width="40%" valign="top">
                                                             <div style="color: rgb(80, 80, 80); font-family: Arial; font-size: 12px; line-height: 150%; text-align: left; padding-top: 10px;">
-                                                                        <a style="color: rgb(255, 154, 12); font-weight: normal; text-decoration: underline;"><strong>Click here</strong></a> to add this event to your Outlook Calendar.<br><br>
-		<a style="color: rgb(255, 154, 12); font-weight: normal; text-decoration: underline;"><strong>Click here</strong></a> to view the webinar on {{ event.start_time_eastern|date:"l, F d" }} at {{ event.start_time_eastern|date:"h:i A" }} EST.<br><br>
-        <a style="color: rgb(255, 154, 12); font-weight: normal; text-decoration: underline;"><strong>Click here</strong></a> to invite a friend to view the webinar.<br><br>
+                                                              <a style="color: rgb(255, 154, 12); font-weight: normal; text-decoration: underline;" href="{{ settings.SITE_URL }}{% url event event.id %}"><strong>Click here</strong></a> to view the webinar on {{ event.start_time_eastern|date:"l, F d" }} at {{ event.start_time_eastern|date:"h:i A" }} EST.<br><br>
 	  <a target="_blank" style="color: rgb(255, 154, 12); font-weight: normal; text-decoration: underline;" href="http://www.tdcanadatrust.com/smallbusiness/advisor/index.jsp"><strong>Click here</strong></a> to find your local TD Canada Trust Small Business Advisor.<br>
 
 

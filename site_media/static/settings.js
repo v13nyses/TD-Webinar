@@ -11,15 +11,16 @@ TDWebinar = {
     },
     eventPage: { 
       slideshowContainer: "#slideshow",
+      slideshowPreloadContainer: "#slideshow-preload",
       presentationWrapper: "#presentation-wrapper",
       presentationContainer: "#presentation",
       playerCover: "#presentation-cover",
       eventStates: ["pre", "lobby", "live", "post", "archive"],
       slideAnimationDuration: 800,
       tabContainer: "#information-tabs",
-      tabDefaultState: {'background-position': '110px top'},
-      tabHoverState: {'background-position': '50px top'},
-      engagementContainer: "#engagement"
+      tabDefaultState: {backgroundPosition: '110px top'},
+      tabHoverState: {backgroundPosition: '50px top'},
+      engagementUpdateInterval: 60,
     }
   }
 }

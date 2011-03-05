@@ -5,10 +5,12 @@ from django.template.loader import render_to_string
 register = template.Library()
 
 @register.inclusion_tag('events/presenter.html')
-def presenter(presenter):
+def presenter(presenter, classes = '', small = None):
   return {
     'presenter': presenter,
-    'settings': settings
+    'settings': settings,
+    'classes': classes,
+    'small': small
   }
 
 @register.inclusion_tag('events/presenter_list.html')

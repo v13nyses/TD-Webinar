@@ -2,6 +2,7 @@ from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render_to_response
 from django.template import RequestContext, loader, Context
+from django.template.loader import render_to_string
 from django.conf import settings
 from django.template.defaultfilters import slugify
 from events.models import Event, Question
@@ -11,7 +12,7 @@ from datetime import datetime
 from pytz import timezone
 import os
 import logging
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, EmailMultiAlternatives
 
 from events.forms import LoginForm, LogoutForm, RecommendForm, QuestionForm
 from userprofiles.forms import UserProfileForm
@@ -139,6 +140,11 @@ def start_new_block(engagement, start_time, seconds):
 
 
 # used by urls:
+#   event/browser-check
+def browser_check(request):
+  return render_to_response('browser_check.html', {}, context_instance = RequestContext(request))
+
+# used by urls:
 #   event/
 #   event/<event_id>/
 def event(request, event_id = None, state = None, template = 'event.html', user_message = None):
@@ -243,23 +249,25 @@ def event(request, event_id = None, state = None, template = 'event.html', user_
     elif logout_form.is_valid():
       logout_user(request)
 
-    if user_is_logged_in(request):
-      if recommend_form.is_valid():
-        subject = "You have recieved a link"
-        message_template = loader.get_template('events/recommend.txt')
-        message_context = Context({
-          'event': event,
-          'from': request.session['login_email'],
-        })
-        message = message_template.render(message_context)
-        email = EmailMessage(
-          subject,
-          message,
-          request.session['login_email'],
-          [recommend_form.cleaned_data['to_list']],
-        )
-        email.send()
-      elif register_event_form.is_valid():
+    if recommend_form.is_valid() and user_is_logged_in(request):
+      user_profile = UserProfile.objects.get(email = request.session['login_email'])
+      message_context = {
+        'event': event,
+        'from': request.session['login_email'],
+      }
+      html_message = render_to_string('events/recommend_email.html', message_context)
+      text_message = render_to_string('events/recommend_email.txt', message_context)
+      email = EmailMultiAlternatives(
+        settings.RECOMMEND_EMAIL_SUBJECT.format(profile = user_profile),
+        text_message,
+        user_profile.email,
+        [recommend_form.cleaned_data['to_list']],
+      )
+      email.attach_alternative(html_message, 'text/html')
+      email.send()
+
+    elif register_event_form.is_valid():
+      if user_is_logged_in(request):
         register_user_for_event(request)
         user_message = settings.REGISTRATION_MESSAGE
     
@@ -267,6 +275,7 @@ def event(request, event_id = None, state = None, template = 'event.html', user_
   if user_is_logged_in(request):
     push_analytics.append(['_setCustomVar', 1, 'UserEmail', request.session['login_email'], 1])
     push_analytics.append(['_trackEvent', 'Conversions', 'UserEmail'])
+    message = settings.REGISTRATION_MESSAGE
     if request.session['user_registered'] is None and is_first_redirect(request):
       print "redirect to register b/c user isn't registered"
       return HttpResponseRedirect(reverse('register', args=[event_id]))

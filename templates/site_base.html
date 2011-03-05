@@ -11,8 +11,19 @@
 
 {% block header %}
   {% block header_right %}{% endblock %}
+  <!--[if IE 6]>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/ie6.css" />
+  <![endif]-->
+  <META HTTP-EQUIV="Cache-Control" CONTENT="max-age=0">
+  <META HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
+  <META http-equiv="expires" content="0">
+  <META HTTP-EQUIV="Expires" CONTENT="Tue, 01 Jan 1980 1:00:00 GMT">
+  <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
 {% endblock %}
 
 {% block footer %}
-  <div class="container">TD Group Financial Small Business Webinars - Copyright © TD</div>
+  <div class="container">
+  	<div id="footer-right"></div>
+	<div id="footer-left">Copyright © TD</div>
+  </div>
 {% endblock %}

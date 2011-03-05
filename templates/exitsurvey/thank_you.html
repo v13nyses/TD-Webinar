@@ -1,7 +1,12 @@
-{% load ifsetting_tag %}
+{% extends "base.html" %}
 
-{% ifnotequal request.session.thank_you None %}
-  <div class="panel">
-    <strong>Thank you for your participation!</strong>
+{% block header %}
+  <h3>Exit Survey</h3>
+{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <h1>Thank you for your participation!</h1>
+    <p>Please visit <a href="http://www.tdcanadatrust.com/smallbusiness/webinars.jsp">TD Canada Trust</a> for more information.</p>
   </div>
-{% endifnotequal %}
+{% endblock %}

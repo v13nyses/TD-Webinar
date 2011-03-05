@@ -1,0 +1,22 @@
+{% extends "site_base.html" %}
+
+{% block extra_head %}
+  <script type="text/javascript" src="{{ STATIC_URL }}swfobject/swfobject.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}browser_test.js"></script>
+{% endblock %}
+
+{% block header_right %}
+  <h3>Browser Test</h3>
+{% endblock %}
+
+{% block body %}
+  <div class="container">
+    <h1>Browser Test</h1>
+    <ul class="browser-tests">
+      <li class="browser"><h3>Browser</h3><span>checking...</span></li>
+      <li class="cookies"><h3>Cookies</h3><span>checking...</span></li>
+      <li class="javascript"><h3>Javascript</h3><span>checking...</span></li>
+      <li class="flash"><h3>Flash</h3><span>checking...</span></li>
+    </ul>
+  </div>
+{% endblock %}

@@ -7,6 +7,7 @@
   <link type="text/css" rel="stylesheet" href="{{ STATIC_URL}}/fancybox/jquery.fancybox-1.3.4.css" />
   <script type="text/javascript" src="{{ STATIC_URL }}fancybox/jquery.fancybox-1.3.4.js"></script>
   <script type="text/javascript" src="{{ STATIC_URL }}jquery.hoverIntent.minified.js"></script>
+  <script type="text/javascript" src="{{ STATIC_URL }}bitsontherun.js"></script>
   <script type="text/javascript" src="{{ STATIC_URL }}settings.js"></script>
   <script type="text/javascript" src="{{ STATIC_URL }}event.js"></script>
   <script type="text/javascript" src="{{ STATIC_URL }}register.js"></script>
@@ -39,7 +40,7 @@
 
 {% block header_right %}
   <h3>{{ event.name }}</h3>
-  <h4>{{ event.live_start_date|date:"F d, Y" }}</h4>
+  <h4>Webinar Workshop</h4>
 {% endblock %}
   
 {% block body %}
@@ -49,11 +50,11 @@
   <div id="presentation-wrapper">
     {% presentation event state %}
   </div>
-  <div id="information-wrapper">
+  <div id="information-wrapper" class="event">
     <div class="container">
       <div id="information-tabs">
-        <div class="infotab webinar-info selected active" rel="information"></div>
-        <div class="infotab presenter-info" rel="presenters"></div>
+        <div class="infotab webinar-info selected active" id="webinar-info-tab" rel="information"></div>
+        <div class="infotab presenter-info" id="presenter-info-tab" rel="presenters"></div>
       </div>
     </div>
     <div id="content-container" class="container">
@@ -62,7 +63,7 @@
           {% presenter_list event.presenters %}
         </div>
       </div>
-      <div id="information">
+      <div id="information" class="container">
         <div id="information-left">
           <h1>{{ event.name }}</h1>
           <h3>{{ event.live_start_date|date:"F d, Y" }}</h3>
@@ -70,7 +71,7 @@
             <div class="description start-time">The Webinar Workshop {{ event.name }} will begin on {{ event.start_time_eastern|date:"F d" }} at {{ event.start_time_eastern|date:"f A"|lower }} EST.</div>
           {% endifequal %}
           <div class="description">
-            {{ event.short_description|safe }}
+            {{ event.description|safe }}
           </div>
         </div>
       </div>
@@ -78,16 +79,16 @@
         <div id="resource-panel" class="panel">
           <h3>Resource Panel</h3>
           <div class="rp-item rp-download">
-            <a href="{% url pdf event.id %}" ><div class="rp-description">Download Presentation</div></a>
+            <a class="rp-description" href="{% url pdf event.id %}" target="_blank">Download Presentation</a>
           </div>
           <div class="rp-item rp-resourceguide">
-            <a href="{{ MEDIA_URL}}{{ event.resource_guide.name }}"><div class="rp-description">Resource Guide</div></a>
+            <a class="rp-description" href="{{ MEDIA_URL}}{{ event.resource_guide.name }}" target="_blank">Resource Guide</a>
           </div>
           <div class="rp-item rp-td">
-            <a href="http://www.tdcanadatrust.com/smallbusiness/advisor/index.jsp" target="_blank"><div class="rp-description">Locate a TD Small Business Advisor</div></a>
+            <a class="rp-description" href="http://www.tdcanadatrust.com/smallbusiness/advisor/index.jsp" target="_blank">Locate a TD Small Business Advisor</a>
           </div>
           <div class="rp-item rp-td">
-            <a href="http://www.tdcommercialbanking.com/cbc_dir.jsp" target="_blank"><div class="rp-description">Find a TD Commercial Banking Centre</div></a>
+            <a class="rp-description" href="http://www.tdcommercialbanking.com/cbc_dir.jsp" target="_blank">Find a TD Commercial Banking Centre</a>
           </div>
           {% ifnotequal request.session.login_email None %}
             <div class="rp-item rp-mail">

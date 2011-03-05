@@ -2,6 +2,7 @@ from django import template
 from django.conf import settings
 from presentations.models import Slide
 import simplejson
+from sorl.thumbnail import get_thumbnail
 
 register = template.Library()
 
@@ -29,9 +30,20 @@ def slide_set_json(event):
 
   slides_data = []
   for slide in slides:
-    slides_data.append({
-      'slideId': slide.id,
-      'timeOffset': slide.offset
-    })
+    # filter out slides if this is in the archive state
+    if event.state == event.STATE_ARCHIVE:
+      leaf = slide.as_leaf_class()
+      if type(leaf) == Slide:
+        slides_data.append({
+          'slideId': slide.id,
+          'timeOffset': slide.offset,
+          'image': get_thumbnail(slide.image, '360x270').url
+        })
+    else:
+      slides_data.append({
+        'slideId': slide.id,
+        'timeOffset': slide.offset,
+        'image': get_thumbnail(slide.image, '360x270').url
+      })
 
   return simplejson.dumps(slides_data)
