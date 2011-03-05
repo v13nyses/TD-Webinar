@@ -18,7 +18,8 @@ TDWebinar = {
       slideAnimationDuration: 800,
       tabContainer: "#information-tabs",
       tabDefaultState: {'background-position': '110px top'},
-      tabHoverState: {'background-position': '50px top'}
+      tabHoverState: {'background-position': '50px top'},
+      engagementContainer: "#engagement"
     }
   }
 }

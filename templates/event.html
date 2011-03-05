@@ -23,6 +23,7 @@
       post: "{{ stateOffsets.post }}",
       archive: "{{ stateOffsets.archive }}"
     };
+    settings.engagementUrl = "/event/{{ event.id }}/engagement/";
   </script>
 
   {% ifnotequal custom_variables None %}

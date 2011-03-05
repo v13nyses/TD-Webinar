@@ -88,6 +88,12 @@ o.loadSlide = function(event) {
   }
 }
 
+function f() {
+  alert("aoeu");
+  $(TDWebinar.settings.eventPage.engagementContainer).load(
+    TDWebinar.settings.eventPage.engagementUrl() + "10/");
+}
+
 // EventController loads new event states and animates the transitions. It also sets
 // up a PresentationController when necessary to control the slides.
 EventController = function() {
@@ -113,9 +119,14 @@ o.onChangeState = function() {
 
   if(this.state == 'live') {
     this.tabController.selectTab('.infotab.presenter-info');
+    this.recordEngagement();
   } else {
     this.tabController.selectTab('.infotab.webinar-info');
   }
+}
+
+o.recordEngagement = function() {
+  setInterval("f()", 10000);
 }
 
 o.setupStateTransitions = function() {
