@@ -5,8 +5,8 @@ class Engagement(models.Model):
   profile = models.ForeignKey('userprofiles.UserProfile')
   event = models.ForeignKey('events.Event')
   ip_address = models.IPAddressField(blank = True, null = True)
-  start_time = models.IntegerField()
-  duration = models.IntegerField()
+#  start_time = models.IntegerField()
+#  duration = models.IntegerField()
   #location = models.ForeignKey('geoip.City')
 
 class Block(models.Model):

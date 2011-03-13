@@ -13,6 +13,7 @@
   <form id="logout_form" action="" method="post">
     <strong>Hello, {{ request.session.login_email }}!</strong><br/>
     {{ logout_form.as_p }}
-    Not you?  <a class="logout_link" href="#">Logout</a>
+    Not you?  <a class="logout_link" href="#">Logout</a><br/>
+    <a href="{% url event event.id %}">View Event</a>
   </form>
 {% endifequal %}

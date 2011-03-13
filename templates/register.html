@@ -38,8 +38,7 @@
             <h3>Login</h3>
             <p>Already registered? Please login with your email address below:<p>
           {% endifequal %}
-          {% event_login request login_form logout_form %}
-          <a href="{% url event event.id %}">View Event</a>
+          {% event_login request login_form logout_form event %}
         </div>
         {% ifequal request.session.login_email None %}
             {% user_profile request user_profile_form %}
