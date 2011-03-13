@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from form_controllers import FormController, EventFormController, PresentationFormController, SlideFormController
 from events.models import Event
-from events.views import logout_user
+from registration.views import logout_user
 from registration.models import Registration
 from presentations.models import Presenter, Slide
 from polls.models import Poll, Vote

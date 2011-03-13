@@ -39,12 +39,7 @@
             <p>Already registered? Please login with your email address below:<p>
           {% endifequal %}
           {% event_login request login_form logout_form %}
-          {% ifnotequal message "" %}
-            <span class="message">
-              {{ message }}
-              <a href="{% url event event.id %}">View Event</a>
-            </span>
-          {% endifnotequal %}
+          <a href="{% url event event.id %}">View Event</a>
         </div>
         {% ifequal request.session.login_email None %}
             {% user_profile request user_profile_form %}
