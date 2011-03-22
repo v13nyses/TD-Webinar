@@ -9,7 +9,7 @@ from reporting.models import Engagement, Block
 
 logger = logging.getLogger(__name__)
 
-def update_engagement(request, event_id, start_time, duration):
+def update_engagement(request, event_id, start_offset, duration):
   event = Event.objects.get(id = event_id)
 
   if request.session.has_key('login_email'):
@@ -27,22 +27,22 @@ def update_engagement(request, event_id, start_time, duration):
 
         block = Block()
         block.engagement = engagement_data
-        block.start = start_time
+        block.start_offset = start_offset
         block.seconds = duration
         block.save()
       else:
         engagement_data = engagement_objects[0]
-        blocks = Block.objects.filter(engagement = engagement_data, start = start_time)
+        blocks = Block.objects.filter(engagement = engagement_data, start_offset = start_offset)
 
         if len(blocks) == 0:
           block = Block()
           block.engagement = engagement_data
-          block.start = start_time
-          block.seconds = duration
+          block.start_offset = start_offset
+          block.seconds = int(duration)
           block.save()
         else:
           block = blocks[0]
-          block.seconds = block.seconds + duration    
+          block.seconds = block.seconds + int(duration)    
           block.save()
 
       result = {

@@ -63,6 +63,7 @@ def register(request, event_id = None):
         return HttpResponseRedirect(reverse('event', args=[event_id]))
       else:
         # Do Nothing (page will reload with no one logged in)
+        login_form = LoginForm()
         logout_form = LogoutForm()
         pass
     elif logout_form.is_valid():
